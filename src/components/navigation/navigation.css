@@ -1,0 +1,36 @@
+.navbar {
+	height: 10vh;
+	background: #181919;
+	color: white;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
+.nav-items {
+	display: flex;
+	list-style: none;
+	text-align: center;
+	width: 70vw;
+	justify-content: flex-end;
+	margin-right: 2rem;
+}
+
+.nav-item {
+	display: flex;
+	align-items: center;
+	height: 10vh;
+}
+
+.nav-item a {
+	text-decoration: none;
+	color: white;
+	font-size: 1.1rem;
+	margin-right: 2rem;
+	padding: 6px 16px;
+	border-radius: 5px;
+}
+
+.nav-item a:hover {
+	background: rgb(0, 212, 212);
+}
