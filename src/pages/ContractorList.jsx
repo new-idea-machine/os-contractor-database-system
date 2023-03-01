@@ -1,6 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
+import { Footer, Navigation } from '../components';
 
 export default function ContractorList() {
 	const { contractorList } = useContext(contractorContext);
@@ -9,6 +10,7 @@ export default function ContractorList() {
 	}, []);
 	return (
 		<>
+			<Navigation />
 			<div className='contractorListPage'>
 				<h1 style={{ textAlign: 'center', color: 'white' }}>
 					Our Available Contractors
@@ -34,6 +36,7 @@ export default function ContractorList() {
 						))}
 				</div>
 			</div>
+			<Footer />
 		</>
 	);
 }
