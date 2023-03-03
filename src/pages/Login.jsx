@@ -4,10 +4,11 @@ import { useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
 import images from '../constants/images';
 import Register from './Register';
+import { toast } from 'react-toastify';
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
-	const { login } = useContext(authContext);
+	const { login, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
@@ -20,8 +21,10 @@ export default function Login() {
 
 	const handleLogin = () => {
 		login(loginEmail, loginPassword);
-		alert('welcome!');
-		navigate('/booking');
+		if (user) {
+			toast.info(`welcome! ${user?.displayName}`);
+			navigate('/contractorlist');
+		}
 	};
 
 	// const handleLogOut = () => {

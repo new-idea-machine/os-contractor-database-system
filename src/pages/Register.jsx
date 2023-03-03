@@ -52,8 +52,8 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 				setErroMessage(
 					`A login email link sent to ${registerEmail}, please check your email`
 				);
-				alert(`You Have successfully registered with ${registerEmail} !!`);
-				navigate('/booking');
+				toast.info(`You Have successfully registered with ${registerEmail} !!`);
+				navigate('/contractorlist');
 			}
 			return true;
 		}

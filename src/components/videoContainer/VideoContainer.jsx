@@ -1,12 +1,14 @@
-import React, { useState } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import video from '../../assets/work-space.mp4';
 // import { BsFillPlayFill, BsPauseFill } from 'react-icons/bs';
 // import { meal } from '../../constants';
 import { useNavigate } from 'react-router-dom';
 import './videoContainer.css';
+import { authContext } from '../../contexts/auth';
 // import ActionBar from '../../components/actionBar/ActionBar';
 
 const VideoContainer = () => {
+	const { user, logout } = useContext(authContext);
 	// const [playVideo, setPlayVideo] = useState(false);
 	const navigate = useNavigate();
 	const vidRef = React.useRef();
@@ -49,6 +51,11 @@ const VideoContainer = () => {
 				>
 					<span>Continue</span>
 				</div>
+				{user && (
+					<div className='customButton4' onClick={() => logout()}>
+						<span>Logout</span>
+					</div>
+				)}
 				{/* {playVideo ? (
           <BsPauseFill color='#fff' fontSize={30}/>
         ) : <BsFillPlayFill color='#fff' fontSize={30}/>} */}
