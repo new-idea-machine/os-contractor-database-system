@@ -12,6 +12,7 @@
 /build
 
 # misc
+/firebaseconfig.js
 .env
 .DS_Store
 .env.local
