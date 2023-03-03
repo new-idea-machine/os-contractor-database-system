@@ -12,4 +12,4 @@ For recruiters, this app can help streamline the hiring process by providing a c
 
 ### Web
 
-https://www.test.skape.space
+https://test.skape.space/
