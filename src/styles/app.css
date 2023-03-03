@@ -9,6 +9,12 @@
 	gap: 50px;
 }
 
+.updateProfilePage {
+	/* height: 80vh; */
+	background-color: rgb(0, 0, 0);
+	/* border: 2px solid white; */
+}
+
 .flexCenter {
 	display: flex;
 	justify-content: center;
@@ -107,4 +113,26 @@
 .customButton2:hover:after {
 	border-radius: 0px 0px 20px 0px;
 	width: 100%;
+}
+
+.customButton {
+	display: inline-block;
+	outline: 0;
+	border: 0;
+	cursor: pointer;
+	background: #000000;
+	color: #ffffff;
+	border-radius: 8px;
+	padding: 14px 24px 16px;
+	font-size: 18px;
+	font-weight: 700;
+	line-height: 1;
+	transition: transform 200ms, background 200ms;
+}
+.customButton:hover {
+	transform: translateY(-2px);
+	line-height: 1;
+	background: transparent;
+	color: #000000;
+	box-shadow: 0 0 0 3px #000000 inset;
 }

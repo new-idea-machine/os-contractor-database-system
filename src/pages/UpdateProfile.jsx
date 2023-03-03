@@ -1,5 +1,14 @@
 import React from 'react';
+import { Footer, Navigation } from '../components';
+import ProfileForm from '../components/profileForm/ProfileForm';
 
 export default function UpdateProfile() {
-	return <div>AddContractor</div>;
+	return (
+		<>
+			<Navigation />
+			<ProfileForm />
+
+			<Footer />
+		</>
+	);
 }

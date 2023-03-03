@@ -16,23 +16,21 @@ import AuthControl from './contexts/auth';
 function App() {
 	return (
 		<>
-			<div className='App'>
-				<AuthControl>
-					<ContractorContext>
-						<Router>
-							<Routes>
-								<Route path='*' element={<NotFound />} />
-								<Route path='/' element={<Home />} />
-								<Route path='/auth' element={<Login />} />
-								<Route path='/contractorList' element={<ContractorList />} />
-								<Route path='/myProfile' element={<ContractorProfile />} />
-								<Route path='/UpdateProfile' element={<UpdateProfile />} />
-							</Routes>
-						</Router>
-					</ContractorContext>
-				</AuthControl>
-				<ToastContainer />
-			</div>
+			<AuthControl>
+				<ContractorContext>
+					<Router>
+						<Routes>
+							<Route path='*' element={<NotFound />} />
+							<Route path='/' element={<Home />} />
+							<Route path='/auth' element={<Login />} />
+							<Route path='/contractorList' element={<ContractorList />} />
+							<Route path='/myProfile' element={<ContractorProfile />} />
+							<Route path='/UpdateProfile' element={<UpdateProfile />} />
+						</Routes>
+					</Router>
+				</ContractorContext>
+			</AuthControl>
+			<ToastContainer />
 		</>
 	);
 }
