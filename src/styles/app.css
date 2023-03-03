@@ -9,6 +9,12 @@
 	gap: 50px;
 }
 
+.flexCenter {
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+
 .contractorListPage {
 	min-height: 73.4vh;
 	padding: 2rem 6rem;
@@ -58,4 +64,47 @@
 	background: transparent;
 	color: #ffffff;
 	box-shadow: 0 0 0 3px #ffffff inset;
+}
+
+.customButton2 {
+	display: block;
+	/* width: 200px;
+	height: 40px; */
+	line-height: 40px;
+	font-size: 18px;
+	font-family: sans-serif;
+	text-decoration: none;
+	color: #ffffff;
+	border-radius: 0px 0px 20px 0px;
+	/* border: 2px solid #333; */
+	letter-spacing: 2px;
+	text-align: center;
+	position: relative;
+	transition: all 0.35s;
+	cursor: pointer;
+}
+
+.customButton2 span {
+	position: relative;
+	z-index: 2;
+}
+
+.customButton2:after {
+	position: absolute;
+	content: '';
+	top: 0;
+	left: 0;
+	width: 0;
+	height: 100%;
+	background: rgba(128, 128, 128, 0.384);
+	transition: all 0.35s;
+}
+
+.customButton2:hover {
+	color: #ffffff;
+}
+
+.customButton2:hover:after {
+	border-radius: 0px 0px 20px 0px;
+	width: 100%;
 }

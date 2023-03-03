@@ -4,7 +4,8 @@ import 'react-toastify/dist/ReactToastify.css';
 import './styles/app.css';
 import { Home, NotFound, AddContractor, ContractorList } from './pages';
 import ContractorContext from './contexts/ContractorContext';
-import AuthControl from './services/auth';
+import AuthControl from './contexts/auth';
+import Login from './pages/Login';
 
 function App() {
 	return (
@@ -16,6 +17,7 @@ function App() {
 							<Routes>
 								<Route path='*' element={<NotFound />} />
 								<Route path='/' element={<Home />} />
+								<Route path='/auth' element={<Login />} />
 								<Route path='/contractorList' element={<ContractorList />} />
 								<Route path='/addContractor' element={<AddContractor />} />
 							</Routes>

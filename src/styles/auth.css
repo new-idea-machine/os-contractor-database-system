@@ -1,0 +1,155 @@
+.appLogin {
+	background: url('../assets/office-bg.jpg');
+	background-position: center;
+	background-size: cover;
+	background-repeat: repeat;
+	background-attachment: fixed;
+	/* background: linear-gradient(252.44deg, #dc489c 0%, #2e22ab 100%); */
+	min-height: 100vh;
+}
+.backButton {
+	z-index: 2;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 75px;
+}
+
+.loginContainer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	flex-direction: column;
+	gap: 25px;
+	/* border: 5px solid white; */
+	/* alignItems: center,
+	height: 90vh,
+	textAlign: center, */
+}
+
+.fields {
+	/* max-width: 15%; */
+	width: fit-content;
+	/* max-width: 30%; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 12px 12px 12px 12px;
+	/* gap: 2px; */
+	/* border: 1px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25); */
+	/* border: 3px solid rgb(216, 85, 8); */
+}
+.fields2 {
+	/* max-width: 15%; */
+	width: fit-content;
+	/* max-width: 30%; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 12px 12px 12px 12px;
+	/* gap: 2px; */
+	/* border: 1px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25); */
+	/* border: 3px solid rgb(255, 3, 3); */
+}
+.fields2 input {
+	width: 80%;
+	height: 25px;
+	border: 0;
+	padding: 1rem 1rem;
+	border: 0.5px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.fields input {
+	width: 80%;
+	height: 25px;
+	border: 0;
+	padding: 1rem 1rem;
+	border: 0.5px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.fields button {
+	width: 100%;
+	height: 35px;
+	border-radius: 0px 0px 12px 12px;
+	border: 0;
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+#regButton {
+	width: 100%;
+	height: 35px;
+	border-radius: 0px 0px 12px 12px;
+	/* border: 0; */
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+.logoContainer {
+	width: 300px;
+	height: 300px;
+	border-radius: 0px 0px 12px 12px;
+}
+
+.logoContainer img {
+	width: 100%;
+	height: 100%;
+	border-radius: 0px 0px 12px 12px;
+}
+
+.optionContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+	font-weight: 900;
+	color: white;
+	font-size: 20px;
+}
+
+.optionContainer button {
+	width: fit-content;
+	height: fit-content;
+	background-color: transparent;
+	border: none;
+	color: rgb(0, 0, 0);
+	cursor: pointer;
+	font-size: 17px;
+	font-weight: 700;
+}
+
+#emailInput {
+	border-radius: 12px 12px 0px 0px;
+}
+
+#emailInputReg {
+	border-radius: 12px 12px 0px 0px;
+}
+
+@media screen and (max-width: 650px) {
+	.login__title {
+		font-size: 15;
+	}
+}
+
+@media screen and (max-width: 300px) {
+	.login__title {
+		font-size: 10;
+	}
+}
