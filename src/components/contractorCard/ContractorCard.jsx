@@ -3,6 +3,7 @@ import './contractorCard.css';
 import { contractorContext } from '../../contexts/ContractorContext';
 
 export default function ContractorCard({ data }) {
+	const { contractor } = useContext(contractorContext);
 	console.log(data);
 	return (
 		<>
@@ -10,7 +11,7 @@ export default function ContractorCard({ data }) {
 				<div className='imageWrapper'>
 					<img src={data?.profileImg} alt='Contractor headshot' />
 				</div>
-				<h1>{data?.name}</h1>
+				<h1 onClick={() => console.log(contractor)}>{data?.name}</h1>
 				<h3>{data?.email}</h3>
 			</div>
 		</>

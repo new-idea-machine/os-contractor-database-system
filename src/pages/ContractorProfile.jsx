@@ -1,5 +1,11 @@
 import React from 'react';
+import { Footer, Navigation } from '../components';
 
 export default function ContractorProfile() {
-	return <div>ContractorProfile</div>;
+	return (
+		<>
+			<Navigation />
+			<Footer />
+		</>
+	);
 }
