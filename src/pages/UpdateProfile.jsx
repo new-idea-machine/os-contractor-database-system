@@ -7,7 +7,6 @@ export default function UpdateProfile() {
 		<>
 			<Navigation />
 			<ProfileForm />
-
 			<Footer />
 		</>
 	);
