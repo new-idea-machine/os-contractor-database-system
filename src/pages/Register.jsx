@@ -68,44 +68,54 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 		<>
 			<div className='appLogin flexCenter'>
 				<div className='loginContainer'>
-					<div className='logoContainer'>
-						<img src={images.loginBg} alt='' />
+					<div className='boxAuthTop flexCenter'>
+						<div className='logoContainer'>
+							<img src={images.team} alt='' />
+						</div>
 					</div>
-					{/* <h2 style={{ color: 'var(--color-golden)' }}> Register </h2> */}
-					<div className='fields2'>
-						<input
-							id='emailInput'
-							type='email'
-							placeholder='Email...'
-							onChange={(event) => {
-								setRegisterEmail(event.target.value);
-							}}
-						/>
-						<input
-							placeholder='DisplayName...'
-							onChange={(event) => {
-								setDisplayName(event.target.value);
-							}}
-						/>
-						<input
-							type='password'
-							placeholder='Password...'
-							onChange={(event) => {
-								setRegisterPassword(event.target.value);
-							}}
-						/>
+					<div className='boxAuth'>
+						{/* <h2 style={{ color: 'var(--color-golden)' }}> Register </h2> */}
+						<div className='fields2'>
+							<input
+								id='emailInput'
+								type='email'
+								name='email'
+								placeholder='Email...'
+								autocomplete='off'
+								onChange={(event) => {
+									setRegisterEmail(event.target.value);
+								}}
+							/>
+							<input
+								name='displayName'
+								placeholder='DisplayName...'
+								type='text'
+								autocomplete='off'
+								onChange={(event) => {
+									setDisplayName(event.target.value);
+								}}
+							/>
+							<input
+								type='password'
+								placeholder='Password...'
+								autocomplete='off'
+								onChange={(event) => {
+									setRegisterPassword(event.target.value);
+								}}
+							/>
 
-						<button id='regButton' onClick={() => nameEmailValidation()}>
-							{' '}
-							Create User
-						</button>
-						{/* <button onClick={() => navigate('/login')}>LogIn</button> */}
-					</div>
-					<div className='optionContainer'>
-						<p>Already have an account?</p>
-						<button className='' onClick={handleFormChange}>
-							Login
-						</button>
+							<button id='regButton' onClick={() => nameEmailValidation()}>
+								{' '}
+								Create User
+							</button>
+							{/* <button onClick={() => navigate('/login')}>LogIn</button> */}
+						</div>
+						<div className='optionContainer'>
+							<p style={{ color: 'black' }}>Already have an account?</p>
+							<button className='' onClick={handleFormChange}>
+								<span style={{ textDecoration: 'underline' }}>Login</span>
+							</button>
+						</div>
 					</div>
 				</div>
 			</div>

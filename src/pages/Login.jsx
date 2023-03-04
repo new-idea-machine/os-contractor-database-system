@@ -50,35 +50,41 @@ export default function Login() {
 			<div className='appLogin flexCenter'>
 				{loginStep && (
 					<div className='loginContainer' ref={loginPage}>
-						<div className='logoContainer'>
-							<img src={images.loginBg} alt='' />
+						<div className='boxAuthTop flexCenter'>
+							<div className='logoContainer'>
+								<img src={images.team} alt='' />
+							</div>
 						</div>
-						{/* <h2 style={{ color: 'var(--color-golden)' }}> Login </h2> */}
-						<div className='fields'>
-							<input
-								id='emailInput'
-								type='email'
-								placeholder='Email...'
-								onChange={(event) => {
-									setLoginEmail(event.target.value);
-								}}
-							/>
-							<input
-								type='password'
-								placeholder='Password...'
-								onChange={(event) => {
-									setLoginPassword(event.target.value);
-								}}
-							/>
+						<div className='boxAuth'>
+							{/* <h2 style={{ color: 'var(--color-golden)' }}> Login </h2> */}
+							<div className='fields'>
+								<input
+									id='emailInput'
+									type='email'
+									placeholder='Email...'
+									autocomplete='off'
+									onChange={(event) => {
+										setLoginEmail(event.target.value);
+									}}
+								/>
+								<input
+									type='password'
+									placeholder='Password...'
+									autocomplete='off'
+									onChange={(event) => {
+										setLoginPassword(event.target.value);
+									}}
+								/>
 
-							<button onClick={() => handleLogin()}> Login</button>
-							{/* <button onClick={() => handleLogOut()}> Logout</button> */}
-						</div>
-						<div className='optionContainer'>
-							<p>Don't have an account?</p>
-							<button className='' onClick={handleFormChange}>
-								Register
-							</button>
+								<button onClick={() => handleLogin()}> Login</button>
+								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
+							</div>
+							<div className='optionContainer'>
+								<p style={{ color: 'black' }}>Don't have an account?</p>
+								<button className='' onClick={handleFormChange}>
+									<span style={{ textDecoration: 'underline' }}>Register</span>
+								</button>
+							</div>
 						</div>
 					</div>
 				)}

@@ -80,7 +80,7 @@
 	font-size: 18px;
 	font-family: sans-serif;
 	text-decoration: none;
-	color: #ffffff;
+	color: #000000;
 	border-radius: 0px 0px 20px 0px;
 	/* border: 2px solid #333; */
 	letter-spacing: 2px;
@@ -106,9 +106,9 @@
 	transition: all 0.35s;
 }
 
-.customButton2:hover {
+/* .customButton2:hover {
 	color: #ffffff;
-}
+} */
 
 .customButton2:hover:after {
 	border-radius: 0px 0px 20px 0px;
