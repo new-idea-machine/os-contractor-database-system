@@ -47,7 +47,7 @@ export default function Login() {
 				</div>
 			</div>
 
-			<div className='appLogin flexCenter'>
+			<div className='appLogin'>
 				{loginStep && (
 					<div className='loginContainer' ref={loginPage}>
 						<div className='boxAuthTop flexCenter'>
@@ -62,7 +62,7 @@ export default function Login() {
 									id='emailInput'
 									type='email'
 									placeholder='Email...'
-									autocomplete='off'
+									autoComplete='off'
 									onChange={(event) => {
 										setLoginEmail(event.target.value);
 									}}
@@ -70,7 +70,7 @@ export default function Login() {
 								<input
 									type='password'
 									placeholder='Password...'
-									autocomplete='off'
+									autoComplete='off'
 									onChange={(event) => {
 										setLoginPassword(event.target.value);
 									}}

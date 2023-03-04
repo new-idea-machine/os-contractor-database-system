@@ -66,7 +66,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 	return (
 		<>
-			<div className='appLogin flexCenter'>
+			<div className='appLogin'>
 				<div className='loginContainer'>
 					<div className='boxAuthTop flexCenter'>
 						<div className='logoContainer'>
@@ -81,7 +81,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								type='email'
 								name='email'
 								placeholder='Email...'
-								autocomplete='off'
+								autoComplete='off'
 								onChange={(event) => {
 									setRegisterEmail(event.target.value);
 								}}
@@ -90,7 +90,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								name='displayName'
 								placeholder='DisplayName...'
 								type='text'
-								autocomplete='off'
+								autoComplete='off'
 								onChange={(event) => {
 									setDisplayName(event.target.value);
 								}}
@@ -98,7 +98,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 							<input
 								type='password'
 								placeholder='Password...'
-								autocomplete='off'
+								autoComplete='off'
 								onChange={(event) => {
 									setRegisterPassword(event.target.value);
 								}}
