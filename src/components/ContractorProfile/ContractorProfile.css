@@ -1,0 +1,32 @@
+.contractor_profile {
+  padding: 20px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+
+}
+
+.contractor_name {
+    font-size:30px;
+    font-weight: bold;
+}
+
+.image_wrapper {
+	/* width: 175px;
+	height: 175px;
+	border-radius: 5%; */
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+          }
+
+.image_wrapper img {
+	width: 50%;
+	height: 50%;
+	object-fit: cover;
+	border-radius: inherit;
+    
+}
+

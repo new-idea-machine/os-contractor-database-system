@@ -8,6 +8,8 @@ const ContractorContext = ({ children }) => {
 	const [contractorList, setContractorList] = useState(data?.contractors);
 	const [contractor, setContractor] = useState(null);
 
+	console.log("contractor", contractor)
+
 	// useEffect(() => {}, [setContractorList(data?.contractors)]);
 
 	const appStates = {

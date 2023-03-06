@@ -5,6 +5,7 @@ import './styles/app.css';
 import { Home, NotFound, AddContractor, ContractorList } from './pages';
 import ContractorContext from './contexts/ContractorContext';
 import AuthControl from './services/auth';
+import ContractorProfile from './components/ContractorProfile/ContractorProfile';
 
 function App() {
 	return (
@@ -18,6 +19,7 @@ function App() {
 								<Route path='/' element={<Home />} />
 								<Route path='/contractorList' element={<ContractorList />} />
 								<Route path='/addContractor' element={<AddContractor />} />
+								<Route path='/contractor/:id' element={<ContractorProfile />} />
 							</Routes>
 						</Router>
 					</ContractorContext>
