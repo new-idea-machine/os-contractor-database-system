@@ -13,7 +13,7 @@ function App() {
 			<div className='App'>
 				<AuthControl>
 					<ContractorContext>
-						<Router>
+									<Router>
 							<Routes>
 								<Route path='*' element={<NotFound />} />
 								<Route path='/' element={<Home />} />
