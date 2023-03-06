@@ -30,7 +30,7 @@ export const navItems = [
 	{
 		id: 4,
 		title: 'Login',
-		path: '/login',
+		path: '/auth',
 		cName: 'nav-item',
 	},
 ];

@@ -12,17 +12,19 @@ import {
 import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
+	addDoc,
 	//   getDoc,
 	//   onSnapshot,
 	setDoc,
 	serverTimestamp,
-	//   updateDoc,
-	//   collection,
+	updateDoc,
+	collection,
 	//   query,
 	//   getDocs,
 	//   where,
 	//   orderBy,
 } from 'firebase/firestore';
+// import { Toast } from 'react-toastify/dist/components';
 
 export const authContext = React.createContext();
 
@@ -30,11 +32,51 @@ export default function AuthControl(props) {
 	const children = props.children;
 	const [user, setUser] = useState({});
 
+	// This is the firebase method that checks
+	// The current user in our application from our
+	// Project's authentication
 	onAuthStateChanged(auth, (currentUser) => {
 		setUser(currentUser);
-		console.log('>><<<', user);
+		// console.log('>><<<', user);
 	});
 
+	// This Function is declared to be called in the below
+	// function --createUserInDatabase-- To add the creted
+	// id of the "tech" object, to the object itself
+	const addDocumentIdFieldToObject = async (id) => {
+		const data = {
+			id: id,
+		};
+		const userDocRef = doc(db, 'techs', id);
+		if (userDocRef) {
+			await updateDoc(userDocRef, data);
+			console.log('User successfully updated!');
+		} else {
+			console.log('object not found');
+		}
+	};
+
+	// This function is declared to be called in the below
+	// Register function to create out "tech" object with our
+	// defined schema relateing it to the "user" by firebase
+	// with the "firebaseUID"
+	const createUserInDatabase = async (
+		registerEmail,
+		displayName,
+		firebaseUID
+	) => {
+		const data = {
+			name: displayName,
+			email: registerEmail,
+			firebaseUID: firebaseUID,
+		};
+		const createUserRequest = await addDoc(collection(db, 'techs'), data);
+		// console.log('Document written with ID: ', createUserRequest.id);
+		const idToAdd = createUserRequest.id;
+		addDocumentIdFieldToObject(idToAdd);
+	};
+
+	// This function registers the user with firebase
 	const register = async (registerEmail, displayName, registerPassword) => {
 		try {
 			await createUserWithEmailAndPassword(
@@ -46,43 +88,33 @@ export default function AuthControl(props) {
 				displayName: displayName,
 			})
 				.then(() => {
-					// const URL = `https://us-central1-xen-wellness.cloudfunctions.net/clientsCollection/api/createClient/`;
-					// const data = {
-					// 	userUid: auth.currentUser.uid,
-					// 	email: registerEmail,
-					// 	clientName: displayName,
-					// };
-					// axios.post(URL, data).then((res) => {
-					// 	console.log('Client created', res);
-					// });
-					// Profile updated!
 					// ...
+					const FUID = auth.currentUser.uid;
+					createUserInDatabase(registerEmail, displayName, FUID);
 				})
 				.catch((error) => {
-					// An error occurred
-					// ...
+					console.log(error.message);
 				});
 		} catch (error) {
 			console.log(error.message);
 		}
 	};
 
+	// This function Logs the user in
 	const login = async (loginEmail, loginPassword) => {
 		try {
-			const user = await signInWithEmailAndPassword(
-				auth,
-				loginEmail,
-				loginPassword
-			);
+			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
 		} catch (error) {
 			console.log(error.message);
 		}
 	};
 
+	// This function logs the user out
 	const logout = async () => {
 		await signOut(auth);
 	};
 
+	// Currently not in use passwordless sign In
 	const signInWithEmail = async () => {
 		let email = window.localStorage.getItem('emailForSignIn');
 		signInWithEmailLink(auth, email, window.location.href)

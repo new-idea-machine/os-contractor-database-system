@@ -1,0 +1,183 @@
+.appLogin {
+	background: url('../assets/bg.png');
+	background-position: center;
+	background-size: cover;
+	background-repeat: repeat;
+	background-attachment: fixed;
+	/* background: linear-gradient(252.44deg, #dc489c 0%, #2e22ab 100%); */
+	height: 100vh;
+}
+.backButton {
+	z-index: 2;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 75px;
+}
+
+.loginContainer {
+	width: 100%;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+	text-align: center;
+	flex-direction: column;
+	gap: 25px;
+	height: 70%;
+	/* border: 2px solid rgb(0, 0, 0); */
+	/* alignItems: center,
+	height: 90vh,
+	textAlign: center, */
+}
+
+.boxAuthTop {
+	/* border: 2px solid rgb(3, 255, 24); */
+	/* width: 100%; */
+	height: fit-content;
+	padding: 1rem;
+}
+
+.boxAuth {
+	/* width: 100%; */
+	height: fit-content;
+	/* border: 2px solid yellow; */
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
+
+.fields {
+	/* max-width: 15%; */
+	width: fit-content;
+	/* max-width: 30%; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 12px 12px 12px 12px;
+	/* gap: 2px; */
+	/* border: 1px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25); */
+	/* border: 3px solid rgb(216, 85, 8); */
+}
+.fields2 {
+	/* max-width: 15%; */
+	width: fit-content;
+	/* max-width: 30%; */
+	display: flex;
+	flex-direction: column;
+	justify-content: center;
+	align-items: center;
+	border-radius: 12px 12px 12px 12px;
+	/* gap: 2px; */
+	/* border: 1px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25); */
+	/* border: 3px solid rgb(255, 3, 3); */
+}
+.fields2 input {
+	width: 83%;
+	height: 10px;
+	border: 0;
+	padding: 1rem;
+	border: 0.5px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.fields input {
+	width: 84%;
+	height: 10px;
+	border: 0;
+	padding: 1rem 1rem;
+	border: 0.5px solid gray;
+	box-shadow: 0px 5px 4px rgba(0, 0, 0, 0.25),
+		inset 1px 2px 5px rgba(0, 0, 0, 0.25);
+}
+
+.fields button {
+	width: 100%;
+	height: 35px;
+	border-radius: 0px 0px 12px 12px;
+	border: 0;
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+#regButton {
+	width: 100%;
+	height: 35px;
+	border-radius: 0px 0px 12px 12px;
+	/* border: 0; */
+	background-color: black;
+	color: white;
+	cursor: pointer;
+}
+
+.logoContainer {
+	width: 647px;
+	height: 400px;
+	/* border-radius: 0px 0px 12px 12px; */
+	/* border: 2px solid black; */
+}
+
+.logoContainer img {
+	width: 100%;
+	height: 100%;
+	/* border-radius: 0px 0px 12px 12px; */
+}
+
+.optionContainer {
+	width: 100%;
+	display: flex;
+	flex-direction: row;
+	justify-content: center;
+	align-items: center;
+	gap: 15px;
+	font-weight: 900;
+	color: white;
+	font-size: 20px;
+}
+
+.optionContainer button {
+	width: fit-content;
+	height: fit-content;
+	background-color: transparent;
+	border: none;
+	color: rgb(0, 0, 0);
+	cursor: pointer;
+	font-size: 20px;
+	font-weight: 700;
+	display: flex;
+	justify-content: center;
+	align-items: center;
+}
+.optionContainer button:hover {
+	transform: translateY(-2px);
+	line-height: 1;
+	background: transparent;
+	color: #ff0000;
+	/* box-shadow: 0 0 0 3px #000000 inset; */
+}
+
+#emailInput {
+	border-radius: 12px 12px 0px 0px;
+}
+
+#emailInputReg {
+	border-radius: 12px 12px 0px 0px;
+}
+
+@media screen and (max-width: 650px) {
+	.login__title {
+		font-size: 15;
+	}
+}
+
+@media screen and (max-width: 300px) {
+	.login__title {
+		font-size: 10;
+	}
+}

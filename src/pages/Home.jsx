@@ -1,8 +1,6 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import ContractorCard from '../components/contractorCard/ContractorCard';
 import VideoContainer from '../components/videoContainer/VideoContainer';
-import { contractorContext } from '../contexts/ContractorContext';
 
 export default function Home() {
 	const navigate = useNavigate();
