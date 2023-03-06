@@ -3,34 +3,40 @@ import { toast } from 'react-toastify';
 import './profile.css';
 import { authContext } from '../../contexts/auth';
 import { contractorContext } from '../../contexts/ContractorContext';
+import { store } from '../../firebaseconfig';
+import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 
 export default function ProfileForm() {
 	const { user } = useContext(authContext);
 	const { contractorList, updateTechObject } = useContext(contractorContext);
 	const [userToUpdate, setUserToUpdate] = useState({});
+	const [imgUrl, setImgUrl] = useState(null);
+	const [progresspercent, setProgresspercent] = useState(0);
 
 	useEffect(() => {
+		// console.log(contractorList);
 		if (user && contractorList) {
-			// console.log(contractorList);
 			const mathcUserWithProfile = contractorList.find(
 				(tech) => tech?.firebaseUID === user?.uid
 			);
+			console.log('MATCHED', mathcUserWithProfile);
 			setUserToUpdate(mathcUserWithProfile);
 		} else {
 			console.log('No Match');
 		}
-	}, []);
+	}, [contractorList]);
 
 	const [formData, setFormData] = useState({
-		id: '001',
-		name: 'Taylor',
+		id: '',
+		name: '',
 		profileImg: {},
-		email: 'taylor@newideamachine.com',
+		email: '',
 		techStack: [{ tech: '' }],
 		// otherInfo: {
 		linkedinUrl: '',
 		githubUrl: '',
-		resume: {},
+		resume: '',
 		// },
 		summary: '',
 		skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
@@ -57,11 +63,13 @@ export default function ProfileForm() {
 		// ],
 	});
 	const form = useRef();
+	const uploadForm = useRef();
 
 	const {
 		// Personal Info
 		name,
 		email,
+		resume,
 		// Technical Info
 		projectName,
 		description,
@@ -69,6 +77,36 @@ export default function ProfileForm() {
 		linkedinUrl,
 		githubUrl,
 	} = formData;
+
+	const handleSubmit = (e) => {
+		e.preventDefault();
+		const file = e.target[0]?.files[0];
+		console.log('!!!', file);
+		if (!file) return;
+		const storageRef = ref(store, `files/${uuidv4() + file.name}`);
+		const uploadTask = uploadBytesResumable(storageRef, file);
+
+		uploadTask.on(
+			'state_changed',
+			(snapshot) => {
+				const progress = Math.round(
+					(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				);
+				setProgresspercent(progress);
+			},
+			(error) => {
+				alert(error);
+			},
+			() => {
+				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+					// handleUpdate(file, downloadURL);
+					setImgUrl(downloadURL);
+
+					//   console.log("####", imgUrl)
+				});
+			}
+		);
+	};
 
 	// Handle Input change
 	const onChange = (e) => {
@@ -86,6 +124,8 @@ export default function ProfileForm() {
 				linkedinUrl: linkedinUrl,
 				githubUrl: githubUrl,
 			},
+			resume: resume,
+			profileImg: imgUrl,
 			projects: [{ projectName: projectName, description: description }],
 		};
 		console.log('data to update', data);
@@ -96,6 +136,31 @@ export default function ProfileForm() {
 	return (
 		<>
 			<div className='updateForm flexCenter'>
+				<form onSubmit={handleSubmit} className='form' ref={uploadForm}>
+					<input type='file' />
+					<button type='submit'>Upload</button>
+				</form>
+				{!imgUrl && (
+					<div
+						className='outerbar'
+						style={{
+							border: '2px solid white',
+							background: 'white',
+							width: '200px',
+						}}
+					>
+						<div
+							className='innerbar'
+							style={{
+								width: `${progresspercent}%`,
+								background: 'red',
+							}}
+						>
+							{progresspercent}%
+						</div>
+					</div>
+				)}
+				{imgUrl && <img src={imgUrl} alt='uploaded file' height={200} />}
 				<form className='flexCenter' ref={form} onSubmit={onSubmit}>
 					<h1 onClick={() => onSubmit()}>Update Profile</h1>
 					<div className='formSection flexCenter'>
@@ -148,7 +213,26 @@ export default function ProfileForm() {
 							type='text'
 							onChange={onChange}
 						/>
+						{/* <input type='file' />
+						<button
+							onClick={() => {
+								handleSubmit();
+							}}
+						>
+							Upload
+						</button> */}
 					</div>
+					{/* {!imgUrl && (
+						<div className='outerbar'>
+							<div
+								className='innerbar'
+								style={{ width: `${progresspercent}%` }}
+							>
+								{progresspercent}%
+							</div>
+						</div>
+					)}
+					{imgUrl && <img src={imgUrl} alt='uploaded file' height={200} />} */}
 					<button className='customButton' type='submit'>
 						<span>Update</span>
 					</button>
