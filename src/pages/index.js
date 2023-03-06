@@ -1,7 +1,15 @@
 import Home from './Home';
-import AddContractor from './AddContractor';
+import UpdateProfile from './UpdateProfile';
 import NotFound from './NotFound';
 import ContractorProfile from './ContractorProfile';
 import ContractorList from './ContractorList';
+import Login from './Login';
 
-export { Home, AddContractor, NotFound, ContractorProfile, ContractorList };
+export {
+	Home,
+	UpdateProfile,
+	NotFound,
+	ContractorProfile,
+	ContractorList,
+	Login,
+};
