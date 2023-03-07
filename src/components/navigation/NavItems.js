@@ -15,7 +15,7 @@ export const navItems = [
 
 	{
 		id: 2,
-		title: 'Profile',
+		title: 'My Profile',
 		path: '/myProfile',
 		cName: 'nav-item',
 	},

@@ -7,7 +7,7 @@ import {
   NotFound,
   UpdateProfile,
   ContractorList,
-//   ContractorProfile,
+  MyProfile,
   Login,
 } from "./pages";
 import ContractorContext from "./contexts/ContractorContext";
@@ -26,7 +26,7 @@ function App() {
               <Route path="/auth" element={<Login />} />
               <Route path="/contractorList" element={<ContractorList />} />
               <Route path="/contractor/:id" element={<ContractorProfile />} />
-              {/* <Route path='/myProfile' element={<ContractorProfile />} /> */}
+              <Route path='/myProfile' element={<MyProfile />} />
               <Route path="/UpdateProfile" element={<UpdateProfile />} />
             </Routes>
           </Router>

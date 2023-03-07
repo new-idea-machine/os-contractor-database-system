@@ -1,11 +1,9 @@
 .contractor_profile {
-    height: 75vh;
+  height: 75vh;
   padding: 20px;
   display: flex;
-  /* justify-content: center; */
   margin-right: 20%;
   margin-left: 20%;
-  /* align-content: center; */
 }
 
 .contractor_info {
@@ -22,10 +20,11 @@
 .image_wrapper {
   width: 175px;
   height: 175px;
+  min-width: 175px;
   border-radius: 5%;
   display: block;
   margin-right: 20px;
-  }
+}
 
 .image_wrapper img {
   width: 100%;
