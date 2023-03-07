@@ -7,7 +7,7 @@ import { Footer, Navigation } from "../index";
 const ContractorProfile = () => {
   const { id } = useParams();
   const { contractorList } = useContext(contractorContext);
-  // console.log("name", name)
+
   return (
     <div>
       <Navigation />
@@ -19,28 +19,55 @@ const ContractorProfile = () => {
                 <img src={contractor?.profileImg} alt="Contractor headshot" />
               </div>
               <div className="contractor_info">
-                <div className="contractor_name">{contractor.name}</div>
-                {/* <a
-                  href={contractor.email}
+                <div className="contractor_name">{contractor?.name}</div>
+                <a
+                  style={{ marginBottom: "10px" }}
+                  href={`mailto:${contractor?.email}`}
                   target="_blank"
                   rel="noopener noreferrer"
                 >
-                  Email
-                </a> */}
-                {/* <a
-                  href={contractor.otherInfo.linkedinUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  LinkedIn
-                </a> */}
-                <div>{contractor.email}</div>
-                <div>{contractor.otherInfo.linkedinUrl}</div>
-                <div style={{marginBottom: "10px"}}>{contractor.otherInfo.githubUrl}</div>
-                <div>Summary: {contractor.summary}</div>
-                <div> Skills: </div>
-                <div>Interests: </div>
-                <div>Projects: </div>
+                  {contractor?.email}
+                </a>
+                {contractor?.otherInfo?.githubUrl && (
+                  <a
+                    href={contractor?.otherInfo?.githubUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    GitHub
+                  </a>
+                )}
+                {contractor?.otherInfo?.linkedinUrl && (
+                  <a
+                    style={{ marginBottom: "10px" }}
+                    href={contractor?.otherInfo?.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    LinkedIn
+                  </a>
+                )}
+                  {contractor?.projects  && (
+                <div>
+                  Projects:{" "}
+                  {contractor?.projects.map((project) => (
+                    <div
+                      key={project.id}
+                      style={{
+                        backgroundColor: "#D5D1D0",
+                        marginTop: "5px",
+                        marginBottom: "5px",
+                        borderRadius: "5px",
+                        padding: "5px",
+                      }}
+                    >
+                      <div>Project Name: {project?.projectName}</div>
+                      <div>Project Description: {project?.description}</div>
+                    </div>
+                  ))}
+                </div>
+      )}
+                <div>Resume:</div>
               </div>
             </div>
           );

@@ -2,8 +2,9 @@
     height: 75vh;
   padding: 20px;
   display: flex;
-  justify-content: center;
-  margin-right: 30%;
+  /* justify-content: center; */
+  margin-right: 20%;
+  margin-left: 20%;
   /* align-content: center; */
 }
 
