@@ -1,4 +1,4 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { authContext } from "../contexts/auth";
 import ContractorProfile from "../components/ContractorProfile/ContractorProfile";
 import { contractorContext } from "../contexts/ContractorContext";
@@ -10,10 +10,14 @@ export default function MyProfile() {
 
   return (
     <>
-      {contractorList.map((contractor) => {
-        if (userUid === contractor?.firebaseUID)
-          return <ContractorProfile key={contractor?.id} data={contractor} />;
-      })}
+      {contractorList.length > 0 &&
+        contractorList.map((contractor) =>
+          userUid === contractor?.firebaseUID ? (
+            <>
+              <ContractorProfile key={contractor?.id} data={contractor} />
+            </>
+          ) : null
+        )}
     </>
   );
 }

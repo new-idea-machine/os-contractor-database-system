@@ -11,10 +11,9 @@ const ContractorProfile = (props) => {
   return (
     <div>
       <Navigation />
-      {contractorList.map((contractor) => {
-        if (id === contractor?.id || props?.data?.id === contractor?.id)
-          return (
-            <div className="contractor_profile" key={contractor.id}>
+      {contractorList.map((contractor) => (
+       id === contractor?.id || props?.data?.id === contractor?.id ? (
+                      <div className="contractor_profile" key={contractor.id}>
               <div className="image_wrapper">
                 <img src={contractor?.profileImg} alt="Contractor headshot" />
               </div>
@@ -85,8 +84,8 @@ const ContractorProfile = (props) => {
                 )}
               </div>
             </div>
-          );
-      })}
+          ) : null
+      ))}
       <Footer />
     </div>
   );
