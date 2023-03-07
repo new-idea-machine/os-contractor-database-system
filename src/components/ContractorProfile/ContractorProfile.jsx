@@ -47,27 +47,42 @@ const ContractorProfile = () => {
                     LinkedIn
                   </a>
                 )}
-                  {contractor?.projects  && (
-                <div>
-                  Projects:{" "}
-                  {contractor?.projects.map((project) => (
-                    <div
-                      key={project.id}
-                      style={{
-                        backgroundColor: "#D5D1D0",
-                        marginTop: "5px",
-                        marginBottom: "5px",
-                        borderRadius: "5px",
-                        padding: "5px",
-                      }}
-                    >
-                      <div>Project Name: {project?.projectName}</div>
-                      <div>Project Description: {project?.description}</div>
-                    </div>
-                  ))}
-                </div>
-      )}
-                <div>Resume:</div>
+                {contractor?.projects && (
+                  <div>
+                    Projects:{" "}
+                    {contractor?.projects.map((project) => (
+                      <div
+                        key={project.id}
+                        style={{
+                          backgroundColor: "#D5D1D0",
+                          marginTop: "5px",
+                          marginBottom: "5px",
+                          borderRadius: "5px",
+                          padding: "5px",
+                        }}
+                      >
+                        <div>Project Name: {project?.projectName}</div>
+                        <div>Project Description: {project?.description}</div>
+                      </div>
+                    ))}
+                  </div>
+                )}
+                {contractor?.resume && (
+                <a
+                  style={{
+                    cursor: "pointer",
+                    margin: "0",
+                    border: "0",
+                    padding: "0",
+                    width: "200px",
+                  }}
+                  href={contractor?.resume}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  Download Resume
+                </a>
+                )}
               </div>
             </div>
           );
