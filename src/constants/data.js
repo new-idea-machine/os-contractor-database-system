@@ -6,14 +6,14 @@ const contractors = [
 		name: 'Taylor',
 		profileImg: images.taylor,
 		email: 'taylor@newideamachine.com',
-		techStack: [{ tech: '' }],
+		// techStack: [{ tech: 'ReactJS' }],
 		otherInfo: {
-			linkedinUrl: '',
-			githubUrl: '',
+			linkedinUrl: 'https://www.linkedin.com',
+			githubUrl: 'https://www.github.com',
 			resume: {},
 		},
 		summary: '',
-		skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
+		skills: [{ skill: 'ReactJS' }, { skill: 'NodeJS' }, { skill: 'Firebase' }, { skill: 'Mongo' }],
 		interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
 		projects: [
 			{
