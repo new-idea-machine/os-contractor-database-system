@@ -1,12 +1,10 @@
 import React, { useState, useEffect, createContext } from 'react';
-// import axios from 'axios';
-import data from '../constants/data';
 import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
 	//   getDoc,
-	//   onSnapshot,
+	onSnapshot,
 	setDoc,
 	serverTimestamp,
 	updateDoc,
@@ -23,17 +21,27 @@ const ContractorContext = ({ children }) => {
 	const [contractorList, setContractorList] = useState([]);
 	const [contractor, setContractor] = useState(null);
 
-	const getCollection = async () => {
-		const querySnapshot = await getDocs(collection(db, 'techs'));
-		const documents = querySnapshot.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
-		// console.log('first', documents);
-		setContractorList(documents);
-	};
+	// const getCollection = async () => {
+	// 	const querySnapshot = await getDocs(collection(db, 'techs'));
+	// 	const documents = querySnapshot.docs.map((doc) => ({
+	// 		id: doc.id,
+	// 		...doc.data(),
+	// 	}));
+	// 	setContractorList(documents);
+	// };
 	useEffect(() => {
-		getCollection();
+		// getCollection();
+		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
+			const documents = snapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
+			setContractorList(documents);
+		});
+		// Stop listening for updates when the component unmounts
+		return () => {
+			unsubscribe();
+		};
 	}, []);
 
 	const updateTechObject = async (data) => {
