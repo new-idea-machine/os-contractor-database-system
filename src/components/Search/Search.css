@@ -1,0 +1,30 @@
+.search_container {
+  height: 71.5vh;
+  padding: 30px;
+}
+
+.search_title {
+  font-size: 30px;
+  font-weight: bold;
+  margin-bottom: 30px;
+  text-align: center;
+}
+
+.search_options {
+  margin-bottom: 5px;
+  display: flex;
+  align-items: center;
+}
+
+.search_options label {
+  cursor: pointer;
+  margin-right: 20px;
+}
+
+.search_options input {
+  cursor: pointer;
+}
+
+.search_results {
+  margin-top: 10px;
+}
