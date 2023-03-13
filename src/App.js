@@ -7,12 +7,13 @@ import {
   NotFound,
   UpdateProfile,
   ContractorList,
-//   ContractorProfile,
+  MyProfile,
   Login,
 } from "./pages";
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
 import AuthControl from "./contexts/auth";
+import Search from "./components/Search/Search";
 
 function App() {
   return (
@@ -26,7 +27,8 @@ function App() {
               <Route path="/auth" element={<Login />} />
               <Route path="/contractorList" element={<ContractorList />} />
               <Route path="/contractor/:id" element={<ContractorProfile />} />
-              {/* <Route path='/myProfile' element={<ContractorProfile />} /> */}
+              <Route path='/myProfile' element={<MyProfile />} />
+              <Route path='/search' element={<Search />} />
               <Route path="/UpdateProfile" element={<UpdateProfile />} />
             </Routes>
           </Router>

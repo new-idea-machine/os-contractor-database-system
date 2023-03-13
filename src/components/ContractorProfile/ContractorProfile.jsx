@@ -4,17 +4,16 @@ import { useParams } from "react-router-dom";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { Footer, Navigation } from "../index";
 
-const ContractorProfile = () => {
+const ContractorProfile = (props) => {
   const { id } = useParams();
   const { contractorList } = useContext(contractorContext);
 
   return (
     <div>
       <Navigation />
-      {contractorList.map((contractor) => {
-        if (id === contractor.id)
-          return (
-            <div className="contractor_profile" key={contractor.id}>
+      {contractorList.map((contractor) => (
+       id === contractor?.id || props?.data?.id === contractor?.id ? (
+                      <div className="contractor_profile" key={contractor.id}>
               <div className="image_wrapper">
                 <img src={contractor?.profileImg} alt="Contractor headshot" />
               </div>
@@ -68,25 +67,25 @@ const ContractorProfile = () => {
                   </div>
                 )}
                 {contractor?.resume && (
-                <a
-                  style={{
-                    cursor: "pointer",
-                    margin: "0",
-                    border: "0",
-                    padding: "0",
-                    width: "200px",
-                  }}
-                  href={contractor?.resume}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  Download Resume
-                </a>
+                  <a
+                    style={{
+                      cursor: "pointer",
+                      margin: "0",
+                      border: "0",
+                      padding: "0",
+                      width: "200px",
+                    }}
+                    href={contractor?.resume}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Download Resume
+                  </a>
                 )}
               </div>
             </div>
-          );
-      })}
+          ) : null
+      ))}
       <Footer />
     </div>
   );

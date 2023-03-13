@@ -15,20 +15,26 @@ export const navItems = [
 
 	{
 		id: 2,
-		title: 'Profile',
+		title: 'My Profile',
 		path: '/myProfile',
+		cName: 'nav-item',
+	},
+	{
+		id: 3,
+		title: 'Search',
+		path: '/search',
 		cName: 'nav-item',
 	},
 
 	{
-		id: 3,
+		id: 4,
 		title: 'Contractor List',
 		path: '/contractorList',
 		cName: 'nav-item',
 	},
 
 	{
-		id: 4,
+		id: 5,
 		title: 'Login',
 		path: '/auth',
 		cName: 'nav-item',
