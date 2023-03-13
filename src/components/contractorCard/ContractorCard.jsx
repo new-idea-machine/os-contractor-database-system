@@ -16,12 +16,12 @@ export default function ContractorCard({ data }) {
 				</div>
 				<h1 onClick={() => console.log(data?.name)}>{data?.name}</h1>
 				<h3>{data?.email}</h3>
-				{data?.resume && (
+				{/* {data?.resume && (
 					<>
 						<h4>Resume</h4>
 						<iframe src={pdfURL} width='100%' height='200px' />
 					</>
-				)}
+				)} */}
 			</div>
 		</>
 	);
