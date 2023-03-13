@@ -9,28 +9,30 @@ import {
 	ContractorList,
 	ContractorProfile,
 	Login,
+	AddContractor,
 } from './pages';
 import ContractorContext from './contexts/ContractorContext';
-import AuthControl from './contexts/auth';
+import AuthControl from './services/auth';
 
 function App() {
 	return (
 		<>
-			<AuthControl>
-				<ContractorContext>
-					<Router>
-						<Routes>
-							<Route path='*' element={<NotFound />} />
-							<Route path='/' element={<Home />} />
-							<Route path='/auth' element={<Login />} />
-							<Route path='/contractorList' element={<ContractorList />} />
-							<Route path='/myProfile' element={<ContractorProfile />} />
-							<Route path='/UpdateProfile' element={<UpdateProfile />} />
-						</Routes>
-					</Router>
-				</ContractorContext>
-			</AuthControl>
-			<ToastContainer />
+			<div className='App'>
+				<AuthControl>
+					<ContractorContext>
+						<Router>
+							<Routes>
+								<Route path='*' element={<NotFound />} />
+								<Route path='/' element={<Home />} />
+								<Route path='/contractorList' element={<ContractorList />} />
+								<Route path='/addContractor' element={<AddContractor />} />
+								<Route path='/contractor/:id' element={<ContractorProfile />} />
+							</Routes>
+						</Router>
+					</ContractorContext>
+				</AuthControl>
+				<ToastContainer />
+			</div>
 		</>
 	);
 }
