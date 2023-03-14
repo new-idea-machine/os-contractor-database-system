@@ -11,7 +11,9 @@ export default function ProfileForm() {
 	const { user } = useContext(authContext);
 	const { contractorList, updateTechObject } = useContext(contractorContext);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
-	const [profileImageUrl, setProfileImageUrl] = useState(null);
+	const [profileImageUrl, setProfileImageUrl] = useState(
+		currentUserProfile?.profileImg
+	);
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
 	const form = useRef();
 	const contractorMap = {};
@@ -68,6 +70,7 @@ export default function ProfileForm() {
 							setImgUrl={setProfileImageUrl}
 							imgUrl={profileImageUrl}
 							currentUserProfile={currentUserProfile}
+							setProfileImageUrl={setProfileImageUrl}
 						/>
 					</div>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>

@@ -4,7 +4,12 @@ import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 
-export default function Upload({ setImgUrl, imgUrl, currentUserProfile }) {
+export default function Upload({
+	setImgUrl,
+	imgUrl,
+	currentUserProfile,
+	setProfileImageUrl,
+}) {
 	const [progresspercent, setProgresspercent] = useState(0);
 	const [file, setFile] = useState(null);
 	const [previewUrl, setPreviewUrl] = useState(null);
@@ -37,7 +42,7 @@ export default function Upload({ setImgUrl, imgUrl, currentUserProfile }) {
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 					setImgUrl(downloadURL);
-
+					setProfileImageUrl(downloadURL);
 					setPreviewUrl(null);
 				});
 			}
