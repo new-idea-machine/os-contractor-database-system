@@ -26,4 +26,5 @@ export default function ContractorCard({ data }) {
       </div>
     </>
   );
+
 }
