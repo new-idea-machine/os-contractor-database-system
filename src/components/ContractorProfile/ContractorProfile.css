@@ -17,6 +17,15 @@
   margin-bottom: 10px;
 }
 
+.contractor_links {
+  display: flex;
+  align-items: flex-start;
+}
+.contractor_links a {
+  margin-right: 20px;
+  color: rgb(48, 47, 47);
+}
+
 .image_wrapper {
   width: 175px;
   height: 175px;
