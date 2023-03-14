@@ -17,10 +17,24 @@
   margin-bottom: 10px;
 }
 
+.contractor_links {
+  display: flex;
+  align-items: flex-start;
+}
+.contractor_links a {
+  margin-right: 20px;
+  color: rgb(48, 47, 47);
+}
+
+.contractor_summary {
+  min-width: 565px;
+  margin-bottom: 10px;
+}
+
 .image_wrapper {
-  width: 175px;
-  height: 175px;
-  min-width: 175px;
+  width: 275px;
+  height: 275px;
+  min-width: 275px;
   border-radius: 5%;
   display: block;
   margin-right: 20px;
