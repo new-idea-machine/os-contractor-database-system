@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
-import { Button } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -22,12 +22,13 @@ const ContractorProfile = (props) => {
           const result = skillsList?.filter(({ id }) =>
             contractor?.skillIds?.includes(id)
           );
+          result.sort((a, b) => (a.title > b.title ? 1 : -1));
           setContractorSkills(result);
         }
       });
     };
     contractorSkillsList();
-  }, [id]);
+  }, [id, contractorList]);
 
   return (
     <div>
@@ -85,29 +86,64 @@ const ContractorProfile = (props) => {
                   </a>
                 )}
               </div>
+              <div className="contractor_summary">{contractor?.summary}</div>
+              <div className="contractor_interests">
+                <div
+                  style={{
+                    fontSize: "20px",
+                    backgroundColor: "#D5D1D0",
+                    width: "100%",
+                    borderRadius: "5px",
+                    marginTop: "10px",
+                  }}
+                >
+                  <b style={{ paddingLeft: "5px" }}>Interests</b>
+                </div>
+                <div style={{ paddingLeft: "5px" }}>
+                  {contractor?.interests}
+                </div>
+              </div>
               {contractor?.projects && (
                 <div>
-                  Projects{" "}
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      backgroundColor: "#D5D1D0",
+                      width: "100%",
+                      borderRadius: "5px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <b style={{ paddingLeft: "5px" }}>Projects</b>
+                  </div>
                   {contractor?.projects.map((project) => (
                     <div
                       key={project.id}
                       style={{
-                        backgroundColor: "#D5D1D0",
                         marginTop: "5px",
                         marginBottom: "15px",
                         borderRadius: "5px",
+                        borderColor: "#D5D1D0",
+                        borderStyle: "solid",
+                        borderWidth: "0.5px",
                         padding: "5px",
                       }}
                     >
-                      <div><b>Project Name:</b><br/> {project?.projectName}</div>
-                      <div><b>Project Description:</b><br/> {project?.description}</div>
+                      <div>
+                        <b>Project Name:</b>
+                        <br /> {project?.projectName}
+                      </div>
+                      <div>
+                        <b>Project Description:</b>
+                        <br /> {project?.description}
+                      </div>
                     </div>
                   ))}
                 </div>
               )}
               {contractor?.skillIds && (
                 <div>
-                  {contractorSkills.map((resultSkill) => {
+                  {contractorSkills?.map((resultSkill) => {
                     return (
                       <Button
                         key={resultSkill.id}
