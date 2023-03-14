@@ -5,6 +5,12 @@
 	flex-direction: column;
 }
 
+.profileImgUpload {
+	width: 30%;
+	height: fit-content;
+	border: 2px solid red;
+}
+
 .updateForm form {
 	background-color: aliceblue;
 	width: 30%;
