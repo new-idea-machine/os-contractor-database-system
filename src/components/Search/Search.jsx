@@ -1,21 +1,26 @@
-import React from "react";
+import React, { useContext } from "react";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { useCheckbox } from "react-checkbox-hook";
 import { Divider } from "@mui/material";
 import Grid from '@mui/material/Unstable_Grid2';
+import { skillsContext } from "../../contexts/SkillsContext";
 
-export default function ControlledCheckbox() {
+export default function Search() {
   const options = [
-    { id: 100, title: "ReactJS" },
-    { id: 101, title: "NodeJS" },
-    { id: 102, title: "ExpressJS" },
-    { id: 103, title: "Firebase" },
-    { id: 104, title: "MongoDB" },
+    { id: "100", title: "ReactJS" },
+    { id: "101", title: "NodeJS" },
+    { id: "102", title: "ExpressJS" },
+    { id: "103", title: "Firebase" },
+    { id: "104", title: "MongoDB" },
   ];
-  const { selectedOptions, handleOptionChange } = useCheckbox({ options });
-  console.log("selected", selectedOptions);
 
+  const { skillsList } = useContext(skillsContext);
+  const skList = skillsList
+  const { selectedOptions, handleOptionChange } = useCheckbox({options});
+  console.log("selectedOptions", selectedOptions);
+
+  
   return (
     <div>
       <Navigation />
@@ -24,7 +29,7 @@ export default function ControlledCheckbox() {
         <div>
         <Grid container spacing={10} minHeight={160}>
         <Grid xs display="flex" justifyContent="center" alignItems="center">
-          {options.map((option) => (
+          {skillsList.map((option) => (
             <div className="search_options" key={option.id}>
               <label>
                 <input
