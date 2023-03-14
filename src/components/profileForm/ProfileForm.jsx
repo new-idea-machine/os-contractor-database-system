@@ -50,7 +50,7 @@ export default function ProfileForm() {
 				linkedinUrl: initialFormData.linkedinUrl,
 				githubUrl: initialFormData.githubUrl,
 			},
-			profileImg: profileImageUrl,
+			// profileImg: profileImageUrl,
 			projects: [
 				{
 					projectName: initialFormData.projectName,
@@ -58,6 +58,7 @@ export default function ProfileForm() {
 				},
 			],
 		};
+		console.log(data);
 		updateTechObject(data);
 	};
 
