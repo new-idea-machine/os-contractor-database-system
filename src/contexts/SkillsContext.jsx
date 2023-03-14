@@ -36,6 +36,7 @@ const SkillsContext = ({ children }) => {
         id: doc.id,
         ...doc.data(),
       }));
+      documents.sort((a, b) => (a.title > b.title ? 1 : -1));
       setSkillsList(documents);
     });
     // Stop listening for updates when the component unmounts
