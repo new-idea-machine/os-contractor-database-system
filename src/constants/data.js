@@ -3,7 +3,6 @@ const techDataSchema = {
 	name: '',
 	profileImg: '',
 	email: '',
-	// techStack: [{ tech: 'ReactJS' }],
 	otherInfo: {
 		linkedinUrl: '',
 		githubUrl: '',

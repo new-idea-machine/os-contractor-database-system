@@ -12,8 +12,10 @@ export default function ProfileForm() {
 	const { contractorList, updateTechObject } = useContext(contractorContext);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
 	const [profileImageUrl, setProfileImageUrl] = useState(null);
-
+	const [initialFormData, setInitialFormData] = useState(techDataSchema);
+	const form = useRef();
 	const contractorMap = {};
+
 	const matchProfileToCurrentUser = () => {
 		contractorList.forEach((tech) => {
 			contractorMap[tech.firebaseUID] = tech;
@@ -31,10 +33,6 @@ export default function ProfileForm() {
 		}
 	}, [user, contractorMap]);
 
-	const [initialFormData, setInitialFormData] = useState(techDataSchema);
-	const form = useRef();
-
-	// Handle Input change
 	const onChange = (e) => {
 		setInitialFormData((prevState) => ({
 			...prevState,
