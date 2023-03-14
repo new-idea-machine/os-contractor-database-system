@@ -64,7 +64,11 @@ export default function ProfileForm() {
 			{currentUserProfile && (
 				<div className='updateForm flexCenter'>
 					<div className='profileImgUpload'>
-						<Upload setImgUrl={setProfileImageUrl} imgUrl={profileImageUrl} />
+						<Upload
+							setImgUrl={setProfileImageUrl}
+							imgUrl={profileImageUrl}
+							currentUserProfile={currentUserProfile}
+						/>
 					</div>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
 						{formInputs?.map((section) => (

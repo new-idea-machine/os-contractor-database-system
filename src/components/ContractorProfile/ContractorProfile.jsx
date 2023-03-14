@@ -3,7 +3,6 @@ import './ContractorProfile.css';
 import { useParams, useNavigate } from 'react-router-dom';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { Footer, Navigation } from '../index';
-import { authContext } from '../../contexts/auth';
 
 const ContractorProfile = (props) => {
 	const { id } = useParams();
