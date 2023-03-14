@@ -87,22 +87,24 @@ const ContractorProfile = (props) => {
                 )}
               </div>
               <div className="contractor_summary">{contractor?.summary}</div>
-              <div className="contractor_interests">
-                <div
-                  style={{
-                    fontSize: "20px",
-                    backgroundColor: "#D5D1D0",
-                    width: "100%",
-                    borderRadius: "5px",
-                    marginTop: "10px",
-                  }}
-                >
-                  <b style={{ paddingLeft: "5px" }}>Interests</b>
+              {contractor?.interests && (
+                <div className="contractor_interests">
+                  <div
+                    style={{
+                      fontSize: "20px",
+                      backgroundColor: "#D5D1D0",
+                      width: "100%",
+                      borderRadius: "5px",
+                      marginTop: "10px",
+                    }}
+                  >
+                    <b style={{ paddingLeft: "5px" }}>Interests</b>
+                  </div>
+                  <div style={{ paddingLeft: "5px" }}>
+                    {contractor?.interests}
+                  </div>
                 </div>
-                <div style={{ paddingLeft: "5px" }}>
-                  {contractor?.interests}
-                </div>
-              </div>
+              )}
               {contractor?.projects && (
                 <div>
                   <div
