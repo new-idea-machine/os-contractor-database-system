@@ -1,146 +1,93 @@
-import images from './images';
+const techDataSchema = {
+	id: '',
+	name: '',
+	profileImg: '',
+	email: '',
+	otherInfo: {
+		linkedinUrl: '',
+		githubUrl: '',
+		resume: '',
+	},
+	summary: '',
+	skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
+	interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
+	projects: [
+		{
+			projectName: '',
+			techStack: [{ tech: '' }],
+			role: '',
+			description: '',
+		},
+		{
+			projectName: '',
+			techStack: [{ tech: '' }],
+			role: '',
+			description: '',
+		},
+		{
+			projectName: '',
+			techStack: [{ tech: '' }],
+			role: '',
+			description: '',
+		},
+	],
+};
 
-const contractors = [
+const formInputs = [
 	{
-		id: '001',
-		name: 'Taylor',
-		profileImg: images.taylor,
-		email: 'taylor@newideamachine.com',
-		// techStack: [{ tech: 'ReactJS' }],
-		otherInfo: {
-			linkedinUrl: 'https://www.linkedin.com',
-			githubUrl: 'https://www.github.com',
-			resume: {},
-		},
-		summary: '',
-		skills: [{ skill: 'ReactJS' }, { skill: 'NodeJS' }, { skill: 'Firebase' }, { skill: 'Mongo' }],
-		interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
-		projects: [
+		sectionTitle: 'Personal Info',
+		fields: [
+			{ name: 'name', label: 'Name', type: 'text', placeholder: 'Name' },
+			{ name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'linkedinUrl',
+				label: 'LinkedIn URL',
+				type: 'text',
+				placeholder: 'LinkedIn URL',
 			},
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'githubUrl',
+				label: 'GitHub URL',
+				type: 'text',
+				placeholder: 'GitHub URL',
 			},
 		],
 	},
 	{
-		id: '002',
-		name: 'Vince',
-		profileImg: images.vince,
-		email: 'david@newideamachine.com',
-		techStack: [{ tech: '' }],
-		otherInfo: {
-			linkedinUrl: '',
-			githubUrl: '',
-			resume: {},
-		},
-		summary: '',
-		skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
-		interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
-		projects: [
+		sectionTitle: 'Technical Info',
+		fields: [
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'projectName',
+				label: 'Project Name',
+				type: 'text',
+				placeholder: 'Project Name',
 			},
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'description',
+				label: 'Description',
+				type: 'text',
+				placeholder: 'Project Description',
 			},
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
+			{ name: 'skill', label: 'Skill', type: 'text', placeholder: 'Skill' },
 		],
 	},
 	{
-		id: '003',
-		name: 'Jane',
-		profileImg: images.jane,
-		email: 'jane@newideamachine.com',
-		techStack: [{ tech: '' }],
-		otherInfo: {
-			linkedinUrl: '',
-			githubUrl: '',
-			resume: {},
-		},
-		summary: '',
-		skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
-		interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
-		projects: [
+		sectionTitle: 'About Info',
+		fields: [
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'summary',
+				label: 'Summary',
+				type: 'text',
+				placeholder: 'Summary',
 			},
 			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
-		],
-	},
-	{
-		id: '004',
-		name: 'Ronny',
-		profileImg: images.ronny,
-		email: 'ronny@newideamachine.com',
-		techStack: [{ tech: '' }],
-		otherInfo: {
-			linkedinUrl: '',
-			githubUrl: '',
-			resume: {},
-		},
-		summary: '',
-		skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
-		interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
-		projects: [
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
-			},
-			{
-				projectName: '',
-				techStack: [{ tech: '' }],
-				role: '',
-				description: '',
+				name: 'interest',
+				label: 'Interest',
+				type: 'text',
+				placeholder: 'Interest',
 			},
 		],
 	},
 ];
 
-export default { contractors };
+export { techDataSchema, formInputs };

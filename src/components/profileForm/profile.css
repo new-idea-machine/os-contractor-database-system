@@ -1,8 +1,20 @@
 .updateForm {
 	height: 100%;
-	min-height: 80vh;
+	/* min-height: 80vh; */
 	background-color: rgb(0, 0, 0);
 	flex-direction: column;
+	padding: 2rem;
+}
+
+.profileImgUpload {
+	width: 30%;
+	height: fit-content;
+	background-color: aliceblue;
+	gap: 10px;
+	border-radius: 12px 12px 0px 0px;
+	padding: 2rem;
+
+	/* border: 2px solid red; */
 }
 
 .updateForm form {
@@ -13,8 +25,8 @@
 	max-width: 70%;
 	height: 50%;
 	flex-direction: column;
-	gap: 10px;
-	border-radius: 12px 12px 6px 6px;
+	gap: 5px;
+	border-radius: 0px 0px 6px 6px;
 }
 
 .formSection {
@@ -23,9 +35,10 @@
 	/* border: 2px solid red; */
 	flex-direction: column;
 	gap: 2px;
-	padding: 1rem;
+	/* padding: 1rem; */
 }
 
 .formSection input {
-	width: 20%;
+	min-width: 20%;
+	width: fit-content;
 }
