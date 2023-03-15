@@ -16,21 +16,27 @@ export default function Search() {
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
 
-  console.log("selectedOptions", selectedOptions);
-  console.log("contractorList", contractorList);
-  console.log("contractors", contractors);
+  console.log("contractors", contractors)
 
   useEffect(() => {
     const contractorSkillsList = () => {
-      contractorList?.map((contractor) => {
-        selectedOptions?.filter((id) => {
-          contractor?.skillIds?.includes(id);
-        });
-        setContractors(contractor);
-      });
+      const filteredContractors = [];
+      for (const contractor of contractorList) {
+        let hasSelectedOption = false;
+        for (const option of selectedOptions) {
+          if (contractor.skillIds.includes(option)) {
+            hasSelectedOption = true;
+            break;
+          }
+        }
+        if (hasSelectedOption) {
+          filteredContractors.push(contractor);
+        }
+      }
+      setContractors(filteredContractors);
     };
     contractorSkillsList();
-  }, [selectedOptions]);
+  }, [selectedOptions, contractorList]);
 
   return (
     <div>
@@ -60,7 +66,8 @@ export default function Search() {
         </div>
         <Divider />
         <div className="search_results">Results</div>
-        <div>{contractors.name}</div>
+        <div>{contractors.map(contractor => 
+          <div key={contractor.id}>{contractor.name}</div>)}</div>
       </div>
       <Footer />
     </div>
