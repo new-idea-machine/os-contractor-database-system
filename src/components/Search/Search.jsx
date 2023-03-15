@@ -2,37 +2,43 @@ import React, { useContext, useEffect, useState } from "react";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { useCheckbox } from "react-checkbox-hook";
-import { Divider } from "@mui/material";
+import { Button, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
+import { useNavigate } from "react-router-dom";
 
 export default function Search() {
   //This doesn't have any use. It looks it just have to be on line 17 (used library "react-checkbox-hook")
   const options = [{ id: "100", title: "ReactJS" }];
 
+  const navigate = useNavigate();
   const { skillsList } = useContext(skillsContext);
   const { selectedOptions, handleOptionChange } = useCheckbox({ options });
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
 
-  console.log("contractors", contractors)
-
   useEffect(() => {
     const contractorSkillsList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
-        let hasSelectedOption = false;
+        let numMatchingSkills = 0;
         for (const option of selectedOptions) {
           if (contractor.skillIds.includes(option)) {
-            hasSelectedOption = true;
-            break;
+            numMatchingSkills++;
           }
         }
-        if (hasSelectedOption) {
-          filteredContractors.push(contractor);
+        const percentMatching = Math.round(
+          (numMatchingSkills / selectedOptions.length) * 100
+        );
+        if (numMatchingSkills > 0) {
+          filteredContractors.push({
+            ...contractor,
+            percentMatching,
+          });
         }
       }
+      filteredContractors.sort((a, b) => b.percentMatching - a.percentMatching);
       setContractors(filteredContractors);
     };
     contractorSkillsList();
@@ -66,8 +72,67 @@ export default function Search() {
         </div>
         <Divider />
         <div className="search_results">Results</div>
-        <div>{contractors.map(contractor => 
-          <div key={contractor.id}>{contractor.name}</div>)}</div>
+        <ul>
+          {contractors.map((contractor) => (
+            <div
+              className="contractor_container"
+              key={contractor.id}
+              onClick={() => navigate(`/contractor/${contractor?.id}`)}
+            >
+              <div style={{ marginLeft: "5px" }}>
+                <div style={{ minWidth: "60px" }}>
+                  <b>{contractor.percentMatching}%</b>
+                </div>
+                <img
+                  style={{
+                    width: "60px",
+                    height: "60px",
+                    objectFit: "cover",
+                    borderRadius: "5px",
+                  }}
+                  src={contractor.profileImg}
+                />
+              </div>
+              <div style={{ marginLeft: "5px" }}>
+                <div>
+                  <b>{contractor.name}</b>
+                </div>
+                <div>{contractor.summary}</div>
+                <div>
+                  {contractor?.skillIds && (
+                    <div style={{ display: "flex" }}>
+                      {contractor?.skillIds.map((resultSkill) => {
+                        const allSkills = skillsList?.filter(({ id }) =>
+                          resultSkill.includes(id)
+                        );
+                        return (
+                          <div key={resultSkill}>
+                            {allSkills.map((r) => (
+                              <Button
+                                key={r.id}
+                                style={{
+                                  borderStyle: "solid",
+                                  borderWidth: "1px",
+                                  padding: "0.2px",
+                                  marginTop: "5px",
+                                  marginBottom: "5px",
+                                  marginLeft: "5px",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {r.title}
+                              </Button>
+                            ))}
+                          </div>
+                        );
+                      })}
+                    </div>
+                  )}
+                </div>
+              </div>
+            </div>
+          ))}
+        </ul>
       </div>
       <Footer />
     </div>
