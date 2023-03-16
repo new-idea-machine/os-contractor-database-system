@@ -1,15 +1,12 @@
-import React, { useState, useRef } from 'react';
+import React, { useState, useContext } from 'react';
 import './upload.css';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
+import { contractorContext } from '../../contexts/ContractorContext';
 
-export default function Upload({
-	setImgUrl,
-	imgUrl,
-	currentUserProfile,
-	setProfileImageUrl,
-}) {
+export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
+	const { currentUserProfile } = useContext(contractorContext);
 	const [progresspercent, setProgresspercent] = useState(0);
 	const [file, setFile] = useState(null);
 	const [previewUrl, setPreviewUrl] = useState(null);
@@ -66,12 +63,6 @@ export default function Upload({
 						<button onClick={handleFileInputChange}>Preview</button>
 					</>
 				)}
-				{/* {previewUrl && (
-					<>
-						<p>Select A Different File</p>
-						<button onClick={() => setPreviewUrl(null)}>Select</button>
-					</>
-				)} */}
 				<div>
 					{previewUrl && (
 						<>

@@ -9,31 +9,13 @@ import InputSection from '../inputSection/InputSection';
 
 export default function ProfileForm() {
 	const { user } = useContext(authContext);
-	const { contractorList, updateTechObject } = useContext(contractorContext);
-	const [currentUserProfile, setCurrentUserProfile] = useState(null);
+	const { updateTechObject, currentUserProfile } =
+		useContext(contractorContext);
 	const [profileImageUrl, setProfileImageUrl] = useState(
 		currentUserProfile?.profileImg
 	);
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
 	const form = useRef();
-	const contractorMap = {};
-
-	const matchProfileToCurrentUser = () => {
-		contractorList.forEach((tech) => {
-			contractorMap[tech.firebaseUID] = tech;
-		});
-		if (user && contractorMap[user?.uid]) {
-			const matchedProfile = contractorMap[user?.uid];
-			setCurrentUserProfile(matchedProfile);
-			toast.info(`Update your profile ${user?.displayName}!`);
-		}
-	};
-
-	useEffect(() => {
-		if (!currentUserProfile) {
-			matchProfileToCurrentUser();
-		}
-	}, [user, contractorMap]);
 
 	const onChange = (e) => {
 		setInitialFormData((prevState) => ({
@@ -50,7 +32,7 @@ export default function ProfileForm() {
 				linkedinUrl: initialFormData.linkedinUrl,
 				githubUrl: initialFormData.githubUrl,
 			},
-			// profileImg: profileImageUrl,
+			profileImg: profileImageUrl || currentUserProfile?.profileImg,
 			projects: [
 				{
 					projectName: initialFormData.projectName,
@@ -70,7 +52,6 @@ export default function ProfileForm() {
 						<Upload
 							setImgUrl={setProfileImageUrl}
 							imgUrl={profileImageUrl}
-							currentUserProfile={currentUserProfile}
 							setProfileImageUrl={setProfileImageUrl}
 						/>
 					</div>
@@ -91,6 +72,11 @@ export default function ProfileForm() {
 								))}
 							</div>
 						))}
+						<div className='formSection flexCenter'>
+							<label>
+								<input name='test' type='text' placeholder='Test' />
+							</label>
+						</div>
 						<button className='customButton' type='submit'>
 							<span>Update</span>
 						</button>
