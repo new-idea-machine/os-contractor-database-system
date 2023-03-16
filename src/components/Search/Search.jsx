@@ -91,6 +91,7 @@ export default function Search() {
                     borderRadius: "5px",
                   }}
                   src={contractor.profileImg}
+                  alt=""
                 />
               </div>
               <div style={{ marginLeft: "5px" }}>
