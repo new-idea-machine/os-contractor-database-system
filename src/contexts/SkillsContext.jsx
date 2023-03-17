@@ -1,12 +1,12 @@
 import React, { useState, useEffect, createContext } from 'react';
-import { store, auth, db, fbFunctions } from '../firebaseconfig';
+import { db } from '../firebaseconfig';
 import {
 	doc,
-	addDoc,
+	// addDoc,
 	//   getDoc,
-	onSnapshot,
-	setDoc,
-	serverTimestamp,
+	// onSnapshot,
+	// setDoc,
+	// serverTimestamp,
 	updateDoc,
 	collection,
 	//   query,

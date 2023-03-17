@@ -1,13 +1,11 @@
-import React, { useContext, useEffect, useState } from 'react';
+import React, { useContext } from 'react';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
 import { Footer, Navigation } from '../components';
 
 export default function ContractorList() {
 	const { contractorList } = useContext(contractorContext);
-	useEffect(() => {
-		console.log(contractorList);
-	}, []);
+	
 	return (
 		<>
 			<Navigation />
@@ -30,9 +28,9 @@ export default function ContractorList() {
 				<div className='listContainer'>
 					{contractorList.length > 0 &&
 						contractorList?.map((person) => (
-							<>
-								<ContractorCard key={person?.id} data={person} />
-							</>
+							<div key={person?.id}>
+								<ContractorCard data={person} />
+							</div>
 						))}
 				</div>
 			</div>

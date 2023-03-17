@@ -22,9 +22,9 @@ export default function MyProfile() {
 			{contractorList.length > 0 &&
 				contractorList.map((contractor) =>
 					userUid === contractor?.firebaseUID ? (
-						<>
-							<ContractorProfile key={contractor?.id} data={contractor} />
-						</>
+						<div key={contractor?.id}>
+							<ContractorProfile data={contractor} />
+						</div>
 					) : null
 				)}
 		</>

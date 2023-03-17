@@ -4,7 +4,7 @@ import { useParams } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
-import { Button, Divider } from "@mui/material";
+import { Button } from "@mui/material";
 import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedInIcon from "@mui/icons-material/LinkedIn";
@@ -24,11 +24,11 @@ const ContractorProfile = (props) => {
           );
           result.sort((a, b) => (a.title > b.title ? 1 : -1));
           setContractorSkills(result);
-        }
+        } return null;
       });
     };
     contractorSkillsList();
-  }, [id, contractorList]);
+  }, [id, props?.data?.id, contractorList, skillsList]);
 
   return (
     <div>
@@ -120,7 +120,7 @@ const ContractorProfile = (props) => {
                   </div>
                   {contractor?.projects.map((project) => (
                     <div
-                      key={project.id}
+                      key={project?.projectName}
                       style={{
                         marginTop: "5px",
                         marginBottom: "15px",
