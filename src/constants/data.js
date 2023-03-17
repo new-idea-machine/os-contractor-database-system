@@ -1,33 +1,17 @@
 const techDataSchema = {
-	id: '',
 	name: '',
-	profileImg: '',
 	email: '',
+	summary: '',
+	profileImg: '',
 	otherInfo: {
 		linkedinUrl: '',
 		githubUrl: '',
 		resume: '',
 	},
-	summary: '',
-	skills: [{ skill: '' }, { skill: '' }, { skill: '' }, { skill: '' }],
-	interests: [{ interest: '' }, { interest: '' }, { interest: '' }],
+	skills: [{ skill: '' }],
 	projects: [
 		{
 			projectName: '',
-			techStack: [{ tech: '' }],
-			role: '',
-			description: '',
-		},
-		{
-			projectName: '',
-			techStack: [{ tech: '' }],
-			role: '',
-			description: '',
-		},
-		{
-			projectName: '',
-			techStack: [{ tech: '' }],
-			role: '',
 			description: '',
 		},
 	],
@@ -54,24 +38,6 @@ const formInputs = [
 		],
 	},
 	{
-		sectionTitle: 'Technical Info',
-		fields: [
-			{
-				name: 'projectName',
-				label: 'Project Name',
-				type: 'text',
-				placeholder: 'Project Name',
-			},
-			{
-				name: 'description',
-				label: 'Description',
-				type: 'text',
-				placeholder: 'Project Description',
-			},
-			{ name: 'skill', label: 'Skill', type: 'text', placeholder: 'Skill' },
-		],
-	},
-	{
 		sectionTitle: 'About Info',
 		fields: [
 			{
@@ -83,7 +49,7 @@ const formInputs = [
 			{
 				name: 'interest',
 				label: 'Interest',
-				type: 'text',
+				textArea: 'true',
 				placeholder: 'Interest',
 			},
 		],

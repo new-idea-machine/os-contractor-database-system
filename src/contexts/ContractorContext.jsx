@@ -15,7 +15,6 @@ import {
 	//   orderBy,
 } from 'firebase/firestore';
 import { authContext } from './auth';
-import { toast } from 'react-toastify';
 
 export const contractorContext = createContext();
 
@@ -25,8 +24,8 @@ const ContractorContext = ({ children }) => {
 	const [contractor, setContractor] = useState(null);
 
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
-	const contractorMap = {};
 
+	const contractorMap = {};
 	const matchProfileToCurrentUser = () => {
 		contractorList?.forEach((tech) => {
 			contractorMap[tech.firebaseUID] = tech;
@@ -34,35 +33,35 @@ const ContractorContext = ({ children }) => {
 		if (user && contractorMap[user?.uid]) {
 			const matchedProfile = contractorMap[user?.uid];
 			setCurrentUserProfile(matchedProfile);
-			// toast.info(`Update your profile ${user?.displayName}!`);
 		}
 	};
-	const getCollection = async () => {
-		const querySnapshot = await getDocs(collection(db, 'techs'));
-		const documents = querySnapshot.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
-		setContractorList(documents);
-	};
+	// const getCollection = async () => {
+	// 	const querySnapshot = await getDocs(collection(db, 'techs'));
+	// 	const documents = querySnapshot.docs.map((doc) => ({
+	// 		id: doc.id,
+	// 		...doc.data(),
+	// 	}));
+	// 	setContractorList(documents);
+	// };
 
 	useEffect(() => {
-		getCollection();
-		if (!currentUserProfile) {
-			matchProfileToCurrentUser();
-		}
-		// const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
-		// 	const documents = snapshot.docs.map((doc) => ({
-		// 		id: doc.id,
-		// 		...doc.data(),
-		// 	}));
-		// 	setContractorList(documents);
-		// });
-		// // Stop listening for updates when the component unmounts
-		// return () => {
-		// 	unsubscribe();
-		// };
-	}, [user, contractorMap]);
+		// getCollection();
+		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
+			const documents = snapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
+			setContractorList(documents);
+			// if (!currentUserProfile) {
+			// 	console.log('tried');
+			// 	matchProfileToCurrentUser();
+			// }
+		});
+		// Stop listening for updates when the component unmounts
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
 	const updateTechObject = async (data) => {
 		console.log('TRYING TO UPDATE');
@@ -83,6 +82,8 @@ const ContractorContext = ({ children }) => {
 		updateTechObject,
 		currentUserProfile,
 		setCurrentUserProfile,
+		matchProfileToCurrentUser,
+		contractorMap,
 	};
 
 	return (

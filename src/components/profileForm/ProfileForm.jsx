@@ -9,12 +9,38 @@ import InputSection from '../inputSection/InputSection';
 
 export default function ProfileForm() {
 	const { user } = useContext(authContext);
-	const { updateTechObject, currentUserProfile } =
-		useContext(contractorContext);
-	const [profileImageUrl, setProfileImageUrl] = useState(
-		currentUserProfile?.profileImg
-	);
+	const {
+		updateTechObject,
+		currentUserProfile,
+		matchProfileToCurrentUser,
+		contractorMap,
+	} = useContext(contractorContext);
+	const [profileImageUrl, setProfileImageUrl] = useState({ profileImg: '' });
+	const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
+	const [skills, setSkills] = useState([{ skill: '' }]);
+	const [projects, setProjects] = useState([
+		{ projectName: '', description: '' },
+	]);
+
+	useEffect(() => {
+		if (!currentUserProfile) {
+			toast.info('first');
+			matchProfileToCurrentUser();
+		}
+	}, [user, contractorMap]);
+
+	const addSkill = () => {
+		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
+	};
+
+	const addProject = () => {
+		setProjects((prevProjects) => [
+			...prevProjects,
+			{ projectName: '', description: '' },
+		]);
+	};
+
 	const form = useRef();
 
 	const onChange = (e) => {
@@ -28,17 +54,18 @@ export default function ProfileForm() {
 		e.preventDefault();
 		const data = {
 			id: currentUserProfile?.id,
+			name: currentUserProfile?.name || initialFormData?.name,
+			email: currentUserProfile?.email || initialFormData?.email,
+			summary: currentUserProfile?.summary || initialFormData?.summary,
+			profileImg: currentUserProfile?.profileImg || profileImageUrl,
 			otherInfo: {
-				linkedinUrl: initialFormData.linkedinUrl,
-				githubUrl: initialFormData.githubUrl,
+				linkedinUrl:
+					currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
+				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
+				resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			profileImg: profileImageUrl || currentUserProfile?.profileImg,
-			projects: [
-				{
-					projectName: initialFormData.projectName,
-					description: initialFormData.description,
-				},
-			],
+			skills: skills || currentUserProfile?.skills,
+			projects: projects || currentUserProfile?.projects,
 		};
 		console.log(data);
 		updateTechObject(data);
@@ -73,9 +100,72 @@ export default function ProfileForm() {
 							</div>
 						))}
 						<div className='formSection flexCenter'>
-							<label>
-								<input name='test' type='text' placeholder='Test' />
-							</label>
+							<label>test</label>
+							<input name='test' type='text' placeholder='Test' />
+						</div>
+						<div className='formSection flexCenter'>
+							<h3>Skills</h3>
+							{skills.map((skill, index) => (
+								<InputSection
+									key={`skill-${index}`}
+									value={skill.skill}
+									field={{
+										name: `skill-${index}`,
+										label: `Skill ${index + 1}`,
+									}}
+									onChange={(e) => {
+										const value = e.target.value;
+										setSkills((prevSkills) =>
+											prevSkills.map((s, i) =>
+												i === index ? { ...s, skill: value } : s
+											)
+										);
+									}}
+								/>
+							))}
+							<button type='button' onClick={addSkill}>
+								Add Skill
+							</button>
+						</div>
+						<div className='formSection flexCenter'>
+							<h3>Projects</h3>
+							{projects.map((project, index) => (
+								<div key={`project-${index}`} className='flexCenter'>
+									<InputSection
+										value={project.projectName}
+										field={{
+											name: `projectName-${index}`,
+											label: `Project ${index + 1} Name`,
+										}}
+										onChange={(e) => {
+											const value = e.target.value;
+											setProjects((prevProjects) =>
+												prevProjects.map((p, i) =>
+													i === index ? { ...p, projectName: value } : p
+												)
+											);
+										}}
+									/>
+									<InputSection
+										value={project.description}
+										field={{
+											name: `description-${index}`,
+											label: `Project ${index + 1} Description`,
+										}}
+										onChange={(e) => {
+											const value = e.target.value;
+											setProjects((prevProjects) =>
+												prevProjects.map((p, i) =>
+													i === index ? { ...p, description: value } : p
+												)
+											);
+										}}
+									/>
+								</div>
+							))}
+							<button type='button' onClick={addProject}>
+								Add Project
+							</button>
 						</div>
 						<button className='customButton' type='submit'>
 							<span>Update</span>
