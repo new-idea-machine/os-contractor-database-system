@@ -35,27 +35,14 @@ const ContractorContext = ({ children }) => {
 			setCurrentUserProfile(matchedProfile);
 		}
 	};
-	// const getCollection = async () => {
-	// 	const querySnapshot = await getDocs(collection(db, 'techs'));
-	// 	const documents = querySnapshot.docs.map((doc) => ({
-	// 		id: doc.id,
-	// 		...doc.data(),
-	// 	}));
-	// 	setContractorList(documents);
-	// };
 
 	useEffect(() => {
-		// getCollection();
 		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
 			const documents = snapshot.docs.map((doc) => ({
 				id: doc.id,
 				...doc.data(),
 			}));
 			setContractorList(documents);
-			// if (!currentUserProfile) {
-			// 	console.log('tried');
-			// 	matchProfileToCurrentUser();
-			// }
 		});
 		// Stop listening for updates when the component unmounts
 		return () => {
@@ -64,7 +51,7 @@ const ContractorContext = ({ children }) => {
 	}, []);
 
 	const updateTechObject = async (data) => {
-		console.log('TRYING TO UPDATE');
+		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'techs', data?.id);
 		if (userDocRef) {
 			await updateDoc(userDocRef, data);

@@ -43,7 +43,7 @@ const formInputs = [
 			{
 				name: 'summary',
 				label: 'Summary',
-				type: 'text',
+				type: 'textArea',
 				placeholder: 'Summary',
 			},
 			{

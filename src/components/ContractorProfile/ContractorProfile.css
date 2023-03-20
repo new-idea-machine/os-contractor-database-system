@@ -1,48 +1,55 @@
 .contractor_profile {
-  height: 75vh;
-  padding: 20px;
-  display: flex;
-  margin-right: 20%;
-  margin-left: 20%;
+	height: 75vh;
+	padding: 20px;
+	display: flex;
+	margin-right: 20%;
+	margin-left: 20%;
 }
 
 .contractor_info {
-  display: flex;
-  flex-direction: column;
+	display: flex;
+	flex-direction: column;
 }
 
 .contractor_name {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 10px;
+	/* border: 2px solid black; */
+	height: fit-content;
+	font-size: 30px;
+	/* padding-top: 10px; */
+	padding-bottom: 20px;
+	font-weight: bold;
+	/* margin-bottom: 10px; */
+	display: flex;
+	flex-direction: row;
+	align-items: center;
 }
 
 .contractor_links {
-  display: flex;
-  align-items: flex-start;
+	display: flex;
+	align-items: flex-start;
 }
 .contractor_links a {
-  margin-right: 20px;
-  color: rgb(48, 47, 47);
+	margin-right: 20px;
+	color: rgb(48, 47, 47);
 }
 
 .contractor_summary {
-  min-width: 565px;
-  margin-bottom: 10px;
+	min-width: 565px;
+	margin-bottom: 10px;
 }
 
 .image_wrapper {
-  width: 275px;
-  height: 275px;
-  min-width: 275px;
-  border-radius: 5%;
-  display: block;
-  margin-right: 20px;
+	width: 275px;
+	height: 275px;
+	min-width: 275px;
+	border-radius: 5%;
+	display: block;
+	margin-right: 20px;
 }
 
 .image_wrapper img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	border-radius: inherit;
 }
