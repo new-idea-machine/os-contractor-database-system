@@ -1,22 +1,25 @@
 import React, { useContext, useEffect, useState } from "react";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { useCheckbox } from "react-checkbox-hook";
-import { Button, Divider } from "@mui/material";
+import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { useNavigate } from "react-router-dom";
 
 export default function Search() {
-  //This doesn't have any use. It looks it just have to be on line 17 (used library "react-checkbox-hook")
-  const options = [{ id: "100", title: "ReactJS" }];
-
   const navigate = useNavigate();
   const { skillsList } = useContext(skillsContext);
-  const { selectedOptions, handleOptionChange } = useCheckbox({ options });
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
+
+  const handleOptionChange = (optionId) => {
+    const newSelectedOptions = selectedOptions.includes(optionId)
+      ? selectedOptions.filter((id) => id !== optionId)
+      : [...selectedOptions, optionId];
+    setSelectedOptions(newSelectedOptions);
+  };
 
   useEffect(() => {
     const contractorSkillsList = () => {
@@ -54,16 +57,11 @@ export default function Search() {
             <Grid xs display="flex" justifyContent="center" alignItems="center">
               {skillsList.map((option) => (
                 <div className="search_options" key={option.id}>
-                  <label>
-                    <input
-                      type="checkbox"
-                      checked={selectedOptions.includes(option.id)}
-                      onChange={(e) =>
-                        handleOptionChange(option, e.target.checked)
-                      }
-                    />
-                    {option.title}
-                  </label>
+                  <Checkbox
+                    checked={selectedOptions.includes(option.id)}
+                    onChange={() => handleOptionChange(option.id)}
+                  />
+                  {option.title}
                   <br />
                 </div>
               ))}
@@ -112,6 +110,7 @@ export default function Search() {
                               <Button
                                 key={r.id}
                                 style={{
+                                  width: "auto",
                                   borderStyle: "solid",
                                   borderWidth: "1px",
                                   padding: "0.2px",

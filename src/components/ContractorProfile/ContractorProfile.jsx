@@ -150,6 +150,7 @@ const ContractorProfile = (props) => {
                       <Button
                         key={resultSkill.id}
                         style={{
+                          width: "auto",
                           borderStyle: "solid",
                           borderWidth: "1px",
                           padding: "2px",
