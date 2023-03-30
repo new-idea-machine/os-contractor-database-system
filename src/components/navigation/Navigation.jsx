@@ -1,5 +1,5 @@
 import React, { useContext } from "react";
-import "./Navigation.css";
+import "./navigation.css";
 import { useNavigate } from "react-router-dom";
 import { NavHashLink } from "react-router-hash-link";
 import { authContext } from "../../contexts/auth";
@@ -13,6 +13,7 @@ import IconButton from "@mui/material/IconButton";
 import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
+import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -20,9 +21,11 @@ const Navigation = () => {
   const { currentUserProfile } = useContext(contractorContext);
   const [anchorEl, setAnchorEl] = React.useState(null);
   const open = Boolean(anchorEl);
+
   const handleClick = (event) => {
     setAnchorEl(event.currentTarget);
   };
+
   const handleClose = () => {
     setAnchorEl(null);
   };
@@ -72,9 +75,17 @@ const Navigation = () => {
                   {" "}
                   {currentUserProfile ? (
                     <>
-                      <div className="image_container">
-                        <img src={currentUserProfile.profileImg} alt="" />
-                      </div>
+                      {currentUserProfile?.profileImg ? (
+                        <>
+                          <div className="image_container">
+                            <img src={currentUserProfile?.profileImg} alt="" />
+                          </div>
+                        </>
+                      ) : (
+                        <BackgroundLetterAvatars
+                          currentUserName={currentUserProfile?.name}
+                        />
+                      )}
                     </>
                   ) : null}
                 </Avatar>
