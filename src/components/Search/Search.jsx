@@ -27,7 +27,7 @@ export default function Search() {
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
         for (const option of selectedOptions) {
-          if (contractor.skillIds.includes(option)) {
+          if (contractor?.skillIds?.includes(option)) {
             numMatchingSkills++;
           }
         }

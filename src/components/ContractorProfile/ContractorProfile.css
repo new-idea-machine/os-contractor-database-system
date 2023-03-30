@@ -1,5 +1,5 @@
 .contractor_profile {
-  height: 75vh;
+  height: 100vh;
   padding: 20px;
   display: flex;
   margin-right: 20%;
@@ -9,6 +9,7 @@
 .contractor_info {
   display: flex;
   flex-direction: column;
+  margin-top: 55px;
 }
 
 .contractor_name {
@@ -38,6 +39,7 @@
   border-radius: 5%;
   display: block;
   margin-right: 20px;
+  margin-top: 55px;
 }
 
 .image_wrapper img {

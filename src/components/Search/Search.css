@@ -1,5 +1,5 @@
 .search_container {
-  height: 71.5vh;
+  height: 100vh;
   padding: 30px;
 }
 
@@ -18,9 +18,9 @@
 }
 
 .MuiButtonBase-root {
-padding: 0px;
-width: 30px;
-height: 30px;
+  padding: 0px;
+  width: 30px;
+  height: 30px;
 }
 
 .search_results {
