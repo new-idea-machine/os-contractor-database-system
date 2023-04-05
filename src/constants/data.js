@@ -46,12 +46,12 @@ const formInputs = [
 				type: 'textArea',
 				placeholder: 'Summary',
 			},
-			{
-				name: 'interest',
-				label: 'Interest',
-				textArea: 'true',
-				placeholder: 'Interest',
-			},
+			// {
+			// 	name: 'interest',
+			// 	label: 'Interest',
+			// 	textArea: 'true',
+			// 	placeholder: 'Interest',
+			// },
 		],
 	},
 ];

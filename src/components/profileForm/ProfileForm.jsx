@@ -78,20 +78,10 @@ export default function ProfileForm() {
 		<>
 			{currentUserProfile && (
 				<div className='updateForm flexCenter'>
-					<div className='profileImgUpload'>
-						<Upload
-							setImgUrl={setImgUrl}
-							imgUrl={imgUrl}
-							// setProfileImageUrl={setProfileImageUrl}
-						/>
-					</div>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
-						<div className='flexCenter formContainer'>
+						<div className='formContainer'>
 							{formInputs?.map((section) => (
-								<div
-									key={section?.sectionTitle}
-									className='formSection flexCenter'
-								>
+								<div key={section?.sectionTitle} className='formSection '>
 									<h3>{section?.sectionTitle}</h3>
 									{section?.fields?.map((field) => (
 										<InputSection
@@ -103,42 +93,15 @@ export default function ProfileForm() {
 									))}
 								</div>
 							))}
-						</div>
-						<div className='flexCenter formContainer'>
-							<div className='formSection flexCenter'>
-								<h3>Skills</h3>
-								{skills.map((skill, index) => (
-									<InputSection
-										key={`skill-${index}`}
-										value={skill.skill}
-										field={{
-											name: `skill-${index}`,
-											label: `Skill ${index + 1}`,
-											type: 'checkbox',
-
-											placeholder: `Skill ${index + 1}`,
-										}}
-										onChange={(e) => {
-											const value = e.target.value;
-											setSkills((prevSkills) =>
-												prevSkills.map((s, i) =>
-													i === index ? { ...s, skill: value } : s
-												)
-											);
-										}}
-									/>
-								))}
-								<button type='button' onClick={addSkill}>
-									Add Skill
-								</button>
-							</div>
-							<div className='formSection flexCenter'>
+							{/* </div>
+						<div className='flexCenter formContainer'> */}
+							<div className='formSection '>
 								<h3>Projects</h3>
 								{projects.map((project, index) => (
 									<div
 										key={`project-${index}`}
-										className='flexCenter'
-										style={{ flexDirection: 'column' }}
+										// className='formSection '
+										style={{ flexDirection: 'column', display: 'flex' }}
 									>
 										<InputSection
 											value={project.projectName}
@@ -179,11 +142,46 @@ export default function ProfileForm() {
 									Add Project
 								</button>
 							</div>
+
+							<div className='formSection'>
+								<h3>Skills</h3>
+								{skills.map((skill, index) => (
+									<InputSection
+										key={`skill-${index}`}
+										value={skill.skill}
+										field={{
+											name: `skill-${index}`,
+											label: `Skill ${index + 1}`,
+											type: 'text',
+
+											placeholder: `Skill ${index + 1}`,
+										}}
+										onChange={(e) => {
+											const value = e.target.value;
+											setSkills((prevSkills) =>
+												prevSkills.map((s, i) =>
+													i === index ? { ...s, skill: value } : s
+												)
+											);
+										}}
+									/>
+								))}
+								<button type='button' onClick={addSkill}>
+									Add Skill
+								</button>
+							</div>
 						</div>
 						<button className='customButton' type='submit'>
 							<span>Save</span>
 						</button>
 					</form>
+					<div className='profileImgUpload'>
+						<Upload
+							setImgUrl={setImgUrl}
+							imgUrl={imgUrl}
+							// setProfileImageUrl={setProfileImageUrl}
+						/>
+					</div>
 				</div>
 			)}
 		</>
