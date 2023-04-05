@@ -5,8 +5,9 @@ import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import { contractorContext } from '../../contexts/ContractorContext';
 
-export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
-	const { currentUserProfile } = useContext(contractorContext);
+export default function Upload({ setImgUrl, imgUrl }) {
+	const { updateTechObject, currentUserProfile } =
+		useContext(contractorContext);
 	const [progresspercent, setProgresspercent] = useState(0);
 	const [file, setFile] = useState(null);
 	const [previewUrl, setPreviewUrl] = useState(null);
@@ -17,6 +18,16 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 			const url = URL.createObjectURL(file);
 			setPreviewUrl(url);
 		}
+	};
+
+	const onSubmit = (url) => {
+		// e.preventDefault();
+		const data = {
+			id: currentUserProfile?.id,
+			profileImg: url || currentUserProfile?.profileImg,
+		};
+		console.log(data);
+		updateTechObject(data);
 	};
 
 	const handleSubmitFile = (e) => {
@@ -39,8 +50,9 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 			() => {
 				getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
 					setImgUrl(downloadURL);
-					setProfileImageUrl(downloadURL);
 					setPreviewUrl(null);
+					onSubmit(downloadURL);
+					setProgresspercent(0);
 				});
 			}
 		);
@@ -51,8 +63,9 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 				className='flexCenter'
 				style={{ flexDirection: 'column', gap: '7px' }}
 			>
-				{!previewUrl && (
+				{!previewUrl && !imgUrl && (
 					<>
+						<h3>Your Current Profile Image</h3>
 						<img
 							src={currentUserProfile?.profileImg}
 							alt='Current Profile Image'
@@ -60,7 +73,11 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 							width={200}
 						/>
 						<input type='file' onChange={(e) => setFile(e.target.files[0])} />
-						<button onClick={handleFileInputChange}>Preview</button>
+						{file ? (
+							<button onClick={handleFileInputChange}>Preview</button>
+						) : (
+							''
+						)}
 					</>
 				)}
 				<div>
@@ -71,7 +88,14 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 								style={{ flexDirection: 'column', gap: '7px' }}
 							>
 								<img src={previewUrl} alt={file.name} height={200} />
-								<button onClick={() => setPreviewUrl(null)}>Cancel</button>
+								<button
+									onClick={() => {
+										setPreviewUrl(null);
+										setFile(null);
+									}}
+								>
+									Cancel
+								</button>
 								<button onClick={handleSubmitFile}>Upload</button>
 								{!imgUrl && (
 									<div
@@ -93,9 +117,28 @@ export default function Upload({ setImgUrl, imgUrl, setProfileImageUrl }) {
 										</div>
 									</div>
 								)}
+							</div>
+						</>
+					)}
+					{!previewUrl && imgUrl && (
+						<>
+							<h3>Your New Profile Image</h3>
+							<div
+								className='flexCenter'
+								style={{ flexDirection: 'column', gap: '7px' }}
+							>
 								{imgUrl && (
 									<img src={imgUrl} alt='uploaded file' height={200} />
 								)}
+								<button
+									onClick={() => {
+										setImgUrl(null);
+										setPreviewUrl(null);
+										window.location.reload();
+									}}
+								>
+									Done
+								</button>
 							</div>
 						</>
 					)}

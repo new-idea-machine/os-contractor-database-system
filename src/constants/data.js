@@ -43,15 +43,15 @@ const formInputs = [
 			{
 				name: 'summary',
 				label: 'Summary',
-				type: 'text',
+				type: 'textArea',
 				placeholder: 'Summary',
 			},
-			{
-				name: 'interest',
-				label: 'Interest',
-				textArea: 'true',
-				placeholder: 'Interest',
-			},
+			// {
+			// 	name: 'interest',
+			// 	label: 'Interest',
+			// 	textArea: 'true',
+			// 	placeholder: 'Interest',
+			// },
 		],
 	},
 ];

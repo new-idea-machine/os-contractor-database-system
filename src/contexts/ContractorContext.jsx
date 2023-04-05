@@ -29,33 +29,41 @@ const ContractorContext = ({ children }) => {
       if (userUID?.firebaseUID === user?.uid) setCurrentUserProfile(userUID);
     });
   };
+	const contractorMap = {};
+	const matchProfileToCurrentUser = () => {
+		contractorList?.forEach((tech) => {
+			contractorMap[tech.firebaseUID] = tech;
+		});
+		if (user && contractorMap[user?.uid]) {
+			const matchedProfile = contractorMap[user?.uid];
+			setCurrentUserProfile(matchedProfile);
+		}
+	};
 
-  useEffect(() => {
-    matchProfileToCurrentUser();
-  }, [contractorList, user]);
+	useEffect(() => {
+		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
+			const documents = snapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
+			setContractorList(documents);
+		});
+		// Stop listening for updates when the component unmounts
+		return () => {
+			unsubscribe();
+		};
+	}, []);
 
-  // 	const contractorMap = {};
-  // 	const matchProfileToCurrentUser = () => {
-  // 		contractorList?.forEach((tech) => {
-  // 			contractorMap[tech.firebaseUID] = tech;
-  // 		});
-  // 		if (user && contractorMap[user?.uid]) {
-  // 			const matchedProfile = contractorMap[user?.uid];
-  // 			setCurrentUserProfile(matchedProfile);
-  // 		}
-  // 	};
-  // 	useEffect(() => {
-  // 	matchProfileToCurrentUser();
-  // }, [user])
-
-  // const getCollection = async () => {
-  // 	const querySnapshot = await getDocs(collection(db, 'techs'));
-  // 	const documents = querySnapshot.docs.map((doc) => ({
-  // 		id: doc.id,
-  // 		...doc.data(),
-  // 	}));
-  // 	setContractorList(documents);
-  // };
+	const updateTechObject = async (data) => {
+		console.log('TRYING TO UPDATE', data);
+		const userDocRef = doc(db, 'techs', data?.id);
+		if (userDocRef) {
+			await updateDoc(userDocRef, data);
+			console.log('User successfully updated!');
+		} else {
+			console.log('object not found');
+		}
+	};
 
   useEffect(() => {
     // getCollection();
