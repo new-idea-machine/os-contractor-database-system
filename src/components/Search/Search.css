@@ -1,5 +1,5 @@
 .search_container {
-  height: 71.5vh;
+  height: 100vh;
   padding: 30px;
 }
 
@@ -12,17 +12,15 @@
 
 .search_options {
   margin-bottom: 5px;
+  margin-left: 10px;
   display: flex;
   align-items: center;
 }
 
-.search_options label {
-  cursor: pointer;
-  margin-right: 20px;
-}
-
-.search_options input {
-  cursor: pointer;
+.MuiButtonBase-root {
+  padding: 0px;
+  width: 30px;
+  height: 30px;
 }
 
 .search_results {

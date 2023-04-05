@@ -10,7 +10,7 @@ export default function ContractorList() {
 		<>
 			<Navigation />
 			<div className='contractorListPage'>
-				<h1 style={{ textAlign: 'center', color: 'white' }}>
+				<h1 style={{ textAlign: 'center', color: 'white'}}>
 					Our Available Contractors
 				</h1>
 				<p
