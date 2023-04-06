@@ -1,7 +1,7 @@
 import React, { useContext, useEffect } from 'react';
 import './navigation.css';
 import { useNavigate } from 'react-router-dom';
-import { NavHashLink } from 'react-router-hash-link';
+import { NavLink } from 'react-router-dom';
 import { authContext } from '../../contexts/auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import Avatar from '@mui/material/Avatar';
@@ -26,7 +26,8 @@ const Navigation = () => {
 			toast.info('first');
 			matchProfileToCurrentUser();
 		}
-	}, [user, contractorMap]);
+	}, [user, contractorMap, currentUserProfile]);
+	console.log(currentUserProfile);
 	const [anchorEl, setAnchorEl] = React.useState(null);
 	const open = Boolean(anchorEl);
 
@@ -42,31 +43,34 @@ const Navigation = () => {
 		<div className='navbar-container'>
 			<ul className='navbar-links'>
 				<li style={{ marginLeft: '60px' }}>
-					<NavHashLink
+					<NavLink
 						className='navbar-links'
 						activeclassname='selected'
+						exact='true'
 						to='/'
 					>
 						Home
-					</NavHashLink>
+					</NavLink>
 				</li>
 				<li>
-					<NavHashLink
+					<NavLink
 						className='navbar-links'
 						activeclassname='selected'
+						exact='true'
 						to='/contractorList'
 					>
 						Contractor List
-					</NavHashLink>
+					</NavLink>
 				</li>
 				<li style={{ marginRight: '30px' }}>
-					<NavHashLink
+					<NavLink
 						className='navbar-links'
 						activeclassname='selected'
+						exact='true'
 						to='/search'
 					>
 						Search
-					</NavHashLink>
+					</NavLink>
 				</li>
 				{user ? (
 					<>
@@ -179,19 +183,20 @@ const Navigation = () => {
 					</>
 				) : (
 					<li style={{ marginRight: '30px' }}>
-						<NavHashLink
+						<NavLink
 							className='navbar-links'
 							activeclassname='selected'
+							exact
 							to='/auth'
 						>
 							Log in
-						</NavHashLink>
+						</NavLink>
 					</li>
 				)}
 
 				{/* {user ? (
           <li style={{ marginRight: "30px" }}>
-            <NavHashLink
+            <NavLink
               className="navbar-links"
               activeclassname="selected"
               // to="/contractorlist"
@@ -205,17 +210,17 @@ const Navigation = () => {
                 </>
               ) : null}
               Log out
-            </NavHashLink>
+            </NavLink>
           </li>
         ) : (
           <li style={{ marginRight: "30px" }}>
-            <NavHashLink
+            <NavLink
               className="navbar-links"
               activeclassname="selected"
               to="/auth"
             >
               Log in
-            </NavHashLink>
+            </NavLink>
           </li>
         )} */}
 			</ul>

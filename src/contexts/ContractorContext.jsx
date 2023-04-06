@@ -72,7 +72,7 @@ const ContractorContext = ({ children }) => {
 		currentUserProfile,
 		setCurrentUserProfile,
 		matchProfileToCurrentUser,
-		// contractorMap,
+		contractorMap,
 	};
 
 	return (
