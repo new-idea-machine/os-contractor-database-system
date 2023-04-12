@@ -6,6 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { useNavigate } from "react-router-dom";
+import CSCSelector from "./CSCSelector";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -13,6 +14,13 @@ export default function Search() {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
+  const [country, setCountry] = React.useState("");
+  const [state, setState] = React.useState("");
+  const [city, setCity] = React.useState("");
+
+  console.log("country", country);
+  console.log("state", state);
+  console.log("city", city);
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -26,15 +34,28 @@ export default function Search() {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
-        for (const option of selectedOptions) {
-          if (contractor?.skillIds?.includes(option)) {
-            numMatchingSkills++;
+        if (selectedOptions.length > 0) {
+          for (const option of selectedOptions) {
+            if (contractor?.skillIds?.includes(option)) {
+              numMatchingSkills++;
+            }
           }
+        } else {
+          // Show all contractors if no skills are selected
+          numMatchingSkills = 1;
         }
-        const percentMatching = Math.round(
-          (numMatchingSkills / selectedOptions.length) * 100
-        );
-        if (numMatchingSkills > 0) {
+
+        // Filter contractors by location (country, state, and city)
+        const isMatchingLocation =
+          (!country || contractor.countryCode === country) &&
+          (!state || contractor.stateCode === state) &&
+          (!city || contractor.city === city);
+
+        const percentMatching = selectedOptions.length
+          ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
+          : 100;
+
+        if (numMatchingSkills > 0 && isMatchingLocation) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
@@ -44,14 +65,26 @@ export default function Search() {
       filteredContractors.sort((a, b) => b.percentMatching - a.percentMatching);
       setContractors(filteredContractors);
     };
+
     contractorSkillsList();
-  }, [selectedOptions, contractorList]);
+  }, [selectedOptions, contractorList, country, state, city]);
 
   return (
     <div>
       <Navigation />
       <div className="search_container">
-        <div className="search_title">Search by Skill</div>
+        <div style={{borderStyle: "solid", borderColor: "gray", borderWidth: "0.5px", borderRadius: "5px", padding: "20px", marginBottom: "20px"}}>
+        <h2 style={{textAlign: "center", margin: 0, marginBottom: "20px"}}>Search by Location</h2>
+        <div className="search_location">
+          <CSCSelector
+            getCountry={(country) => setCountry(country)}
+            getState={(state) => setState(state)}
+            getCity={(city) => setCity(city)}
+          />
+        </div>
+        </div>
+        <div style={{borderStyle: "solid", borderColor: "gray", borderWidth: "0.5px", borderRadius: "5px", padding: "20px"}}>
+        <h2 className="search_title">Search by Skill</h2>
         <div>
           <Grid container spacing={10} minHeight={160}>
             <Grid xs display="flex" justifyContent="center" alignItems="center">
@@ -67,6 +100,7 @@ export default function Search() {
               ))}
             </Grid>
           </Grid>
+        </div>
         </div>
         <Divider />
         <div className="search_results">Results</div>
