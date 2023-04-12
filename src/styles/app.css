@@ -22,8 +22,7 @@
 }
 
 .contractorListPage {
-	/* min-height: 73.4vh; */
-	height: 90vh;
+	min-height: 73.4vh;
 	padding: 2rem 6rem;
 	background-color: black;
 	display: flex;
