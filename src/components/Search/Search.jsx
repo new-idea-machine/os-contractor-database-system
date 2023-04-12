@@ -18,10 +18,6 @@ export default function Search() {
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
 
-  console.log("country", country);
-  console.log("state", state);
-  console.log("city", city);
-
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
       ? selectedOptions.filter((id) => id !== optionId)

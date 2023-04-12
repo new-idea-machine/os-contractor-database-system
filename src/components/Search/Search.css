@@ -1,13 +1,14 @@
 .search_container {
   height: 100vh;
   padding: 30px;
+  margin-bottom: 20px;
 }
 
 .search_location {
   display: flex;
   flex-direction: row;
   justify-content: center;
-  }
+}
 
 .search_title {
   text-align: center;
