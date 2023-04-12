@@ -73,99 +73,126 @@ export default function Search() {
     <div>
       <Navigation />
       <div className="search_container">
-        <div style={{borderStyle: "solid", borderColor: "gray", borderWidth: "0.5px", borderRadius: "5px", padding: "20px", marginBottom: "20px"}}>
-        <h2 style={{textAlign: "center", margin: 0, marginBottom: "20px"}}>Search by Location</h2>
-        <div className="search_location">
-          <CSCSelector
-            getCountry={(country) => setCountry(country)}
-            getState={(state) => setState(state)}
-            getCity={(city) => setCity(city)}
-          />
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "20px",
+            marginBottom: "20px",
+          }}
+        >
+          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "20px" }}>
+            Search by Location
+          </h2>
+          <div className="search_location">
+            <CSCSelector
+              getCountry={(country) => setCountry(country)}
+              getState={(state) => setState(state)}
+              getCity={(city) => setCity(city)}
+            />
+          </div>
         </div>
-        </div>
-        <div style={{borderStyle: "solid", borderColor: "gray", borderWidth: "0.5px", borderRadius: "5px", padding: "20px"}}>
-        <h2 className="search_title">Search by Skill</h2>
-        <div>
-          <Grid container spacing={10} minHeight={160}>
-            <Grid xs display="flex" justifyContent="center" alignItems="center">
-              {skillsList.map((option) => (
-                <div className="search_options" key={option.id}>
-                  <Checkbox
-                    checked={selectedOptions.includes(option.id)}
-                    onChange={() => handleOptionChange(option.id)}
-                  />
-                  {option.title}
-                  <br />
-                </div>
-              ))}
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "20px",
+          }}
+        >
+          <h2 className="search_title">Search by Skill</h2>
+          <div>
+            <Grid container spacing={10} minHeight={160}>
+              <Grid
+                xs
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {skillsList.map((option) => (
+                  <div className="search_options" key={option.id}>
+                    <Checkbox
+                      checked={selectedOptions.includes(option.id)}
+                      onChange={() => handleOptionChange(option.id)}
+                    />
+                    {option.title}
+                    <br />
+                  </div>
+                ))}
+              </Grid>
             </Grid>
-          </Grid>
-        </div>
+          </div>
         </div>
         <Divider />
-        <div className="search_results">Results</div>
         <ul>
-          {contractors.map((contractor) => (
-            <div
-              className="contractor_container"
-              key={contractor.id}
-              onClick={() => navigate(`/contractor/${contractor?.id}`)}
-            >
-              <div style={{ marginLeft: "5px" }}>
-                <div style={{ minWidth: "60px" }}>
-                  <b>{contractor.percentMatching}%</b>
+          {contractors.length === 0 ? (
+            <div className="no-results-message">No results</div>
+          ) : (
+            contractors.map((contractor) => (
+              <div
+                className="contractor_container"
+                key={contractor.id}
+                onClick={() => navigate(`/contractor/${contractor?.id}`)}
+              >
+                <div style={{ marginLeft: "5px" }}>
+                  <div style={{ minWidth: "60px" }}>
+                    <b>{contractor.percentMatching}%</b>
+                  </div>
+                  <img
+                    style={{
+                      width: "60px",
+                      height: "60px",
+                      objectFit: "cover",
+                      borderRadius: "5px",
+                    }}
+                    src={contractor.profileImg}
+                    alt=""
+                  />
                 </div>
-                <img
-                  style={{
-                    width: "60px",
-                    height: "60px",
-                    objectFit: "cover",
-                    borderRadius: "5px",
-                  }}
-                  src={contractor.profileImg}
-                  alt=""
-                />
+                <div style={{ marginLeft: "5px" }}>
+                  <div>
+                    <b>{contractor.name}</b>
+                  </div>
+                  <div>{contractor.summary}</div>
+                  <div>
+                    {contractor?.skillIds && (
+                      <div style={{ display: "flex" }}>
+                        {contractor?.skillIds.map((resultSkill) => {
+                          const allSkills = skillsList?.filter(({ id }) =>
+                            resultSkill.includes(id)
+                          );
+                          return (
+                            <div key={resultSkill}>
+                              {allSkills.map((r) => (
+                                <Button
+                                  key={r.id}
+                                  style={{
+                                    width: "auto",
+                                    borderStyle: "solid",
+                                    borderWidth: "1px",
+                                    padding: "0.2px",
+                                    marginTop: "5px",
+                                    marginBottom: "5px",
+                                    marginLeft: "5px",
+                                    textTransform: "capitalize",
+                                  }}
+                                >
+                                  {r.title}
+                                </Button>
+                              ))}
+                            </div>
+                          );
+                        })}
+                      </div>
+                    )}
+                  </div>
+                </div>
               </div>
-              <div style={{ marginLeft: "5px" }}>
-                <div>
-                  <b>{contractor.name}</b>
-                </div>
-                <div>{contractor.summary}</div>
-                <div>
-                  {contractor?.skillIds && (
-                    <div style={{ display: "flex" }}>
-                      {contractor?.skillIds.map((resultSkill) => {
-                        const allSkills = skillsList?.filter(({ id }) =>
-                          resultSkill.includes(id)
-                        );
-                        return (
-                          <div key={resultSkill}>
-                            {allSkills.map((r) => (
-                              <Button
-                                key={r.id}
-                                style={{
-                                  width: "auto",
-                                  borderStyle: "solid",
-                                  borderWidth: "1px",
-                                  padding: "0.2px",
-                                  marginTop: "5px",
-                                  marginBottom: "5px",
-                                  marginLeft: "5px",
-                                  textTransform: "capitalize",
-                                }}
-                              >
-                                {r.title}
-                              </Button>
-                            ))}
-                          </div>
-                        );
-                      })}
-                    </div>
-                  )}
-                </div>
-              </div>
-            </div>
-          ))}
+            ))
+          )}
         </ul>
       </div>
       <Footer />

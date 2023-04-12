@@ -8,13 +8,19 @@ export default function CSCSelector(props) {
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
 
-   return (
+  return (
     <div style={{ display: "flex", textAlign: "center" }}>
       <Box sx={{ width: 300 }}>
         <Autocomplete
           onChange={(event, value) => {
-            setCountry(value.isoCode);
-            props.getCountry(value.isoCode);
+            setCountry(value ? value.isoCode : "");
+            props.getCountry(value ? value.isoCode : "");
+          }}
+          onInputChange={(event, value) => {
+            if (!value) {
+              setCountry("");
+              props.getCountry("");
+            }
           }}
           id="combo-box-demo"
           options={Country.getAllCountries()}
@@ -30,8 +36,14 @@ export default function CSCSelector(props) {
         <Box sx={{ width: 300, marginLeft: "50px" }}>
           <Autocomplete
             onChange={(event, value) => {
-              setState(value.isoCode);
-              props.getState(value.isoCode);
+              setState(value ? value.isoCode : "");
+              props.getState(value ? value.isoCode : "");
+            }}
+            onInputChange={(event, value) => {
+              if (!value) {
+                setState("");
+                props.getState("");
+              }
             }}
             id="combo-box-demo"
             options={State.getAllStates()
@@ -50,8 +62,14 @@ export default function CSCSelector(props) {
         <Box key={state} sx={{ width: 300, marginLeft: "50px" }}>
           <Autocomplete
             onChange={(event, value) => {
-              setCity(value.name);
-              props.getCity(value.name);
+              setCity(value ? value.name : "");
+              props.getCity(value ? value.name : "");
+            }}
+            onInputChange={(event, value) => {
+              if (!value) {
+                setCity("");
+                props.getCity("");
+              }
             }}
             id="combo-box-demo"
             options={City.getAllCities()
