@@ -1,36 +1,36 @@
-import React, { useContext, useEffect, useState } from 'react';
-import './ContractorProfile.css';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Footer, Navigation } from '../index';
-import { contractorContext } from '../../contexts/ContractorContext';
-import { skillsContext } from '../../contexts/SkillsContext';
-import { Button } from '@mui/material';
-import MailOutlineIcon from '@mui/icons-material/MailOutline';
-import GitHubIcon from '@mui/icons-material/GitHub';
-import LinkedInIcon from '@mui/icons-material/LinkedIn';
+import React, { useContext, useEffect, useState } from "react";
+import "./ContractorProfile.css";
+import { useParams, useNavigate } from "react-router-dom";
+import { Footer, Navigation } from "../index";
+import { contractorContext } from "../../contexts/ContractorContext";
+import { skillsContext } from "../../contexts/SkillsContext";
+import { Button } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
+import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 
 const ContractorProfile = (props) => {
-	const { id } = useParams();
-	const { contractorList } = useContext(contractorContext);
-	const { skillsList } = useContext(skillsContext);
-	const [contractorSkills, setContractorSkills] = useState([]);
-	const navigate = useNavigate();
+  const { id } = useParams();
+  const { contractorList } = useContext(contractorContext);
+  const { skillsList } = useContext(skillsContext);
+  const [contractorSkills, setContractorSkills] = useState([]);
+  const navigate = useNavigate();
 
-	useEffect(() => {
-		const contractorSkillsList = () => {
-			contractorList?.map((contractor) => {
-				if (id === contractor?.id || props?.data?.id === contractor?.id) {
-					const result = skillsList?.filter(({ id }) =>
-						contractor?.skillIds?.includes(id)
-					);
-					result.sort((a, b) => (a.title > b.title ? 1 : -1));
-					setContractorSkills(result);
-				}
-				return null;
-			});
-		};
-		contractorSkillsList();
-	}, [id, props?.data?.id, contractorList, skillsList]);
+  useEffect(() => {
+    const contractorSkillsList = () => {
+      contractorList?.map((contractor) => {
+        if (id === contractor?.id || props?.data?.id === contractor?.id) {
+          const result = skillsList?.filter(({ id }) =>
+            contractor?.skillIds?.includes(id)
+          );
+          result.sort((a, b) => (a.title > b.title ? 1 : -1));
+          setContractorSkills(result);
+        }
+        return null;
+      });
+    };
+    contractorSkillsList();
+  }, [id, props?.data?.id, contractorList, skillsList]);
   return (
     <div>
       <Navigation />

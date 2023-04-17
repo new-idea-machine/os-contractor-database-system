@@ -1,13 +1,18 @@
 .search_container {
   height: 100vh;
   padding: 30px;
+  margin-bottom: 20px;
+}
+
+.search_location {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
 }
 
 .search_title {
-  font-size: 30px;
-  font-weight: bold;
-  margin-bottom: 30px;
   text-align: center;
+  margin: 0;
 }
 
 .search_options {
