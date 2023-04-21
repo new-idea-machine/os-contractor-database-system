@@ -1,6 +1,7 @@
 import React from "react";
 import { useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
+import './SearchQualification.css';
 
 const SearchQualification = () => {
   const navigate = useNavigate();
@@ -12,7 +13,7 @@ const SearchQualification = () => {
         <h1>
         What you are looking for?
       </h1>
-      <div className="search_qualification">
+      <div className="search">
         <button onClick={() => navigate(`/search/developers`)}>
           Developers
         </button>

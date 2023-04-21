@@ -16,10 +16,8 @@ import AuthControl from "./contexts/auth";
 import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
 import SearchQualification from "./components/Search/SearchQualification";
-import SearchDevelopers from "./components/Search/SearchDevelopers/SearchDevelopers";
-import SearchDesigners from "./components/Search/SearchDesigners/SearchDesigners";
-import SearchProjectManagers from "./components/Search/SearchProjectManagers/SearchProjectManagers";
-import SearchProductManagers from "./components/Search/SearchProductManagers/SearchProductManagers";
+import Search from "./components/Search/Search";
+
 
 function App() {
   return (
@@ -40,11 +38,8 @@ function App() {
                   />
                   <Route path="/myProfile" element={<MyProfile />} />
                   <Route path="/search" element={<SearchQualification />} />
-                  <Route path="/search/developers" element={<SearchDevelopers />} />
-                  <Route path="/search/designers" element={<SearchDesigners />} />
-                  <Route path="/search/projectmanagers" element={<SearchProjectManagers />} />
-                  <Route path="/search/productmanagers" element={<SearchProductManagers />} />
-                  <Route path="/UpdateProfile" element={<UpdateProfile />} />
+                  <Route path="/search/:qualification" element={<Search />} />
+                             <Route path="/UpdateProfile" element={<UpdateProfile />} />
                 </Routes>
               </ScrollToTop>
             </Router>

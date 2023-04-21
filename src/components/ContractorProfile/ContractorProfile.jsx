@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
@@ -14,8 +14,8 @@ const ContractorProfile = (props) => {
   const { contractorList } = useContext(contractorContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
-  const navigate = useNavigate();
-console.log(skillsList)
+
+
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.map((contractor) => {

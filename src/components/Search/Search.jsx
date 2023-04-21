@@ -7,9 +7,13 @@ import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { useNavigate } from "react-router-dom";
 import CSCSelector from "./CSCSelector";
+import { useParams } from "react-router-dom";
 
+let q;
 export default function Search() {
   const navigate = useNavigate();
+  const { qualification } = useParams();
+
   const { skillsList } = useContext(skillsContext);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
@@ -24,6 +28,21 @@ export default function Search() {
       : [...selectedOptions, optionId];
     setSelectedOptions(newSelectedOptions);
   };
+
+  useEffect(() => {
+    const checkQualification = () => {
+      if (qualification === "developers") {
+        q = "Developer";
+      } else if (qualification === "projectmanagers") {
+        q = "Project Manager";
+      } else if (qualification === "designers") {
+        q = "Designer";
+      } else if (qualification === "productmanager") {
+        q = "Product Manager";
+      }
+    };
+    checkQualification();
+  }, [qualification]);
 
   useEffect(() => {
     const contractorSkillsList = () => {
@@ -47,18 +66,26 @@ export default function Search() {
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
+        // Filter contractors by "Developer" qualification
+        const isDeveloper = contractor.qualification === q;
+
         const percentMatching = selectedOptions.length
           ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation) {
+        if (numMatchingSkills > 0 && isMatchingLocation && isDeveloper) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
           });
         }
       }
-      filteredContractors.sort((a, b) => b.percentMatching - a.percentMatching);
+      filteredContractors.sort((a, b) => {
+        if (b.percentMatching === a.percentMatching) {
+          return a.name.localeCompare(b.name);
+        }
+        return b.percentMatching - a.percentMatching;
+      });
       setContractors(filteredContractors);
     };
 
@@ -68,8 +95,16 @@ export default function Search() {
   return (
     <div>
       <Navigation />
+      <h1
+        style={{
+          textAlign: "center",
+          backgroundColor: "#B2B2B2",
+          padding: "3px",
+        }}
+      >
+        Developers
+      </h1>
       <div className="search_container">
-     
         <div
           style={{
             borderStyle: "solid",
@@ -131,12 +166,12 @@ export default function Search() {
             contractors.map((contractor) => (
               <div
                 className="contractor_container"
-                key={contractor?.id}
+                key={contractor.id}
                 onClick={() => navigate(`/contractor/${contractor?.id}`)}
               >
                 <div style={{ marginLeft: "5px" }}>
                   <div style={{ minWidth: "60px" }}>
-                    <b>{contractor?.percentMatching}%</b>
+                    <b>{contractor.percentMatching}%</b>
                   </div>
                   <img
                     style={{
@@ -145,15 +180,18 @@ export default function Search() {
                       objectFit: "cover",
                       borderRadius: "5px",
                     }}
-                    src={contractor?.profileImg}
+                    src={contractor.profileImg}
                     alt=""
                   />
                 </div>
                 <div style={{ marginLeft: "5px" }}>
                   <div>
-                    <b>{contractor?.name}</b>
+                    <b>{contractor.name}</b>
+                    <div className="contractor_qualification2">
+                      {contractor?.qualification}
+                    </div>
                   </div>
-                  <div>{contractor?.summary}</div>
+                  <div>{contractor.summary}</div>
                   <div>
                     {contractor?.skillIds && (
                       <div style={{ display: "flex" }}>
