@@ -1,6 +1,7 @@
 .search_container {
   padding: 20px;
   margin-bottom: 20px;
+  min-height: 90vh;
 }
 
 .search_qualification {

@@ -15,7 +15,7 @@ const ContractorProfile = (props) => {
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const navigate = useNavigate();
-
+console.log(skillsList)
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.map((contractor) => {

@@ -1,12 +1,12 @@
 import React, { useContext, useEffect, useState } from "react";
-import { Footer, Navigation } from "../index";
-import "./Search.css";
+import { Footer, Navigation } from "../../index";
+import "./SearchProductManagers.css";
 import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { skillsContext } from "../../contexts/SkillsContext";
-import { contractorContext } from "../../contexts/ContractorContext";
+import { skillsContext } from "../../../contexts/SkillsContext";
+import { contractorContext } from "../../../contexts/ContractorContext";
 import { useNavigate } from "react-router-dom";
-import CSCSelector from "./CSCSelector";
+import CSCSelector from "../CSCSelector";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -17,6 +17,8 @@ export default function Search() {
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
+
+  console.log(contractorList)
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -40,27 +42,36 @@ export default function Search() {
           // Show all contractors if no skills are selected
           numMatchingSkills = 1;
         }
-
+    
         // Filter contractors by location (country, state, and city)
         const isMatchingLocation =
           (!country || contractor.countryCode === country) &&
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
-
+    
+        // Filter contractors by "Product Manager" qualification
+        const isProductManager = contractor.qualification === "Product Manager";
+    
         const percentMatching = selectedOptions.length
           ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
           : 100;
-
-        if (numMatchingSkills > 0 && isMatchingLocation) {
+    
+        if (numMatchingSkills > 0 && isMatchingLocation && isProductManager) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
           });
         }
       }
-      filteredContractors.sort((a, b) => b.percentMatching - a.percentMatching);
-      setContractors(filteredContractors);
+      filteredContractors.sort((a, b) => {
+        if (b.percentMatching === a.percentMatching) {
+          return a.name.localeCompare(b.name);
+        }
+        return b.percentMatching - a.percentMatching;
+      });
+            setContractors(filteredContractors);
     };
+    
 
     contractorSkillsList();
   }, [selectedOptions, contractorList, country, state, city]);
@@ -68,6 +79,7 @@ export default function Search() {
   return (
     <div>
       <Navigation />
+        <h1 style={{textAlign: "center", backgroundColor: "#B2B2B2", padding: "3px"}}>Product Managers</h1>
       <div className="search_container">
      
         <div

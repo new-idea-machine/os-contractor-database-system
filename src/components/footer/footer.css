@@ -1,8 +1,12 @@
 .footer {
-	height: 55px;
-	background: #181919;
-	color: white;
-	display: flex;
-	justify-content: center;
-	align-items: center;
-}
+  height: 55px;
+  background: #181919;
+  color: white;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  position: relative;
+  left: 0;
+  bottom: 0;
+  right: 0;
+ }
