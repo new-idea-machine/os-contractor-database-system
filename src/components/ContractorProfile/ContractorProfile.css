@@ -15,11 +15,21 @@
 .contractor_name {
   height: fit-content;
   font-size: 30px;
-  padding-bottom: 20px;
+  padding-bottom: 10px;
   font-weight: bold;
   display: flex;
   flex-direction: row;
   align-items: center;
+}
+
+.contractor_qualification {
+  padding: 5px;
+  margin-bottom: 10px;
+  font-weight: bold;
+  background-color: #D5D1D0;
+  width:fit-content;
+  border: none;
+  border-radius: 5px;
 }
 
 .contractor_links {

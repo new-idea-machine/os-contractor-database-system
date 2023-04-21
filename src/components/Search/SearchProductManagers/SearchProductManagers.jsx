@@ -18,7 +18,7 @@ export default function Search() {
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
 
-  console.log(contractorList)
+  console.log(contractorList);
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -42,20 +42,20 @@ export default function Search() {
           // Show all contractors if no skills are selected
           numMatchingSkills = 1;
         }
-    
+
         // Filter contractors by location (country, state, and city)
         const isMatchingLocation =
           (!country || contractor.countryCode === country) &&
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
-    
+
         // Filter contractors by "Product Manager" qualification
         const isProductManager = contractor.qualification === "Product Manager";
-    
+
         const percentMatching = selectedOptions.length
           ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
           : 100;
-    
+
         if (numMatchingSkills > 0 && isMatchingLocation && isProductManager) {
           filteredContractors.push({
             ...contractor,
@@ -69,9 +69,8 @@ export default function Search() {
         }
         return b.percentMatching - a.percentMatching;
       });
-            setContractors(filteredContractors);
+      setContractors(filteredContractors);
     };
-    
 
     contractorSkillsList();
   }, [selectedOptions, contractorList, country, state, city]);
@@ -79,9 +78,16 @@ export default function Search() {
   return (
     <div>
       <Navigation />
-        <h1 style={{textAlign: "center", backgroundColor: "#B2B2B2", padding: "3px"}}>Product Managers</h1>
+      <h1
+        style={{
+          textAlign: "center",
+          backgroundColor: "#B2B2B2",
+          padding: "3px",
+        }}
+      >
+        Product Managers
+      </h1>
       <div className="search_container">
-     
         <div
           style={{
             borderStyle: "solid",
@@ -164,6 +170,9 @@ export default function Search() {
                 <div style={{ marginLeft: "5px" }}>
                   <div>
                     <b>{contractor.name}</b>
+                    <div className="contractor_qualification2">
+                      {contractor?.qualification}
+                    </div>
                   </div>
                   <div>{contractor.summary}</div>
                   <div>

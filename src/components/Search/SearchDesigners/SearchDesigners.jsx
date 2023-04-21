@@ -164,6 +164,8 @@ export default function Search() {
                 <div style={{ marginLeft: "5px" }}>
                   <div>
                     <b>{contractor.name}</b>
+                    <div className="contractor_qualification2">{contractor?.qualification}</div>
+
                   </div>
                   <div>{contractor.summary}</div>
                   <div>

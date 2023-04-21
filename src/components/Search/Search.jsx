@@ -131,12 +131,12 @@ export default function Search() {
             contractors.map((contractor) => (
               <div
                 className="contractor_container"
-                key={contractor.id}
+                key={contractor?.id}
                 onClick={() => navigate(`/contractor/${contractor?.id}`)}
               >
                 <div style={{ marginLeft: "5px" }}>
                   <div style={{ minWidth: "60px" }}>
-                    <b>{contractor.percentMatching}%</b>
+                    <b>{contractor?.percentMatching}%</b>
                   </div>
                   <img
                     style={{
@@ -145,15 +145,15 @@ export default function Search() {
                       objectFit: "cover",
                       borderRadius: "5px",
                     }}
-                    src={contractor.profileImg}
+                    src={contractor?.profileImg}
                     alt=""
                   />
                 </div>
                 <div style={{ marginLeft: "5px" }}>
                   <div>
-                    <b>{contractor.name}</b>
+                    <b>{contractor?.name}</b>
                   </div>
-                  <div>{contractor.summary}</div>
+                  <div>{contractor?.summary}</div>
                   <div>
                     {contractor?.skillIds && (
                       <div style={{ display: "flex" }}>

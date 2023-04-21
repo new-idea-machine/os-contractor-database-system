@@ -42,6 +42,7 @@ console.log(skillsList)
             </div>
             <div className="contractor_info">
               <div className="contractor_name">{contractor?.name}</div>
+              <div className="contractor_qualification">{contractor?.qualification}</div>
               <div className="contractor_links">
                 <a
                   style={{ marginBottom: "10px" }}

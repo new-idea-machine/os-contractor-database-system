@@ -9,9 +9,9 @@ const SearchQualification = () => {
       <Navigation />
 
       <div style={{ textAlign: "center", marginTop: "40px", height: "100vh" }}>
-        <div>
+        <h1>
         What you are looking for?
-      </div>
+      </h1>
       <div className="search_qualification">
         <button onClick={() => navigate(`/search/developers`)}>
           Developers
