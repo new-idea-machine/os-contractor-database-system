@@ -5,7 +5,6 @@ import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
-// import { useNavigate } from "react-router-dom";
 import CSCSelector from "./CSCSelector";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
@@ -14,7 +13,6 @@ let q;
 export default function Search() {
   const navigate = useNavigate();
   const { qualification } = useParams();
-
   const { skillsList } = useContext(skillsContext);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
@@ -96,14 +94,14 @@ export default function Search() {
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
-        // Filter contractors by "Developer" qualification
-        const isDeveloper = contractor.qualification === q;
+        // Filter contractors by qualification
+        const whatQualification = contractor.qualification === q;
 
         const percentMatching = selectedOptions.length
           ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation && isDeveloper) {
+        if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
