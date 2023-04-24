@@ -1,5 +1,6 @@
 const techDataSchema = {
 	name: '',
+	lastName: '',
 	email: '',
 	summary: '',
 	profileImg: '',
@@ -22,6 +23,12 @@ const formInputs = [
 		sectionTitle: 'Personal Info',
 		fields: [
 			{ name: 'name', label: 'Name', type: 'text', placeholder: 'Name' },
+			{
+				name: 'lastName',
+				label: 'Last Name',
+				type: 'text',
+				placeholder: 'Last Name',
+			},
 			{ name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
 			{
 				name: 'linkedinUrl',
