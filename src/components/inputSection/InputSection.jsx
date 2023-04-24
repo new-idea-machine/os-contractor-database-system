@@ -33,6 +33,7 @@ export default function InputSection({ field, onChange, value }) {
 					type={field?.type}
 					onChange={onChange}
 					aria-label={field?.label}
+					required
 				/>
 			)}
 		</>
