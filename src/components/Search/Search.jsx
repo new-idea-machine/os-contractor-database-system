@@ -33,11 +33,11 @@ export default function Search() {
     const checkQualification = () => {
       if (qualification === "developers") {
         q = "Developer";
-      } else if (qualification === "projectmanagers") {
-        q = "Project Manager";
       } else if (qualification === "designers") {
         q = "Designer";
-      } else if (qualification === "productmanager") {
+      } else if (qualification === "projectmanagers") {
+        q = "Project Manager";
+         } else if (qualification === "productmanagers") {
         q = "Product Manager";
       }
     };
