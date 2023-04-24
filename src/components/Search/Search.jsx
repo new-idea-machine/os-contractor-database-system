@@ -8,6 +8,7 @@ import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import { useParams } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
+import Avatar from "../../assets/avatar.png";
 
 let q;
 export default function Search() {
@@ -62,7 +63,7 @@ export default function Search() {
     };
     checkQualification();
   }, [qualification]);
-  console.log(selectedOptions);
+
   useEffect(() => {
     sessionStorage.setItem(
       "searchState",
@@ -110,7 +111,7 @@ export default function Search() {
       }
       filteredContractors.sort((a, b) => {
         if (b.percentMatching === a.percentMatching) {
-          return a.name.localeCompare(b.name);
+          return a.firstName.localeCompare(b.firstName);
         }
         return b.percentMatching - a.percentMatching;
       });
@@ -194,7 +195,7 @@ export default function Search() {
             contractors.map((contractor) => (
               <div
                 className="contractor_container"
-                key={contractor.id}
+                key={contractor?.id}
                 onClick={() => {
                   navigate(`/contractor/${contractor?.id}`, {
                     state: {
@@ -205,22 +206,39 @@ export default function Search() {
               >
                 <div style={{ marginLeft: "5px" }}>
                   <div style={{ minWidth: "60px" }}>
-                    <b>{contractor.percentMatching}%</b>
+                    <b>{contractor?.percentMatching}%</b>
                   </div>
-                  <img
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      objectFit: "cover",
-                      borderRadius: "5px",
-                    }}
-                    src={contractor.profileImg}
-                    alt=""
-                  />
+                  {contractor?.profileImg ? (
+                    <img
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        objectFit: "cover",
+                        borderRadius: "5px",
+                      }}
+                      src={contractor?.profileImg}
+                      alt=""
+                    />
+                  ) : (
+                    <img
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                        borderStyle: "solid",
+                        borderColor: "gray",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                      }}
+                      src={Avatar}
+                      alt="Avatar"
+                    />
+                  )}
                 </div>
                 <div style={{ marginLeft: "5px" }}>
                   <div>
-                    <b>{contractor.name}</b>
+                    <b>{contractor?.firstName}&nbsp;</b>
+                    <b>{contractor?.lastName}&nbsp;</b>
                     <div className="contractor_qualification2">
                       {contractor?.qualification}
                     </div>

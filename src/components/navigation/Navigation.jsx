@@ -25,7 +25,7 @@ const Navigation = () => {
 
   useEffect(() => {
     if (!currentUserProfile) {
-      toast.info("first");
+      // toast.info("first");
       matchProfileToCurrentUser();
     }
   }, [user, contractorMap, currentUserProfile]);

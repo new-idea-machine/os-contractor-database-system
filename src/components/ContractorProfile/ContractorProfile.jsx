@@ -5,9 +5,8 @@ import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import Avatar from "../../assets/avatar.png"
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -36,11 +35,17 @@ const ContractorProfile = (props) => {
       {contractorList.map((contractor) =>
         id === contractor?.id || props?.data?.id === contractor?.id ? (
           <div className="contractor_profile" key={contractor.id}>
+              {contractor?.profileImg ? (
             <div className="image_wrapper">
-              <img src={contractor?.profileImg} alt="Contractor headshot" />
+                <img src={contractor?.profileImg} alt="Contractor headshot" />
             </div>
+              ) : (
+                <div className="avatar_wrapper">
+                <img src={Avatar} alt="Avatar" />
+                </div>
+              )}
             <div className="contractor_info">
-              <div className="contractor_name">{contractor?.name}</div>
+              <div className="contractor_name">{contractor?.firstName}&nbsp;{contractor?.lastName}</div>
               <div className="contractor_qualification">
                 {contractor?.qualification}
               </div>

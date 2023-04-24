@@ -26,8 +26,8 @@
   padding: 5px;
   margin-bottom: 10px;
   font-weight: bold;
-  background-color: #D5D1D0;
-  width:fit-content;
+  background-color: #d5d1d0;
+  width: fit-content;
   border: none;
   border-radius: 5px;
 }
@@ -61,4 +61,24 @@
   height: 100%;
   object-fit: cover;
   border-radius: inherit;
+}
+
+.avatar_wrapper {
+  width: 275px;
+  height: 275px;
+  min-width: 275px;
+  display: block;
+  margin-right: 20px;
+  margin-top: 55px;
+  display: flex;
+  justify-content: flex-end;
+}
+
+.avatar_wrapper img {
+  width: 50%;
+  height: 50%;
+  object-fit: cover;
+  border-style: solid;
+  border-color: gray;
+  border-radius: 10px;
 }

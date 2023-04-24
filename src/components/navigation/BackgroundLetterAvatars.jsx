@@ -6,8 +6,6 @@ export default function BackgroundLetterAvatars(props) {
   const profileFirstName = props.currentUserFirstName;
   const profileLastName = props.currentUserLastName;
   
-  console.log(profileFirstName+profileLastName)
-
   const stringToColor = (string) => {
     let hash = 0;
     let i;
