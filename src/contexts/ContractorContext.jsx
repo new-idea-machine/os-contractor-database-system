@@ -23,6 +23,7 @@ const ContractorContext = ({ children }) => {
 	const [contractorList, setContractorList] = useState([]);
 	const [contractor, setContractor] = useState(null);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
+	console.log(currentUserProfile)
 
 	// const matchProfileToCurrentUser = () => {
 	//   contractorList?.map((userUID) => {

@@ -21,6 +21,8 @@ const Navigation = () => {
   const { logout, user } = useContext(authContext);
   const { currentUserProfile, matchProfileToCurrentUser, contractorMap } =
     useContext(contractorContext);
+
+
   useEffect(() => {
     if (!currentUserProfile) {
       toast.info("first");
@@ -94,7 +96,8 @@ const Navigation = () => {
                         </>
                       ) : (
                         <BackgroundLetterAvatars
-                          currentUserName={currentUserProfile?.name}
+                          currentUserFirstName={currentUserProfile?.firstName}
+                          currentUserLastName={currentUserProfile?.lastName}
                         />
                       )}
                     </>
