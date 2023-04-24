@@ -1,13 +1,14 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
-import { useNavigate } from "react-router-dom";
+// import { useNavigate } from "react-router-dom";
 import CSCSelector from "./CSCSelector";
 import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 
 let q;
 export default function Search() {
@@ -21,6 +22,26 @@ export default function Search() {
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
+
+  const memoizedSearchState = useMemo(
+    () => ({
+      selectedOptions,
+      country,
+      state,
+      city,
+    }),
+    [selectedOptions, country, state, city]
+  );
+
+  useEffect(() => {
+    const savedState = JSON.parse(sessionStorage.getItem("searchState"));
+    if (savedState) {
+      setSelectedOptions(savedState.selectedOptions || []);
+      setCountry(savedState.country || "");
+      setState(savedState.state || "");
+      setCity(savedState.city || "");
+    }
+  }, []);
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -37,14 +58,23 @@ export default function Search() {
         q = "Designer";
       } else if (qualification === "projectmanagers") {
         q = "Project Manager";
-         } else if (qualification === "productmanagers") {
+      } else if (qualification === "productmanagers") {
         q = "Product Manager";
       }
     };
     checkQualification();
   }, [qualification]);
-
+  console.log(selectedOptions);
   useEffect(() => {
+    sessionStorage.setItem(
+      "searchState",
+      JSON.stringify({
+        selectedOptions,
+        country,
+        state,
+        city,
+      })
+    );
     const contractorSkillsList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
@@ -167,7 +197,13 @@ export default function Search() {
               <div
                 className="contractor_container"
                 key={contractor.id}
-                onClick={() => navigate(`/contractor/${contractor?.id}`)}
+                onClick={() => {
+                  navigate(`/contractor/${contractor?.id}`, {
+                    state: {
+                      searchState: memoizedSearchState,
+                    },
+                  });
+                }}
               >
                 <div style={{ marginLeft: "5px" }}>
                   <div style={{ minWidth: "60px" }}>
