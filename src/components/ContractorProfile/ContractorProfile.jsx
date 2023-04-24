@@ -15,7 +15,6 @@ const ContractorProfile = (props) => {
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
 
-
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.map((contractor) => {
@@ -42,16 +41,10 @@ const ContractorProfile = (props) => {
             </div>
             <div className="contractor_info">
               <div className="contractor_name">{contractor?.name}</div>
-              <div className="contractor_qualification">{contractor?.qualification}</div>
+              <div className="contractor_qualification">
+                {contractor?.qualification}
+              </div>
               <div className="contractor_links">
-                <a
-                  style={{ marginBottom: "10px" }}
-                  href={`mailto:${contractor?.email}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MailOutlineIcon />
-                </a>
                 {contractor?.otherInfo?.githubUrl && (
                   <a
                     href={contractor?.otherInfo?.githubUrl}
@@ -59,16 +52,6 @@ const ContractorProfile = (props) => {
                     rel="noopener noreferrer"
                   >
                     <GitHubIcon />
-                  </a>
-                )}
-                {contractor?.otherInfo?.linkedinUrl && (
-                  <a
-                    style={{ marginBottom: "10px" }}
-                    href={contractor?.otherInfo?.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <LinkedInIcon />
                   </a>
                 )}
                 {contractor?.resume && (
