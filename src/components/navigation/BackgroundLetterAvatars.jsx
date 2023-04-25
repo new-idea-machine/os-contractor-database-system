@@ -3,8 +3,9 @@ import Avatar from "@mui/material/Avatar";
 import Stack from "@mui/material/Stack";
 
 export default function BackgroundLetterAvatars(props) {
-  const profileName = props.currentUserName;
-
+  const profileFirstName = props.currentUserFirstName;
+  const profileLastName = props.currentUserLastName;
+  
   const stringToColor = (string) => {
     let hash = 0;
     let i;
@@ -25,18 +26,18 @@ export default function BackgroundLetterAvatars(props) {
     return color;
   };
 
-  const stringAvatar = (name) => {
+  const stringAvatar = (firstName, lastName) => {
     return {
       sx: {
-        bgcolor: stringToColor(name),
+        bgcolor: stringToColor(firstName),
       },
-      children: `${name.split(" ")[0][0]}${name.split(" ")[1][0]}`,
+      children: `${firstName[0]}${lastName[0]}`,
     };
   };
 
   return (
     <Stack direction="row" spacing={2}>
-      <Avatar {...stringAvatar(profileName)} />
+      <Avatar {...stringAvatar(profileFirstName, profileLastName)} />
     </Stack>
   );
 }

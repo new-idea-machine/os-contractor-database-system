@@ -1,7 +1,28 @@
 .search_container {
-  height: 100vh;
-  padding: 30px;
-  margin-bottom: 20px;
+  padding: 20px;
+  min-height: 90vh;
+}
+
+.search_qualification {
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  padding: 20px;
+}
+
+.search_qualification button {
+  width: 150px;
+  height: 30px;
+  margin: 10px;
+  border-style: solid;
+  border-width: 0.5px;
+  border-color: #d0cfcf;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.search_qualification button:hover {
+  background-color: #d0cfcf;
 }
 
 .search_location {
@@ -13,6 +34,16 @@
 .search_title {
   text-align: center;
   margin: 0;
+}
+
+.contractor_qualification2 {
+  padding: 3px;
+  font-size: 11px;
+  font-weight: bold;
+  background-color: #d5d1d0;
+  width: fit-content;
+  border: none;
+  border-radius: 3px;
 }
 
 .search_options {

@@ -24,6 +24,7 @@ const ContractorContext = ({ children }) => {
 	const [contractor, setContractor] = useState(null);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
 
+
 	// const matchProfileToCurrentUser = () => {
 	//   contractorList?.map((userUID) => {
 	//     if (userUID?.firebaseUID === user?.uid) setCurrentUserProfile(userUID);
