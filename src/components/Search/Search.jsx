@@ -1,15 +1,19 @@
-import React, { useContext, useEffect, useState } from "react";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
-import { useNavigate } from "react-router-dom";
 import CSCSelector from "./CSCSelector";
+import { useParams } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
+import Avatar from "../../assets/avatar.png";
 
+let q;
 export default function Search() {
   const navigate = useNavigate();
+  const { qualification } = useParams();
   const { skillsList } = useContext(skillsContext);
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
@@ -17,6 +21,26 @@ export default function Search() {
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
+
+  const memoizedSearchState = useMemo(
+    () => ({
+      selectedOptions,
+      country,
+      state,
+      city,
+    }),
+    [selectedOptions, country, state, city]
+  );
+
+  useEffect(() => {
+    const savedState = JSON.parse(sessionStorage.getItem("searchState"));
+    if (savedState) {
+      setSelectedOptions(savedState.selectedOptions || []);
+      setCountry(savedState.country || "");
+      setState(savedState.state || "");
+      setCity(savedState.city || "");
+    }
+  }, []);
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -26,6 +50,30 @@ export default function Search() {
   };
 
   useEffect(() => {
+    const checkQualification = () => {
+      if (qualification === "developers") {
+        q = "Developer";
+      } else if (qualification === "designers") {
+        q = "Designer";
+      } else if (qualification === "projectmanagers") {
+        q = "Project Manager";
+      } else if (qualification === "productmanagers") {
+        q = "Product Manager";
+      }
+    };
+    checkQualification();
+  }, [qualification]);
+
+  useEffect(() => {
+    sessionStorage.setItem(
+      "searchState",
+      JSON.stringify({
+        selectedOptions,
+        country,
+        state,
+        city,
+      })
+    );
     const contractorSkillsList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
@@ -47,18 +95,26 @@ export default function Search() {
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
+        // Filter contractors by qualification
+        const whatQualification = contractor.qualification === q;
+
         const percentMatching = selectedOptions.length
           ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation) {
+        if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
           });
         }
       }
-      filteredContractors.sort((a, b) => b.percentMatching - a.percentMatching);
+      filteredContractors.sort((a, b) => {
+        if (b.percentMatching === a.percentMatching) {
+          return a.firstName.localeCompare(b.firstName);
+        }
+        return b.percentMatching - a.percentMatching;
+      });
       setContractors(filteredContractors);
     };
 
@@ -68,6 +124,15 @@ export default function Search() {
   return (
     <div>
       <Navigation />
+      <h1
+        style={{
+          textAlign: "center",
+          backgroundColor: "#B2B2B2",
+          padding: "3px",
+        }}
+      >
+        Developers
+      </h1>
       <div className="search_container">
         <div
           style={{
@@ -130,27 +195,53 @@ export default function Search() {
             contractors.map((contractor) => (
               <div
                 className="contractor_container"
-                key={contractor.id}
-                onClick={() => navigate(`/contractor/${contractor?.id}`)}
+                key={contractor?.id}
+                onClick={() => {
+                  navigate(`/contractor/${contractor?.id}`, {
+                    state: {
+                      searchState: memoizedSearchState,
+                    },
+                  });
+                }}
               >
                 <div style={{ marginLeft: "5px" }}>
                   <div style={{ minWidth: "60px" }}>
-                    <b>{contractor.percentMatching}%</b>
+                    <b>{contractor?.percentMatching}%</b>
                   </div>
-                  <img
-                    style={{
-                      width: "60px",
-                      height: "60px",
-                      objectFit: "cover",
-                      borderRadius: "5px",
-                    }}
-                    src={contractor.profileImg}
-                    alt=""
-                  />
+                  {contractor?.profileImg ? (
+                    <img
+                      style={{
+                        width: "60px",
+                        height: "60px",
+                        objectFit: "cover",
+                        borderRadius: "5px",
+                      }}
+                      src={contractor?.profileImg}
+                      alt=""
+                    />
+                  ) : (
+                    <img
+                      style={{
+                        width: "50px",
+                        height: "50px",
+                        objectFit: "cover",
+                        borderStyle: "solid",
+                        borderColor: "gray",
+                        borderWidth: "1px",
+                        borderRadius: "5px",
+                      }}
+                      src={Avatar}
+                      alt="Avatar"
+                    />
+                  )}
                 </div>
                 <div style={{ marginLeft: "5px" }}>
                   <div>
-                    <b>{contractor.name}</b>
+                    <b>{contractor?.firstName}&nbsp;</b>
+                    <b>{contractor?.lastName}&nbsp;</b>
+                    <div className="contractor_qualification2">
+                      {contractor?.qualification}
+                    </div>
                   </div>
                   <div>{contractor.summary}</div>
                   <div>

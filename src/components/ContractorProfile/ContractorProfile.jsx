@@ -1,20 +1,18 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
-import { useParams, useNavigate } from "react-router-dom";
+import { useParams } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
-import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import LinkedInIcon from "@mui/icons-material/LinkedIn";
+import Avatar from "../../assets/avatar.png"
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
   const { contractorList } = useContext(contractorContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
-  const navigate = useNavigate();
 
   useEffect(() => {
     const contractorSkillsList = () => {
@@ -37,20 +35,21 @@ const ContractorProfile = (props) => {
       {contractorList.map((contractor) =>
         id === contractor?.id || props?.data?.id === contractor?.id ? (
           <div className="contractor_profile" key={contractor.id}>
+              {contractor?.profileImg ? (
             <div className="image_wrapper">
-              <img src={contractor?.profileImg} alt="Contractor headshot" />
+                <img src={contractor?.profileImg} alt="Contractor headshot" />
             </div>
+              ) : (
+                <div className="avatar_wrapper">
+                <img src={Avatar} alt="Avatar" />
+                </div>
+              )}
             <div className="contractor_info">
-              <div className="contractor_name">{contractor?.name}</div>
+              <div className="contractor_name">{contractor?.firstName}&nbsp;{contractor?.lastName}</div>
+              <div className="contractor_qualification">
+                {contractor?.qualification}
+              </div>
               <div className="contractor_links">
-                <a
-                  style={{ marginBottom: "10px" }}
-                  href={`mailto:${contractor?.email}`}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                >
-                  <MailOutlineIcon />
-                </a>
                 {contractor?.otherInfo?.githubUrl && (
                   <a
                     href={contractor?.otherInfo?.githubUrl}
@@ -58,16 +57,6 @@ const ContractorProfile = (props) => {
                     rel="noopener noreferrer"
                   >
                     <GitHubIcon />
-                  </a>
-                )}
-                {contractor?.otherInfo?.linkedinUrl && (
-                  <a
-                    style={{ marginBottom: "10px" }}
-                    href={contractor?.otherInfo?.linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    <LinkedInIcon />
                   </a>
                 )}
                 {contractor?.resume && (
