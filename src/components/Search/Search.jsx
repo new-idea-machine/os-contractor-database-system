@@ -178,7 +178,7 @@ export default function Search() {
             />
           </div>
           <div style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button onClick={handleClearLocation} style={{width: "100px", height: "30px", cursor: "pointer"}}>Clear location</button>
+            <button onClick={handleClearLocation} style={{width: "100px", height: "30px", cursor: "pointer", border: "none"}}>Clear location</button>
           </div>
         </div>
         <div
