@@ -1,13 +1,11 @@
-import * as React from "react";
+import React, { useEffect } from "react";
 import { Country, State, City } from "country-state-city";
 import Box from "@mui/material/Box";
 import { Autocomplete, TextField } from "@mui/material";
-import { useEffect } from "react";
 
 export default function CSCSelector(props) {
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
-  const [city, setCity] = React.useState("");
 
   function isEmpty(obj) {
     if (obj === "") return true;
@@ -32,16 +30,6 @@ export default function CSCSelector(props) {
         );
         if (foundState) {
           setState(foundState?.isoCode);
-          const cities = City.getCitiesOfState(
-            foundCountry?.isoCode,
-            foundState?.isoCode
-          );
-          const foundCity = cities.find(
-            (city) => city?.name === props?.initialCity
-          );
-          if (foundCity) {
-            setCity(foundCity?.name);
-          }
         }
       }
     }
@@ -127,12 +115,10 @@ export default function CSCSelector(props) {
                 : null
             }
             onChange={(event, value) => {
-              setCity(value ? value?.name : "");
               props.getCity(value ? value?.name : "");
             }}
             onInputChange={(event, value) => {
               if (!value) {
-                setCity("");
                 props?.getCity("");
               }
             }}

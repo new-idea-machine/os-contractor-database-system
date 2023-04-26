@@ -1,4 +1,5 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
+import { useParams, useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { Button, Checkbox, Divider } from "@mui/material";
@@ -6,18 +7,17 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
-import { useParams, useLocation } from "react-router-dom";
-import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/avatar.png";
 
-let q;
+let selectedQualification;
+
 export default function Search() {
   const navigate = useNavigate();
   const { qualification } = useParams();
   const { skillsList } = useContext(skillsContext);
-  const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
+  const [selectedSkills, setSelectedSkills] = useState([]);
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -26,24 +26,24 @@ export default function Search() {
 
   const memoizedSearchState = useMemo(
     () => ({
-      selectedOptions,
+      selectedOptions: selectedSkills,
       country,
       state,
       city,
     }),
-    [selectedOptions, country, state, city]
+    [selectedSkills, country, state, city]
   );
 
   useEffect(() => {
     if (searchStateFromLocation) {
-      setSelectedOptions(searchStateFromLocation.selectedOptions || []);
+      setSelectedSkills(searchStateFromLocation.selectedOptions || []);
       setCountry(searchStateFromLocation.country || "");
       setState(searchStateFromLocation.state || "");
       setCity(searchStateFromLocation.city || "");
     } else {
       const savedState = JSON.parse(sessionStorage.getItem("searchState"));
       if (savedState) {
-        setSelectedOptions(savedState.selectedOptions || []);
+        setSelectedSkills(savedState.selectedOptions || []);
         setCountry(savedState.country || "");
         setState(savedState.state || "");
         setCity(savedState.city || "");
@@ -52,22 +52,22 @@ export default function Search() {
   }, [searchStateFromLocation]);
 
   const handleOptionChange = (optionId) => {
-    const newSelectedOptions = selectedOptions.includes(optionId)
-      ? selectedOptions.filter((id) => id !== optionId)
-      : [...selectedOptions, optionId];
-    setSelectedOptions(newSelectedOptions);
+    const newSelectedOptions = selectedSkills.includes(optionId)
+      ? selectedSkills.filter((id) => id !== optionId)
+      : [...selectedSkills, optionId];
+    setSelectedSkills(newSelectedOptions);
   };
 
   useEffect(() => {
     const checkQualification = () => {
       if (qualification === "developers") {
-        q = "Developer";
+        selectedQualification = "Developer";
       } else if (qualification === "designers") {
-        q = "Designer";
+        selectedQualification = "Designer";
       } else if (qualification === "projectmanagers") {
-        q = "Project Manager";
+        selectedQualification = "Project Manager";
       } else if (qualification === "productmanagers") {
-        q = "Product Manager";
+        selectedQualification = "Product Manager";
       }
     };
     checkQualification();
@@ -77,7 +77,7 @@ export default function Search() {
     sessionStorage.setItem(
       "searchState",
       JSON.stringify({
-        selectedOptions,
+        selectedOptions: selectedSkills,
         country,
         state,
         city,
@@ -87,8 +87,8 @@ export default function Search() {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
-        if (selectedOptions.length > 0) {
-          for (const option of selectedOptions) {
+        if (selectedSkills.length > 0) {
+          for (const option of selectedSkills) {
             if (contractor?.skillIds?.includes(option)) {
               numMatchingSkills++;
             }
@@ -105,10 +105,10 @@ export default function Search() {
           (!city || contractor.city === city);
 
         // Filter contractors by qualification
-        const whatQualification = contractor.qualification === q;
+        const whatQualification = contractor.qualification === selectedQualification;
 
-        const percentMatching = selectedOptions.length
-          ? Math.round((numMatchingSkills / selectedOptions.length) * 100)
+        const percentMatching = selectedSkills.length
+          ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
           : 100;
 
         if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
@@ -128,7 +128,7 @@ export default function Search() {
     };
 
     contractorSkillsList();
-  }, [selectedOptions, contractorList, country, state, city]);
+  }, [selectedSkills, contractorList, country, state, city]);
 
   const handleClearLocation = () => {
     setCountry("");
@@ -137,7 +137,7 @@ export default function Search() {
   };
 
   const handleClearSkill = () => {
-    setSelectedOptions([]);
+    setSelectedSkills([]);
   };
 
   return (
@@ -177,8 +177,11 @@ export default function Search() {
               getCity={(city) => setCity(city)}
             />
           </div>
-          <div className="clear_button" style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button onClick={handleClearLocation} >Clear location</button>
+          <div
+            className="clear_button"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <button onClick={handleClearLocation}>Clear location</button>
           </div>
         </div>
         <div
@@ -202,7 +205,7 @@ export default function Search() {
                 {skillsList.map((option) => (
                   <div className="search_options" key={option.id}>
                     <Checkbox
-                      checked={selectedOptions.includes(option.id)}
+                      checked={selectedSkills.includes(option.id)}
                       onChange={() => handleOptionChange(option.id)}
                     />
                     {option.title}
@@ -211,10 +214,13 @@ export default function Search() {
                 ))}
               </Grid>
             </Grid>
-            <div className="clear_button" style={{ display: "flex", justifyContent: "flex-end" }}>
-            <button onClick={handleClearSkill}>Clear skills</button>
+            <div
+              className="clear_button"
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <button onClick={handleClearSkill}>Clear skills</button>
+            </div>
           </div>
-                     </div>
         </div>
         <Divider />
         <ul>
