@@ -18,9 +18,9 @@ export default function Search() {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
-  const [country, setCountry] = React.useState(null);
-  const [state, setState] = React.useState(null);
-  const [city, setCity] = React.useState(null);
+  const [country, setCountry] = React.useState("");
+  const [state, setState] = React.useState("");
+  const [city, setCity] = React.useState("");
   const location = useLocation();
   const searchStateFromLocation = location.state?.searchState;
 
@@ -131,9 +131,9 @@ export default function Search() {
   }, [selectedOptions, contractorList, country, state, city]);
 
   const handleClearLocation = () => {
-    setCountry(null);
-    setState(null);
-    setCity(null);
+    setCountry("");
+    setState("");
+    setCity("");
   };
 
   const handleClearSkill = () => {

@@ -5,12 +5,12 @@ import { Autocomplete, TextField } from "@mui/material";
 import { useEffect } from "react";
 
 export default function CSCSelector(props) {
-  const [country, setCountry] = React.useState(null);
-  const [state, setState] = React.useState(null);
-  const [city, setCity] = React.useState(null);
+  const [country, setCountry] = React.useState("");
+  const [state, setState] = React.useState("");
+  const [city, setCity] = React.useState("");
 
   function isEmpty(obj) {
-    if (obj === null) return true;
+    if (obj === "") return true;
     return Object.keys(obj).length === 0 && obj.constructor === Object;
   }
 
@@ -57,19 +57,19 @@ export default function CSCSelector(props) {
               : null
           }
           onChange={(event, value) => {
-            setCountry(value ? value?.isoCode : null);
-            props?.getCountry(value ? value?.isoCode : null);
+            setCountry(value ? value?.isoCode : "");
+            props?.getCountry(value ? value?.isoCode : "");
           }}
           onInputChange={(event, value) => {
             if (!value) {
-              setCountry(null);
-              props?.getCountry(null);
+              setCountry("");
+              props?.getCountry("");
             }
           }}
           id="combo-box-demo"
           options={Country.getAllCountries()}
           filterSelectedOptions
-          getOptionLabel={(option) => option?.name || null}
+          getOptionLabel={(option) => option?.name || ""}
           isOptionEqualToValue={(option, value) =>
             option?.isoCode === value?.isoCode
           }
@@ -90,13 +90,13 @@ export default function CSCSelector(props) {
                 : null
             }
             onChange={(event, value) => {
-              setState(value ? value?.isoCode : null);
-              props?.getState(value ? value?.isoCode : null);
+              setState(value ? value?.isoCode : "");
+              props?.getState(value ? value?.isoCode : "");
             }}
             onInputChange={(event, value) => {
               if (!value) {
-                setState(null);
-                props?.getState(null);
+                setState("");
+                props?.getState("");
               }
             }}
             id="combo-box-demo"
@@ -104,7 +104,7 @@ export default function CSCSelector(props) {
               .filter((stateValue) => stateValue?.countryCode === country)
               .sort((a, b) => a.name.localeCompare(b.name))}
             filterSelectedOptions
-            getOptionLabel={(option) => option?.name || null}
+            getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.isoCode === value?.isoCode &&
               option?.countryCode === value?.countryCode
@@ -127,13 +127,13 @@ export default function CSCSelector(props) {
                 : null
             }
             onChange={(event, value) => {
-              setCity(value ? value?.name : null);
-              props.getCity(value ? value?.name : null);
+              setCity(value ? value?.name : "");
+              props.getCity(value ? value?.name : "");
             }}
             onInputChange={(event, value) => {
               if (!value) {
-                setCity(null);
-                props?.getCity(null);
+                setCity("");
+                props?.getCity("");
               }
             }}
             id="combo-box-demo"
@@ -141,7 +141,7 @@ export default function CSCSelector(props) {
               .filter((cityValue) => cityValue?.stateCode === state)
               .sort((a, b) => a.name.localeCompare(b.name))}
             filterSelectedOptions
-            getOptionLabel={(option) => option?.name || null}
+            getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.name === value?.name &&
               option?.stateCode === value?.stateCode
