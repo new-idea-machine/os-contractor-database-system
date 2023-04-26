@@ -6,7 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/avatar.png";
 
@@ -18,9 +18,11 @@ export default function Search() {
   const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
-  const [country, setCountry] = React.useState("");
-  const [state, setState] = React.useState("");
-  const [city, setCity] = React.useState("");
+  const [country, setCountry] = React.useState(null);
+  const [state, setState] = React.useState(null);
+  const [city, setCity] = React.useState(null);
+  const location = useLocation();
+  const searchStateFromLocation = location.state?.searchState;
 
   const memoizedSearchState = useMemo(
     () => ({
@@ -33,14 +35,21 @@ export default function Search() {
   );
 
   useEffect(() => {
-    const savedState = JSON.parse(sessionStorage.getItem("searchState"));
-    if (savedState) {
-      setSelectedOptions(savedState.selectedOptions || []);
-      setCountry(savedState.country || "");
-      setState(savedState.state || "");
-      setCity(savedState.city || "");
+    if (searchStateFromLocation) {
+      setSelectedOptions(searchStateFromLocation.selectedOptions || []);
+      setCountry(searchStateFromLocation.country || "");
+      setState(searchStateFromLocation.state || "");
+      setCity(searchStateFromLocation.city || "");
+    } else {
+      const savedState = JSON.parse(sessionStorage.getItem("searchState"));
+      if (savedState) {
+        setSelectedOptions(savedState.selectedOptions || []);
+        setCountry(savedState.country || "");
+        setState(savedState.state || "");
+        setCity(savedState.city || "");
+      }
     }
-  }, []);
+  }, [searchStateFromLocation]);
 
   const handleOptionChange = (optionId) => {
     const newSelectedOptions = selectedOptions.includes(optionId)
@@ -121,6 +130,16 @@ export default function Search() {
     contractorSkillsList();
   }, [selectedOptions, contractorList, country, state, city]);
 
+  const handleClearLocation = () => {
+    setCountry(null);
+    setState(null);
+    setCity(null);
+  };
+
+  const handleClearSkill = () => {
+    setSelectedOptions([]);
+  };
+
   return (
     <div>
       <Navigation />
@@ -147,12 +166,19 @@ export default function Search() {
           <h2 style={{ textAlign: "center", margin: 0, marginBottom: "20px" }}>
             Search by Location
           </h2>
+
           <div className="search_location">
             <CSCSelector
+              initialCountry={country}
+              initialState={state}
+              initialCity={city}
               getCountry={(country) => setCountry(country)}
               getState={(state) => setState(state)}
               getCity={(city) => setCity(city)}
             />
+          </div>
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button onClick={handleClearLocation} style={{width: "100px", height: "30px", cursor: "pointer", border: "none"}}>Clear location</button>
           </div>
         </div>
         <div
@@ -185,7 +211,10 @@ export default function Search() {
                 ))}
               </Grid>
             </Grid>
+            <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            <button onClick={handleClearSkill} style={{width: "100px", height: "30px", cursor: "pointer"}}>Clear skills</button>
           </div>
+                     </div>
         </div>
         <Divider />
         <ul>
