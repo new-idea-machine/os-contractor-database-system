@@ -6,7 +6,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
-import { useParams } from "react-router-dom";
+import { useParams, useLocation } from "react-router-dom";
 import { useNavigate } from "react-router-dom";
 import Avatar from "../../assets/avatar.png";
 
@@ -21,6 +21,8 @@ export default function Search() {
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
+  const location = useLocation();
+  const searchStateFromLocation = location.state?.searchState;
 
   const memoizedSearchState = useMemo(
     () => ({
@@ -33,12 +35,19 @@ export default function Search() {
   );
 
   useEffect(() => {
-    const savedState = JSON.parse(sessionStorage.getItem("searchState"));
-    if (savedState) {
-      setSelectedOptions(savedState.selectedOptions || []);
-      setCountry(savedState.country || "");
-      setState(savedState.state || "");
-      setCity(savedState.city || "");
+    if (searchStateFromLocation) {
+      setSelectedOptions(searchStateFromLocation.selectedOptions || []);
+      setCountry(searchStateFromLocation.country || "");
+      setState(searchStateFromLocation.state || "");
+      setCity(searchStateFromLocation.city || "");
+    } else {
+      const savedState = JSON.parse(sessionStorage.getItem("searchState"));
+      if (savedState) {
+        setSelectedOptions(savedState.selectedOptions || []);
+        setCountry(savedState.country || "");
+        setState(savedState.state || "");
+        setCity(savedState.city || "");
+      }
     }
   }, []);
 
@@ -148,11 +157,15 @@ export default function Search() {
             Search by Location
           </h2>
           <div className="search_location">
-            <CSCSelector
-              getCountry={(country) => setCountry(country)}
-              getState={(state) => setState(state)}
-              getCity={(city) => setCity(city)}
-            />
+          <CSCSelector
+  initialCountry={country}
+  initialState={state}
+  initialCity={city}
+  getCountry={(country) => setCountry(country)}
+  getState={(state) => setState(state)}
+  getCity={(city) => setCity(city)}
+/>
+
           </div>
         </div>
         <div
