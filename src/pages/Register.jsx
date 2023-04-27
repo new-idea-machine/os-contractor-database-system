@@ -12,6 +12,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const [registerEmail, setRegisterEmail] = useState('');
 	const [registerPassword, setRegisterPassword] = useState('');
 	const [displayName, setDisplayName] = useState('');
+	const [userType, setUserType] = useState('');
 	// const [registrationRunning, setRegistrationRunning] = useState(false);
 	const [errorMessage, setErroMessage] = useState();
 
@@ -43,7 +44,8 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 			let success = register(
 				registerEmail,
 				displayName.trim(),
-				registerPassword
+				registerPassword,
+				userType
 			);
 			if (!success) {
 				setErroMessage('Registration Failed');
@@ -74,7 +76,6 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 						</div>
 					</div>
 					<div className='boxAuth'>
-						{/* <h2 style={{ color: 'var(--color-golden)' }}> Register </h2> */}
 						<div className='fields2'>
 							<input
 								id='emailInput'
@@ -108,10 +109,44 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								{' '}
 								Create User
 							</button>
-							{/* <button onClick={() => navigate('/login')}>LogIn</button> */}
+							<div
+								style={{
+									color: 'black',
+									fontSize: '16px',
+									marginTop: '5px',
+								}}
+							>
+								Are you a Recruiter ?
+							</div>
+							<div
+								style={{
+									display: 'flex',
+									flexDirection: 'row',
+									gap: '10px',
+									marginTop: '5px',
+								}}
+							>
+								<input
+									style={{
+										boxShadow: 'none',
+										cursor: 'pointer',
+										width: '20px',
+										height: '20px',
+									}}
+									type='checkbox'
+									name='recruiter'
+									// placeholder='Yes'
+									value='recruiter'
+									// autoComplete='off'
+									onChange={(event) => {
+										setUserType(event.target.value);
+									}}
+								/>
+								<label style={{ color: 'black' }}>Yes</label>
+							</div>
 						</div>
 						<div className='optionContainer'>
-							<p style={{ color: 'black' }}>Already have an account?</p>
+							<div style={{ color: 'black' }}>Already have an account ?</div>
 							<button className='' onClick={handleFormChange}>
 								<span style={{ textDecoration: 'underline' }}>Login</span>
 							</button>
