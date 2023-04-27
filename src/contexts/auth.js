@@ -43,11 +43,11 @@ export default function AuthControl(props) {
 	// This Function is declared to be called in the below
 	// function --createUserInDatabase-- To add the creted
 	// id of the "tech" object, to the object itself
-	const addDocumentIdFieldToObject = async (id) => {
+	const addDocumentIdFieldToObject = async (id, userType) => {
 		const data = {
 			id: id,
 		};
-		const userDocRef = doc(db, 'techs', id);
+		const userDocRef = doc(db, userType, id);
 		if (userDocRef) {
 			await updateDoc(userDocRef, data);
 			console.log('User successfully updated!');
@@ -63,21 +63,29 @@ export default function AuthControl(props) {
 	const createUserInDatabase = async (
 		registerEmail,
 		displayName,
-		firebaseUID
+		firebaseUID,
+		userType
 	) => {
+		console.log(userType, 'userType');
 		const data = {
 			name: displayName,
 			email: registerEmail,
 			firebaseUID: firebaseUID,
+			userType: userType,
 		};
-		const createUserRequest = await addDoc(collection(db, 'techs'), data);
+		const createUserRequest = await addDoc(collection(db, userType), data);
 		// console.log('Document written with ID: ', createUserRequest.id);
 		const idToAdd = createUserRequest.id;
-		addDocumentIdFieldToObject(idToAdd);
+		addDocumentIdFieldToObject(idToAdd, userType);
 	};
 
 	// This function registers the user with firebase
-	const register = async (registerEmail, displayName, registerPassword) => {
+	const register = async (
+		registerEmail,
+		displayName,
+		registerPassword,
+		userType
+	) => {
 		try {
 			await createUserWithEmailAndPassword(
 				auth,
@@ -90,7 +98,7 @@ export default function AuthControl(props) {
 				.then(() => {
 					// ...
 					const FUID = auth.currentUser.uid;
-					createUserInDatabase(registerEmail, displayName, FUID);
+					createUserInDatabase(registerEmail, displayName, FUID, userType);
 				})
 				.catch((error) => {
 					console.log(error.message);
