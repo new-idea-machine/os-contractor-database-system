@@ -4,17 +4,26 @@ import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { Button, Checkbox, Divider } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { skillsContext } from "../../contexts/SkillsContext";
+// import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import Avatar from "../../assets/avatar.png";
+// added skills for each role
+import { developerSkills, designerSkills, productManagerSkills, projectManagerSkills } from "../../contexts/skillsData";
+// import { skillsList } from "../../contexts/skillsData"
+// new
 
-let selectedQualification;
 
+
+let q;
 export default function Search() {
   const navigate = useNavigate();
   const { qualification } = useParams();
   const { skillsList } = useContext(skillsContext);
+  // const { skillsList } = useContext(skillsContext);
+  // added next line
+  const { developerSkills, designerSkills, productManagerSkills, projectManagerSkills } = useMemo(() => skillsData, []);
+  const [selectedOptions, setSelectedOptions] = useState([]);
   const { contractorList } = useContext(contractorContext);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
@@ -23,7 +32,9 @@ export default function Search() {
   const [city, setCity] = React.useState("");
   const location = useLocation();
   const searchStateFromLocation = location.state?.searchState;
-
+  // added lines (Qty 2)
+  console.log('Developer Skills', developerSkills);
+  console.log('Designer Skills', designerSkills);
   const memoizedSearchState = useMemo(
     () => ({
       selectedOptions: selectedSkills,
