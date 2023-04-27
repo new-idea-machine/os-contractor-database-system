@@ -6,14 +6,17 @@ import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import Avatar from "../../assets/avatar.png"
+import Avatar from "../../assets/avatar.png";
+import PlaceIcon from "@mui/icons-material/Place";
+import { Country } from "country-state-city";
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
   const { contractorList } = useContext(contractorContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
-
+  const allCountries = Country.getAllCountries();
+  // console.log(allCountries)
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.map((contractor) => {
@@ -35,20 +38,46 @@ const ContractorProfile = (props) => {
       {contractorList.map((contractor) =>
         id === contractor?.id || props?.data?.id === contractor?.id ? (
           <div className="contractor_profile" key={contractor.id}>
-              {contractor?.profileImg ? (
-            <div className="image_wrapper">
+            {contractor?.profileImg ? (
+              <div className="image_wrapper">
                 <img src={contractor?.profileImg} alt="Contractor headshot" />
-            </div>
-              ) : (
-                <div className="avatar_wrapper">
+              </div>
+            ) : (
+              <div className="avatar_wrapper">
                 <img src={Avatar} alt="Avatar" />
-                </div>
-              )}
+              </div>
+            )}
             <div className="contractor_info">
-              <div className="contractor_name">{contractor?.firstName}&nbsp;{contractor?.lastName}</div>
+              <div className="contractor_name">
+                {contractor?.firstName}&nbsp;{contractor?.lastName}
+              </div>
               <div className="contractor_qualification">
                 {contractor?.qualification}
               </div>
+
+              {contractor?.countryCode ? (
+                <div>
+                  {allCountries.map((code) => {
+                    if (code.isoCode === contractor?.countryCode)
+                      return (
+                        <div
+                          key={code.isoCode}
+                          style={{
+                            display: "flex",
+                            alignContent: "center",
+                            paddingBottom: "10px",
+                          }}
+                        >
+                          <PlaceIcon />
+                          <div>{code.name},</div>
+                          <div>&nbsp;{contractor?.stateCode},</div>
+                          <div>&nbsp;{contractor?.city}</div>
+                        </div>
+                      );
+                  })}
+                </div>
+              ) : null}
+
               <div className="contractor_links">
                 {contractor?.otherInfo?.githubUrl && (
                   <a

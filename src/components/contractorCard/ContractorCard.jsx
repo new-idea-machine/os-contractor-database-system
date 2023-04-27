@@ -6,7 +6,7 @@ import Avatar from "../../assets/avatar.png";
 export default function ContractorCard({ data }) {
   const navigate = useNavigate();
   const pdfURL = data?.resume;
-  console.log(data)
+
 
   return (
     <>
