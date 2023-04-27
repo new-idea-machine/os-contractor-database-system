@@ -7,11 +7,12 @@
   border-radius: 35px;
   flex-direction: column;
   /* border: 2px solid black; */
+  cursor: pointer;
 }
 
 .imageWrapper {
-  width: 75px;
-  height: 75px;
+  width: 130px;
+  height: 130px;
   border-radius: 50%;
 }
 
