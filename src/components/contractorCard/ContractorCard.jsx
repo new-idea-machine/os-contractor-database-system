@@ -6,6 +6,7 @@ import Avatar from "../../assets/avatar.png";
 export default function ContractorCard({ data }) {
   const navigate = useNavigate();
   const pdfURL = data?.resume;
+  console.log(data)
 
   return (
     <>
@@ -23,7 +24,7 @@ export default function ContractorCard({ data }) {
         <h1 onClick={() => console.log(data?.name)}>
           {data?.firstName}&nbsp;{data?.lastName}
         </h1>
-        <h3>{data?.email}</h3>
+        <h3>{data?.qualification}</h3>
         {/* {data?.resume && (
           <>
             <h4>Resume</h4>

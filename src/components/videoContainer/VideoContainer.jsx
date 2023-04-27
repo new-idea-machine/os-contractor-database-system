@@ -45,11 +45,8 @@ const VideoContainer = () => {
 					application that enables users to store, manage, and access
 					information related to contractors.
 				</h1>
-				<div
-					className='customButton4'
-					onClick={() => navigate('contractorlist')}
-				>
-					<span>Continue</span>
+				<div className='customButton4' onClick={() => navigate('auth')}>
+					<span>Log In Or Sign Up</span>
 				</div>
 				{user && (
 					<div className='customButton4' onClick={() => logout()}>
