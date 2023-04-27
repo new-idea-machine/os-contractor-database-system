@@ -79,3 +79,15 @@
   background-color: #f6f5f5;
 }
 
+.clear_button button {
+  width: 100px;
+   height: 30px;
+    cursor: pointer;
+    border: none;
+    border-radius: 5px;
+}
+
+.clear_button button:hover {
+ background-color: #bdbaba;
+}
+
