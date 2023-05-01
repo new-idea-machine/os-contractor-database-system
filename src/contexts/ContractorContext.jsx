@@ -24,7 +24,6 @@ const ContractorContext = ({ children }) => {
 	const [contractor, setContractor] = useState(null);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
 
-
 	// const matchProfileToCurrentUser = () => {
 	//   contractorList?.map((userUID) => {
 	//     if (userUID?.firebaseUID === user?.uid) setCurrentUserProfile(userUID);
@@ -41,6 +40,7 @@ const ContractorContext = ({ children }) => {
 		}
 	};
 	const updateTechObject = async (data) => {
+		console.log('TRYING TO UPDATE', data);
 		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'techs', data?.id);
 		if (userDocRef) {
