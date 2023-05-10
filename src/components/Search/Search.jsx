@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
 import { Button, Checkbox, Divider } from "@mui/material";
@@ -9,13 +9,17 @@ import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import Avatar from "../../assets/avatar.png";
 
-let selectedQualification;
-
 export default function Search() {
   const navigate = useNavigate();
-  const { qualification } = useParams();
   const { skillsList } = useContext(skillsContext);
   const { contractorList } = useContext(contractorContext);
+  const qualification = [
+    "Developer",
+    "Designer",
+    "Product Manager",
+    "Project Manager",
+  ];
+  const [selectedQualification, setSelectedQualification] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [country, setCountry] = React.useState("");
@@ -26,17 +30,21 @@ export default function Search() {
 
   const memoizedSearchState = useMemo(
     () => ({
+      selectedOptQualification: selectedQualification,
       selectedOptions: selectedSkills,
       country,
       state,
       city,
     }),
-    [selectedSkills, country, state, city]
+    [selectedSkills, selectedQualification, country, state, city]
   );
 
   useEffect(() => {
     if (searchStateFromLocation) {
       setSelectedSkills(searchStateFromLocation.selectedOptions || []);
+      setSelectedQualification(
+        searchStateFromLocation.selectedOptQualification || []
+      );
       setCountry(searchStateFromLocation.country || "");
       setState(searchStateFromLocation.state || "");
       setCity(searchStateFromLocation.city || "");
@@ -44,6 +52,7 @@ export default function Search() {
       const savedState = JSON.parse(sessionStorage.getItem("searchState"));
       if (savedState) {
         setSelectedSkills(savedState.selectedOptions || []);
+        setSelectedQualification(savedState.selectedOptQualification || []);
         setCountry(savedState.country || "");
         setState(savedState.state || "");
         setCity(savedState.city || "");
@@ -58,25 +67,18 @@ export default function Search() {
     setSelectedSkills(newSelectedOptions);
   };
 
-  useEffect(() => {
-    const checkQualification = () => {
-      if (qualification === "developers") {
-        selectedQualification = "Developer";
-      } else if (qualification === "designers") {
-        selectedQualification = "Designer";
-      } else if (qualification === "projectmanagers") {
-        selectedQualification = "Project Manager";
-      } else if (qualification === "productmanagers") {
-        selectedQualification = "Product Manager";
-      }
-    };
-    checkQualification();
-  }, [qualification]);
+  const handleOptionQualificationChange = (option) => {
+    const newSelectedOptions = selectedQualification.includes(option)
+      ? selectedQualification.filter((title) => title !== option)
+      : [...selectedQualification, option];
+    setSelectedQualification(newSelectedOptions);
+  };
 
   useEffect(() => {
     sessionStorage.setItem(
       "searchState",
       JSON.stringify({
+        selectedOptQualification: selectedQualification,
         selectedOptions: selectedSkills,
         country,
         state,
@@ -98,20 +100,27 @@ export default function Search() {
           numMatchingSkills = 1;
         }
 
+        // Filter contractors by qualification
+        const isMatchingQualification =
+          selectedQualification.length === 0 ||
+          selectedQualification.includes(contractor.qualification);
+
         // Filter contractors by location (country, state, and city)
         const isMatchingLocation =
           (!country || contractor.countryCode === country) &&
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
-        // Filter contractors by qualification
-        const whatQualification = contractor.qualification === selectedQualification;
-
         const percentMatching = selectedSkills.length
           ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
+        const shouldShowContractor =
+          numMatchingSkills > 0 &&
+          isMatchingLocation &&
+          isMatchingQualification;
+
+        if (shouldShowContractor) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
@@ -128,7 +137,14 @@ export default function Search() {
     };
 
     contractorSkillsList();
-  }, [selectedSkills, contractorList, country, state, city]);
+  }, [
+    selectedSkills,
+    selectedQualification,
+    contractorList,
+    country,
+    state,
+    city,
+  ]);
 
   const handleClearLocation = () => {
     setCountry("");
@@ -140,18 +156,13 @@ export default function Search() {
     setSelectedSkills([]);
   };
 
+  const handleClearQualification = () => {
+    setSelectedQualification([]);
+  };
+
   return (
     <div>
       <Navigation />
-      <h1
-        style={{
-          textAlign: "center",
-          backgroundColor: "#B2B2B2",
-          padding: "3px",
-        }}
-      >
-        Developers
-      </h1>
       <div className="search_container">
         <div
           style={{
@@ -159,11 +170,53 @@ export default function Search() {
             borderColor: "gray",
             borderWidth: "0.5px",
             borderRadius: "5px",
-            padding: "20px",
-            marginBottom: "20px",
+            padding: "10px",
+            marginBottom: "15px",
           }}
         >
-          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "20px" }}>
+          <h2 className="search_title">Search by Qualification</h2>
+          <div>
+            <Grid container spacing={10} minHeight={120}>
+              <Grid
+                xs
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {qualification.map((option) => (
+                  <div className="search_options" key={option}>
+                    <Checkbox
+                      checked={selectedQualification.includes(option)}
+                      onChange={() => handleOptionQualificationChange(option)}
+                    />
+                    {option}
+                    <br />
+                  </div>
+                ))}
+              </Grid>
+            </Grid>
+            <div
+              className="clear_button"
+              style={{ display: "flex", justifyContent: "flex-end" }}
+            >
+              <button onClick={handleClearQualification}>
+                Clear Qualification
+              </button>
+            </div>
+          </div>
+        </div>
+
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "10px",
+            marginBottom: "15px",
+          }}
+        >
+          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "10px" }}>
             Search by Location
           </h2>
 
@@ -190,12 +243,12 @@ export default function Search() {
             borderColor: "gray",
             borderWidth: "0.5px",
             borderRadius: "5px",
-            padding: "20px",
+            padding: "10px",
           }}
         >
           <h2 className="search_title">Search by Skill</h2>
           <div>
-            <Grid container spacing={10} minHeight={160}>
+            <Grid container spacing={10} minHeight={120}>
               <Grid
                 xs
                 display="flex"
