@@ -1,6 +1,7 @@
 .search_container {
   padding: 20px;
   min-height: 90vh;
+  margin-top: 60px;
 }
 
 .search_location {
@@ -12,10 +13,10 @@
 
 .search_skills {
   display: flex;
-  flex-direction:column;
+  flex-direction: column;
   align-items: center;
-  margin-top: 5px;
-}
+  margin-top: 10px;
+ }
 
 .search_title {
   text-align: center;

@@ -2,18 +2,18 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { Button, Checkbox, Chip } from "@mui/material";
+import { Button, Checkbox } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import Avatar from "../../assets/avatar.png";
-import { skillsList } from "../../constants/skillsList.js";
+import { developerSkills } from "../../constants/skills/developerSkills.js";
+import { designerSkills } from "../../constants/skills/designerSkills";
+import { productManagerSkills } from "../../constants/skills/productManagerSkills";
+import { projectManagerSkills } from "../../constants/skills/projectManagerSkills";
 import ClearSkill from "./ClearSkill";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
-import InputAdornment from "@mui/material/InputAdornment";
-import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
-import Box from "@mui/material/Box";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -27,17 +27,8 @@ export default function Search() {
   const [selectedQualification, setSelectedQualification] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [allSkills, setAllSkills] = useState([]);
   const [inputValue, setInputValue] = useState("");
-  // const filteredSkills = skillsList.filter(
-  //   (skill) =>
-  //     skill.toLowerCase().startsWith(inputValue.toLowerCase())
-  // );
-  const filteredSkills = inputValue
-    ? skillsList.filter((skill) =>
-        skill.toLowerCase().startsWith(inputValue.toLowerCase())
-      )
-    : skillsList;
-
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -46,8 +37,8 @@ export default function Search() {
 
   const memoizedSearchState = useMemo(
     () => ({
-      selectedOptQualification: selectedQualification,
-      selectedOptions: selectedSkills,
+      selectedQualification,
+      selectedSkills,
       country,
       state,
       city,
@@ -57,9 +48,9 @@ export default function Search() {
 
   useEffect(() => {
     if (searchStateFromLocation) {
-      setSelectedSkills(searchStateFromLocation.selectedOptions || []);
+      setSelectedSkills(searchStateFromLocation.selectedSkills || []);
       setSelectedQualification(
-        searchStateFromLocation.selectedOptQualification || []
+        searchStateFromLocation.selectedQualification || []
       );
       setCountry(searchStateFromLocation.country || "");
       setState(searchStateFromLocation.state || "");
@@ -67,8 +58,8 @@ export default function Search() {
     } else {
       const savedState = JSON.parse(sessionStorage.getItem("searchState"));
       if (savedState) {
-        setSelectedSkills(savedState.selectedOptions || []);
-        setSelectedQualification(savedState.selectedOptQualification || []);
+        setSelectedSkills(savedState.selectedSkills || []);
+        setSelectedQualification(savedState.selectedQualification || []);
         setCountry(savedState.country || "");
         setState(savedState.state || "");
         setCity(savedState.city || "");
@@ -84,17 +75,58 @@ export default function Search() {
   };
 
   useEffect(() => {
+    const updateAllSkills = () => {
+      let newAllSkills = [];
+
+      if (selectedQualification.length === 0) {
+        // Add all skills when no qualification is selected
+        newAllSkills = [
+          ...developerSkills,
+          ...designerSkills,
+          ...productManagerSkills,
+          ...projectManagerSkills,
+        ];
+      } else {
+        selectedQualification.forEach((qualification) => {
+          switch (qualification) {
+            case "Developer":
+              newAllSkills = [...newAllSkills, ...developerSkills];
+              break;
+            case "Designer":
+              newAllSkills = [...newAllSkills, ...designerSkills];
+              break;
+            case "Product Manager":
+              newAllSkills = [...newAllSkills, ...productManagerSkills];
+              break;
+            case "Project Manager":
+              newAllSkills = [...newAllSkills, ...projectManagerSkills];
+              break;
+            default:
+              break;
+          }
+        });
+      }
+      // Remove duplicates and sort the array
+      newAllSkills = [...new Set(newAllSkills)].sort((a, b) =>
+        a.localeCompare(b)
+      );
+      setAllSkills(newAllSkills);
+    };
+    updateAllSkills();
+  }, [selectedQualification]);
+
+  useEffect(() => {
     sessionStorage.setItem(
       "searchState",
       JSON.stringify({
-        selectedOptQualification: selectedQualification,
-        selectedOptions: selectedSkills,
+        selectedQualification,
+        selectedSkills,
         country,
         state,
         city,
       })
     );
-    const contractorSkillsList = () => {
+    const contractorFilteredList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
@@ -145,7 +177,7 @@ export default function Search() {
       setContractors(filteredContractors);
     };
 
-    contractorSkillsList();
+    contractorFilteredList();
   }, [
     selectedSkills,
     selectedQualification,
@@ -202,7 +234,6 @@ export default function Search() {
             </Grid>
           </div>
         </div>
-
         <div
           style={{
             borderStyle: "solid",
@@ -211,36 +242,6 @@ export default function Search() {
             borderRadius: "5px",
             padding: "10px",
             marginBottom: "15px",
-          }}
-        >
-          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "10px" }}>
-            Search by Location
-          </h2>
-
-          <div className="search_location">
-            <CSCSelector
-              initialCountry={country}
-              initialState={state}
-              initialCity={city}
-              getCountry={(country) => setCountry(country)}
-              getState={(state) => setState(state)}
-              getCity={(city) => setCity(city)}
-            />
-          </div>
-          <div
-            className="clear_button"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
-            <button onClick={handleClearLocation}>Clear location</button>
-          </div>
-        </div>
-        <div
-          style={{
-            borderStyle: "solid",
-            borderColor: "gray",
-            borderWidth: "0.5px",
-            borderRadius: "5px",
-            padding: "10px",
           }}
         >
           <h2 className="search_title">Search by Skill</h2>
@@ -253,7 +254,7 @@ export default function Search() {
               sx={{ width: 350 }}
               inputValue={inputValue}
               onInputChange={(_, value) => setInputValue(value)}
-              options={skillsList}
+              options={allSkills}
               getOptionLabel={(option) =>
                 option.toLowerCase().startsWith(inputValue.toLowerCase())
                   ? option
@@ -300,6 +301,42 @@ export default function Search() {
             <button onClick={handleClearSkills}>Clear Skills</button>
           </div>
         </div>
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "10px",
+            marginBottom: "15px",
+          }}
+        >
+          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "10px" }}>
+            Search by Location
+          </h2>
+
+          <div className="search_location">
+            <CSCSelector
+              initialCountry={country}
+              initialState={state}
+              initialCity={city}
+              getCountry={(country) => setCountry(country)}
+              getState={(state) => setState(state)}
+              getCity={(city) => setCity(city)}
+            />
+          </div>
+          <div
+            className="clear_button"
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "5px",
+            }}
+          >
+            <button onClick={handleClearLocation}>Clear location</button>
+          </div>
+        </div>
+       
         <ul>
           {contractors.length === 0 ? (
             <div className="no-results-message">No results</div>
@@ -365,9 +402,10 @@ export default function Search() {
                               <Button
                                 style={{
                                   width: "auto",
+                                  height: "20px",
                                   borderStyle: "solid",
                                   borderWidth: "1px",
-                                  padding: "0.2px",
+                                  padding: "2px",
                                   marginTop: "5px",
                                   marginBottom: "5px",
                                   marginLeft: "5px",
