@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { Button, Checkbox } from "@mui/material";
+import { Button, Checkbox, Radio } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
@@ -68,10 +68,10 @@ export default function Search() {
   }, [searchStateFromLocation]);
 
   const handleOptionQualificationChange = (option) => {
-    const newSelectedOptions = selectedQualification.includes(option)
-      ? selectedQualification.filter((title) => title !== option)
-      : [...selectedQualification, option];
-    setSelectedQualification(newSelectedOptions);
+    setSelectedQualification(
+      selectedQualification.includes(option) ? [] : [option]
+    );
+    setSelectedSkills([]);
   };
 
   useEffect(() => {
@@ -187,15 +187,20 @@ export default function Search() {
     city,
   ]);
 
+  const handleClearQualification = () => {
+    setSelectedQualification([]);
+  };
+
+  const handleClearSkills = () => {
+    setSelectedSkills([]);
+  };
+
   const handleClearLocation = () => {
     setCountry("");
     setState("");
     setCity("");
   };
 
-  const handleClearSkills = () => {
-    setSelectedSkills([]);
-  };
 
   return (
     <div>
@@ -222,9 +227,9 @@ export default function Search() {
               >
                 {qualification.map((option) => (
                   <div className="search_options" key={option}>
-                    <Checkbox
+                    <Radio
                       checked={selectedQualification.includes(option)}
-                      onChange={() => handleOptionQualificationChange(option)}
+                      onClick={() => handleOptionQualificationChange(option)}
                     />
                     {option}
                     <br />
@@ -232,6 +237,12 @@ export default function Search() {
                 ))}
               </Grid>
             </Grid>
+            <div
+            className="clear_button"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <button onClick={handleClearQualification}>Clear Qualification</button>
+          </div>
           </div>
         </div>
         <div
@@ -336,7 +347,7 @@ export default function Search() {
             <button onClick={handleClearLocation}>Clear location</button>
           </div>
         </div>
-       
+
         <ul>
           {contractors.length === 0 ? (
             <div className="no-results-message">No results</div>
