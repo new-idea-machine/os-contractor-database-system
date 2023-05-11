@@ -2,16 +2,21 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { Button, Checkbox, Divider } from "@mui/material";
+import { Button, Checkbox, Chip } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import Avatar from "../../assets/avatar.png";
+import { skillsList } from "../../constants/skillsList.js";
+import ClearSkill from "./ClearSkill";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
+import InputAdornment from "@mui/material/InputAdornment";
+import ArrowDropDownIcon from "@mui/icons-material/ArrowDropDown";
+import Box from "@mui/material/Box";
 
 export default function Search() {
   const navigate = useNavigate();
-  const { skillsList } = useContext(skillsContext);
   const { contractorList } = useContext(contractorContext);
   const qualification = [
     "Developer",
@@ -22,6 +27,17 @@ export default function Search() {
   const [selectedQualification, setSelectedQualification] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [inputValue, setInputValue] = useState("");
+  // const filteredSkills = skillsList.filter(
+  //   (skill) =>
+  //     skill.toLowerCase().startsWith(inputValue.toLowerCase())
+  // );
+  const filteredSkills = inputValue
+    ? skillsList.filter((skill) =>
+        skill.toLowerCase().startsWith(inputValue.toLowerCase())
+      )
+    : skillsList;
+
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -60,13 +76,6 @@ export default function Search() {
     }
   }, [searchStateFromLocation]);
 
-  const handleOptionChange = (optionId) => {
-    const newSelectedOptions = selectedSkills.includes(optionId)
-      ? selectedSkills.filter((id) => id !== optionId)
-      : [...selectedSkills, optionId];
-    setSelectedSkills(newSelectedOptions);
-  };
-
   const handleOptionQualificationChange = (option) => {
     const newSelectedOptions = selectedQualification.includes(option)
       ? selectedQualification.filter((title) => title !== option)
@@ -89,14 +98,14 @@ export default function Search() {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
+
         if (selectedSkills.length > 0) {
           for (const option of selectedSkills) {
-            if (contractor?.skillIds?.includes(option)) {
+            if (contractor?.skills && contractor.skills.includes(option)) {
               numMatchingSkills++;
             }
           }
         } else {
-          // Show all contractors if no skills are selected
           numMatchingSkills = 1;
         }
 
@@ -152,12 +161,8 @@ export default function Search() {
     setCity("");
   };
 
-  const handleClearSkill = () => {
+  const handleClearSkills = () => {
     setSelectedSkills([]);
-  };
-
-  const handleClearQualification = () => {
-    setSelectedQualification([]);
   };
 
   return (
@@ -195,14 +200,6 @@ export default function Search() {
                 ))}
               </Grid>
             </Grid>
-            <div
-              className="clear_button"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <button onClick={handleClearQualification}>
-                Clear Qualification
-              </button>
-            </div>
           </div>
         </div>
 
@@ -247,35 +244,62 @@ export default function Search() {
           }}
         >
           <h2 className="search_title">Search by Skill</h2>
-          <div>
-            <Grid container spacing={10} minHeight={120}>
-              <Grid
-                xs
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                {skillsList.map((option) => (
-                  <div className="search_options" key={option.id}>
-                    <Checkbox
-                      checked={selectedSkills.includes(option.id)}
-                      onChange={() => handleOptionChange(option.id)}
-                    />
-                    {option.title}
-                    <br />
-                  </div>
-                ))}
-              </Grid>
-            </Grid>
-            <div
-              className="clear_button"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <button onClick={handleClearSkill}>Clear skills</button>
+          <div className="search_skills">
+            <Autocomplete
+              multiple
+              disableClearable
+              value={selectedSkills}
+              onChange={(_, value) => setSelectedSkills(value)}
+              sx={{ width: 350 }}
+              inputValue={inputValue}
+              onInputChange={(_, value) => setInputValue(value)}
+              options={skillsList}
+              getOptionLabel={(option) =>
+                option.toLowerCase().startsWith(inputValue.toLowerCase())
+                  ? option
+                  : ""
+              }
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox checked={selected} />
+                  {option}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select skills"
+                  placeholder="Search for skills"
+                  size="small"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: <div>{params.InputProps.endAdornment}</div>,
+                  }}
+                />
+              )}
+              renderTags={() => null}
+            />
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              {selectedSkills.map((skill) => (
+                <ClearSkill
+                  key={skill}
+                  skill={skill}
+                  onRemove={(removedSkill) => {
+                    setSelectedSkills(
+                      selectedSkills.filter((skill) => skill !== removedSkill)
+                    );
+                  }}
+                />
+              ))}
             </div>
           </div>
+          <div
+            className="clear_button"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <button onClick={handleClearSkills}>Clear Skills</button>
+          </div>
         </div>
-        <Divider />
         <ul>
           {contractors.length === 0 ? (
             <div className="no-results-message">No results</div>
@@ -333,31 +357,25 @@ export default function Search() {
                   </div>
                   <div>{contractor.summary}</div>
                   <div>
-                    {contractor?.skillIds && (
+                    {contractor?.skills && (
                       <div style={{ display: "flex" }}>
-                        {contractor?.skillIds.map((resultSkill) => {
-                          const allSkills = skillsList?.filter(({ id }) =>
-                            resultSkill.includes(id)
-                          );
+                        {contractor?.skills.map((resultSkill) => {
                           return (
                             <div key={resultSkill}>
-                              {allSkills.map((r) => (
-                                <Button
-                                  key={r.id}
-                                  style={{
-                                    width: "auto",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px",
-                                    padding: "0.2px",
-                                    marginTop: "5px",
-                                    marginBottom: "5px",
-                                    marginLeft: "5px",
-                                    textTransform: "capitalize",
-                                  }}
-                                >
-                                  {r.title}
-                                </Button>
-                              ))}
+                              <Button
+                                style={{
+                                  width: "auto",
+                                  borderStyle: "solid",
+                                  borderWidth: "1px",
+                                  padding: "0.2px",
+                                  marginTop: "5px",
+                                  marginBottom: "5px",
+                                  marginLeft: "5px",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {resultSkill}
+                              </Button>
                             </div>
                           );
                         })}
