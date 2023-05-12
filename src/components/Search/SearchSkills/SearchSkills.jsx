@@ -72,6 +72,7 @@ export default function SearchSkills(props) {
       <h2 className="search_skills_title">Search by Skill</h2>
       <div className="search_skills">
         <Autocomplete
+          className="autocomplete"
           multiple
           disableClearable
           value={selectedSkills}
@@ -79,7 +80,6 @@ export default function SearchSkills(props) {
             setSelectedSkills(value);
             props.getSelectedSkills(value);
           }}
-          sx={{ width: 350 }}
           inputValue={inputValue}
           onInputChange={(_, value) => setInputValue(value)}
           options={allSkills}
@@ -108,24 +108,9 @@ export default function SearchSkills(props) {
           )}
           renderTags={() => null}
         />
-        <div style={{ display: "flex", flexDirection: "row" }}>
+        <div className="selected_skills_container">
           {selectedSkills.map((skill) => (
-            <div
-              key={skill}
-              style={{
-                display: "flex",
-                flexDirection: "row",
-                alignItems: "center",
-                marginTop: "5px",
-                marginRight: "8px",
-                borderStyle: "solid",
-                borderColor: "#F2F1F1",
-                borderWidth: "0.5px",
-                borderRadius: "5px",
-                padding: "3px",
-                backgroundColor: "#F2F1F1",
-              }}
-            >
+            <div key={skill} className="selected_skills">
               <span>{skill}</span>
               <CloseIcon
                 className="close_icon"
@@ -141,10 +126,7 @@ export default function SearchSkills(props) {
           ))}
         </div>
       </div>
-      <div
-        className="clear_skills_button"
-        style={{ display: "flex", justifyContent: "flex-end" }}
-      >
+      <div className="clear_skills_button">
         <button onClick={handleClearSkills}>Clear Skills</button>
       </div>
     </div>
