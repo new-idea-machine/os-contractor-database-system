@@ -57,7 +57,14 @@ export default function CSCSelector(props) {
           }}
           id="combo-box-demo"
           options={Country.getAllCountries()}
-          filterSelectedOptions
+          filterOptions={(options, params) => {
+            const filtered = options.filter((option) =>
+              option.name
+                .toLowerCase()
+                .startsWith(params.inputValue.toLowerCase())
+            );
+            return filtered;
+          }}
           getOptionLabel={(option) => option?.name || ""}
           isOptionEqualToValue={(option, value) =>
             option?.isoCode === value?.isoCode
@@ -92,7 +99,14 @@ export default function CSCSelector(props) {
             options={State.getAllStates()
               .filter((stateValue) => stateValue?.countryCode === country)
               .sort((a, b) => a.name.localeCompare(b.name))}
-            filterSelectedOptions
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.name
+                  .toLowerCase()
+                  .startsWith(params.inputValue.toLowerCase())
+              );
+              return filtered;
+            }}
             getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.isoCode === value?.isoCode &&
@@ -127,7 +141,14 @@ export default function CSCSelector(props) {
             options={City.getAllCities()
               .filter((cityValue) => cityValue?.stateCode === state)
               .sort((a, b) => a.name.localeCompare(b.name))}
-            filterSelectedOptions
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.name
+                  .toLowerCase()
+                  .startsWith(params.inputValue.toLowerCase())
+              );
+              return filtered;
+            }}
             getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.name === value?.name &&

@@ -14,7 +14,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
-import { toast } from "react-toastify";
+// import { toast } from "react-toastify";
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -69,6 +69,7 @@ const Navigation = () => {
             activeclassname="selected"
             exact="true"
             to="/search"
+            onClick={() => sessionStorage.removeItem("searchState")}
           >
             Search
           </NavLink>
