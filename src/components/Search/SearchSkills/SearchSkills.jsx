@@ -8,6 +8,39 @@ import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
+import { FixedSizeList as List } from "react-window";
+
+// To load list of skills faster
+const ListboxComponent = React.forwardRef((props, ref) => {
+  const { children, ...other } = props;
+  const itemCount = React.Children.count(children);
+  const itemSize = 36;
+
+  const height = Math.min(itemCount * itemSize, itemSize * 8);
+
+  return (
+    <div ref={ref} {...other}>
+      <List
+        height={height}
+        width="100%"
+        itemSize={itemSize}
+        itemCount={itemCount}
+        overscanCount={5}
+        innerElementType="div"
+        outerElementType="div"
+        innerRef={ref}
+        style={{
+          ...(itemCount <= 8
+            ? { overflow: "hidden", overscrollBehavior: "contain" }
+            : {}),
+        }}
+      >
+        {({ index, style }) => <div style={style}>{children[index]}</div>}
+      </List>
+    </div>
+  );
+});
+
 
 export default function SearchSkills(props) {
   const [selectedSkills, setSelectedSkills] = useState(
@@ -107,6 +140,7 @@ export default function SearchSkills(props) {
             />
           )}
           renderTags={() => null}
+          ListboxComponent={ListboxComponent}
         />
         <div className="selected_skills_container">
           {selectedSkills.map((skill) => (
