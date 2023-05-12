@@ -5,7 +5,9 @@ import { Footer, Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
+import MailOutlineIcon from "@mui/icons-material/MailOutline";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedInIcon from "@mui/icons-material/LinkedIn";
 import Avatar from "../../assets/avatar.png";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
@@ -16,7 +18,7 @@ const ContractorProfile = (props) => {
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const allCountries = Country.getAllCountries();
-  // console.log(allCountries)
+
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.map((contractor) => {
@@ -79,6 +81,14 @@ const ContractorProfile = (props) => {
               ) : null}
 
               <div className="contractor_links">
+                <a
+                  style={{ marginBottom: "10px" }}
+                  href={`mailto:${contractor?.email}`}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  <MailOutlineIcon />
+                </a>
                 {contractor?.otherInfo?.githubUrl && (
                   <a
                     href={contractor?.otherInfo?.githubUrl}
@@ -86,6 +96,16 @@ const ContractorProfile = (props) => {
                     rel="noopener noreferrer"
                   >
                     <GitHubIcon />
+                  </a>
+                )}
+                {contractor?.otherInfo?.linkedinUrl && (
+                  <a
+                    style={{ marginBottom: "10px" }}
+                    href={contractor?.otherInfo?.linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    <LinkedInIcon />
                   </a>
                 )}
                 {contractor?.resume && (

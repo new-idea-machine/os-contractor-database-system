@@ -42,7 +42,7 @@ export default function Search() {
     const clearSessionStorage = () => {
       sessionStorage.removeItem("searchState");
     };
-  
+
     window.addEventListener("beforeunload", clearSessionStorage);
     if (searchStateFromLocation) {
       setSelectedSkills(searchStateFromLocation.selectedSkills || []);
@@ -266,7 +266,7 @@ export default function Search() {
                                   padding: "2px",
                                   marginTop: "5px",
                                   marginBottom: "5px",
-                                  marginLeft: "5px",
+                                  marginRight: "5px",
                                   textTransform: "capitalize",
                                 }}
                               >
