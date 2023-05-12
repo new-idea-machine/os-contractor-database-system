@@ -1,23 +1,34 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { Button, Checkbox, Divider } from "@mui/material";
+import { Button, Checkbox, Radio } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
 import CSCSelector from "./CSCSelector";
 import Avatar from "../../assets/avatar.png";
-
-let selectedQualification;
+import { developerSkills } from "../../constants/skills/developerSkills.js";
+import { designerSkills } from "../../constants/skills/designerSkills";
+import { productManagerSkills } from "../../constants/skills/productManagerSkills";
+import { projectManagerSkills } from "../../constants/skills/projectManagerSkills";
+import ClearSkill from "./ClearSkill";
+import Autocomplete from "@mui/material/Autocomplete";
+import TextField from "@mui/material/TextField";
 
 export default function Search() {
   const navigate = useNavigate();
-  const { qualification } = useParams();
-  const { skillsList } = useContext(skillsContext);
   const { contractorList } = useContext(contractorContext);
+  const qualification = [
+    "Developer",
+    "Designer",
+    "Product Manager",
+    "Project Manager",
+  ];
+  const [selectedQualification, setSelectedQualification] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
+  const [allSkills, setAllSkills] = useState([]);
+  const [inputValue, setInputValue] = useState("");
   const [country, setCountry] = React.useState("");
   const [state, setState] = React.useState("");
   const [city, setCity] = React.useState("");
@@ -26,24 +37,29 @@ export default function Search() {
 
   const memoizedSearchState = useMemo(
     () => ({
-      selectedOptions: selectedSkills,
+      selectedQualification,
+      selectedSkills,
       country,
       state,
       city,
     }),
-    [selectedSkills, country, state, city]
+    [selectedSkills, selectedQualification, country, state, city]
   );
 
   useEffect(() => {
     if (searchStateFromLocation) {
-      setSelectedSkills(searchStateFromLocation.selectedOptions || []);
+      setSelectedSkills(searchStateFromLocation.selectedSkills || []);
+      setSelectedQualification(
+        searchStateFromLocation.selectedQualification || []
+      );
       setCountry(searchStateFromLocation.country || "");
       setState(searchStateFromLocation.state || "");
       setCity(searchStateFromLocation.city || "");
     } else {
       const savedState = JSON.parse(sessionStorage.getItem("searchState"));
       if (savedState) {
-        setSelectedSkills(savedState.selectedOptions || []);
+        setSelectedSkills(savedState.selectedSkills || []);
+        setSelectedQualification(savedState.selectedQualification || []);
         setCountry(savedState.country || "");
         setState(savedState.state || "");
         setCity(savedState.city || "");
@@ -51,52 +67,84 @@ export default function Search() {
     }
   }, [searchStateFromLocation]);
 
-  const handleOptionChange = (optionId) => {
-    const newSelectedOptions = selectedSkills.includes(optionId)
-      ? selectedSkills.filter((id) => id !== optionId)
-      : [...selectedSkills, optionId];
-    setSelectedSkills(newSelectedOptions);
+  const handleOptionQualificationChange = (option) => {
+    setSelectedQualification(
+      selectedQualification.includes(option) ? [] : [option]
+    );
+    setSelectedSkills([]);
   };
 
   useEffect(() => {
-    const checkQualification = () => {
-      if (qualification === "developers") {
-        selectedQualification = "Developer";
-      } else if (qualification === "designers") {
-        selectedQualification = "Designer";
-      } else if (qualification === "projectmanagers") {
-        selectedQualification = "Project Manager";
-      } else if (qualification === "productmanagers") {
-        selectedQualification = "Product Manager";
+    const updateAllSkills = () => {
+      let newAllSkills = [];
+
+      if (selectedQualification.length === 0) {
+        // Add all skills when no qualification is selected
+        newAllSkills = [
+          ...developerSkills,
+          ...designerSkills,
+          ...productManagerSkills,
+          ...projectManagerSkills,
+        ];
+      } else {
+        selectedQualification.forEach((qualification) => {
+          switch (qualification) {
+            case "Developer":
+              newAllSkills = [...newAllSkills, ...developerSkills];
+              break;
+            case "Designer":
+              newAllSkills = [...newAllSkills, ...designerSkills];
+              break;
+            case "Product Manager":
+              newAllSkills = [...newAllSkills, ...productManagerSkills];
+              break;
+            case "Project Manager":
+              newAllSkills = [...newAllSkills, ...projectManagerSkills];
+              break;
+            default:
+              break;
+          }
+        });
       }
+      // Remove duplicates and sort the array
+      newAllSkills = [...new Set(newAllSkills)].sort((a, b) =>
+        a.localeCompare(b)
+      );
+      setAllSkills(newAllSkills);
     };
-    checkQualification();
-  }, [qualification]);
+    updateAllSkills();
+  }, [selectedQualification]);
 
   useEffect(() => {
     sessionStorage.setItem(
       "searchState",
       JSON.stringify({
-        selectedOptions: selectedSkills,
+        selectedQualification,
+        selectedSkills,
         country,
         state,
         city,
       })
     );
-    const contractorSkillsList = () => {
+    const contractorFilteredList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
+
         if (selectedSkills.length > 0) {
           for (const option of selectedSkills) {
-            if (contractor?.skillIds?.includes(option)) {
+            if (contractor?.skills && contractor.skills.includes(option)) {
               numMatchingSkills++;
             }
           }
         } else {
-          // Show all contractors if no skills are selected
           numMatchingSkills = 1;
         }
+
+        // Filter contractors by qualification
+        const isMatchingQualification =
+          selectedQualification.length === 0 ||
+          selectedQualification.includes(contractor.qualification);
 
         // Filter contractors by location (country, state, and city)
         const isMatchingLocation =
@@ -104,14 +152,16 @@ export default function Search() {
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
-        // Filter contractors by qualification
-        const whatQualification = contractor.qualification === selectedQualification;
-
         const percentMatching = selectedSkills.length
           ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
+        const shouldShowContractor =
+          numMatchingSkills > 0 &&
+          isMatchingLocation &&
+          isMatchingQualification;
+
+        if (shouldShowContractor) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
@@ -127,8 +177,23 @@ export default function Search() {
       setContractors(filteredContractors);
     };
 
-    contractorSkillsList();
-  }, [selectedSkills, contractorList, country, state, city]);
+    contractorFilteredList();
+  }, [
+    selectedSkills,
+    selectedQualification,
+    contractorList,
+    country,
+    state,
+    city,
+  ]);
+
+  const handleClearQualification = () => {
+    setSelectedQualification([]);
+  };
+
+  const handleClearSkills = () => {
+    setSelectedSkills([]);
+  };
 
   const handleClearLocation = () => {
     setCountry("");
@@ -136,22 +201,10 @@ export default function Search() {
     setCity("");
   };
 
-  const handleClearSkill = () => {
-    setSelectedSkills([]);
-  };
 
   return (
     <div>
       <Navigation />
-      <h1
-        style={{
-          textAlign: "center",
-          backgroundColor: "#B2B2B2",
-          padding: "3px",
-        }}
-      >
-        Developers
-      </h1>
       <div className="search_container">
         <div
           style={{
@@ -159,11 +212,117 @@ export default function Search() {
             borderColor: "gray",
             borderWidth: "0.5px",
             borderRadius: "5px",
-            padding: "20px",
-            marginBottom: "20px",
+            padding: "10px",
+            marginBottom: "15px",
           }}
         >
-          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "20px" }}>
+          <h2 className="search_title">Search by Qualification</h2>
+          <div>
+            <Grid container spacing={10} minHeight={120}>
+              <Grid
+                xs
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {qualification.map((option) => (
+                  <div className="search_options" key={option}>
+                    <Radio
+                      checked={selectedQualification.includes(option)}
+                      onClick={() => handleOptionQualificationChange(option)}
+                    />
+                    {option}
+                    <br />
+                  </div>
+                ))}
+              </Grid>
+            </Grid>
+            <div
+            className="clear_button"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <button onClick={handleClearQualification}>Clear Qualification</button>
+          </div>
+          </div>
+        </div>
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "10px",
+            marginBottom: "15px",
+          }}
+        >
+          <h2 className="search_title">Search by Skill</h2>
+          <div className="search_skills">
+            <Autocomplete
+              multiple
+              disableClearable
+              value={selectedSkills}
+              onChange={(_, value) => setSelectedSkills(value)}
+              sx={{ width: 350 }}
+              inputValue={inputValue}
+              onInputChange={(_, value) => setInputValue(value)}
+              options={allSkills}
+              getOptionLabel={(option) =>
+                option.toLowerCase().startsWith(inputValue.toLowerCase())
+                  ? option
+                  : ""
+              }
+              renderOption={(props, option, { selected }) => (
+                <li {...props}>
+                  <Checkbox checked={selected} />
+                  {option}
+                </li>
+              )}
+              renderInput={(params) => (
+                <TextField
+                  {...params}
+                  label="Select skills"
+                  placeholder="Search for skills"
+                  size="small"
+                  InputProps={{
+                    ...params.InputProps,
+                    endAdornment: <div>{params.InputProps.endAdornment}</div>,
+                  }}
+                />
+              )}
+              renderTags={() => null}
+            />
+            <div style={{ display: "flex", flexDirection: "row" }}>
+              {selectedSkills.map((skill) => (
+                <ClearSkill
+                  key={skill}
+                  skill={skill}
+                  onRemove={(removedSkill) => {
+                    setSelectedSkills(
+                      selectedSkills.filter((skill) => skill !== removedSkill)
+                    );
+                  }}
+                />
+              ))}
+            </div>
+          </div>
+          <div
+            className="clear_button"
+            style={{ display: "flex", justifyContent: "flex-end" }}
+          >
+            <button onClick={handleClearSkills}>Clear Skills</button>
+          </div>
+        </div>
+        <div
+          style={{
+            borderStyle: "solid",
+            borderColor: "gray",
+            borderWidth: "0.5px",
+            borderRadius: "5px",
+            padding: "10px",
+            marginBottom: "15px",
+          }}
+        >
+          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "10px" }}>
             Search by Location
           </h2>
 
@@ -179,50 +338,16 @@ export default function Search() {
           </div>
           <div
             className="clear_button"
-            style={{ display: "flex", justifyContent: "flex-end" }}
+            style={{
+              display: "flex",
+              justifyContent: "flex-end",
+              marginTop: "5px",
+            }}
           >
             <button onClick={handleClearLocation}>Clear location</button>
           </div>
         </div>
-        <div
-          style={{
-            borderStyle: "solid",
-            borderColor: "gray",
-            borderWidth: "0.5px",
-            borderRadius: "5px",
-            padding: "20px",
-          }}
-        >
-          <h2 className="search_title">Search by Skill</h2>
-          <div>
-            <Grid container spacing={10} minHeight={160}>
-              <Grid
-                xs
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                {skillsList.map((option) => (
-                  <div className="search_options" key={option.id}>
-                    <Checkbox
-                      checked={selectedSkills.includes(option.id)}
-                      onChange={() => handleOptionChange(option.id)}
-                    />
-                    {option.title}
-                    <br />
-                  </div>
-                ))}
-              </Grid>
-            </Grid>
-            <div
-              className="clear_button"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <button onClick={handleClearSkill}>Clear skills</button>
-            </div>
-          </div>
-        </div>
-        <Divider />
+
         <ul>
           {contractors.length === 0 ? (
             <div className="no-results-message">No results</div>
@@ -280,31 +405,26 @@ export default function Search() {
                   </div>
                   <div>{contractor.summary}</div>
                   <div>
-                    {contractor?.skillIds && (
+                    {contractor?.skills && (
                       <div style={{ display: "flex" }}>
-                        {contractor?.skillIds.map((resultSkill) => {
-                          const allSkills = skillsList?.filter(({ id }) =>
-                            resultSkill.includes(id)
-                          );
+                        {contractor?.skills.map((resultSkill) => {
                           return (
                             <div key={resultSkill}>
-                              {allSkills.map((r) => (
-                                <Button
-                                  key={r.id}
-                                  style={{
-                                    width: "auto",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px",
-                                    padding: "0.2px",
-                                    marginTop: "5px",
-                                    marginBottom: "5px",
-                                    marginLeft: "5px",
-                                    textTransform: "capitalize",
-                                  }}
-                                >
-                                  {r.title}
-                                </Button>
-                              ))}
+                              <Button
+                                style={{
+                                  width: "auto",
+                                  height: "20px",
+                                  borderStyle: "solid",
+                                  borderWidth: "1px",
+                                  padding: "2px",
+                                  marginTop: "5px",
+                                  marginBottom: "5px",
+                                  marginLeft: "5px",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {resultSkill}
+                              </Button>
                             </div>
                           );
                         })}

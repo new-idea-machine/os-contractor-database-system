@@ -1,0 +1,14 @@
+.close_icon {
+  font-size: 18px!important;
+  cursor: pointer;
+  margin-left: 4px;
+  border-style: solid;
+  border-color: #f2f1f1;
+  border-width: 0.5px;
+  border-radius: 50px;
+ 
+}
+
+.close_icon:hover {
+    background-color: #b6b5b5;
+}

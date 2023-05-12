@@ -15,9 +15,7 @@ import ContractorProfile from "./components/ContractorProfile/ContractorProfile"
 import AuthControl from "./contexts/auth";
 import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
-import SearchQualification from "./components/Search/SearchQualification";
 import Search from "./components/Search/Search";
-
 
 function App() {
   return (
@@ -37,9 +35,8 @@ function App() {
                     element={<ContractorProfile />}
                   />
                   <Route path="/myProfile" element={<MyProfile />} />
-                  <Route path="/search" element={<SearchQualification />} />
-                  <Route path="/search/:qualification" element={<Search />} />
-                             <Route path="/UpdateProfile" element={<UpdateProfile />} />
+                  <Route path="/search" element={<Search />} />
+                  <Route path="/UpdateProfile" element={<UpdateProfile />} />
                 </Routes>
               </ScrollToTop>
             </Router>
