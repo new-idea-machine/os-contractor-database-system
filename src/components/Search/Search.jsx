@@ -39,6 +39,11 @@ export default function Search() {
   );
 
   useEffect(() => {
+    const clearSessionStorage = () => {
+      sessionStorage.removeItem("searchState");
+    };
+  
+    window.addEventListener("beforeunload", clearSessionStorage);
     if (searchStateFromLocation) {
       setSelectedSkills(searchStateFromLocation.selectedSkills || []);
       setSelectedQualification(
@@ -57,6 +62,9 @@ export default function Search() {
         setCity(savedState.city || "");
       }
     }
+    return () => {
+      window.removeEventListener("beforeunload", clearSessionStorage);
+    };
   }, [searchStateFromLocation]);
 
   const handleOptionQualificationChange = (option) => {
