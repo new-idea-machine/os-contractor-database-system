@@ -1,4 +1,5 @@
 import React, { useEffect } from "react";
+import "./CSCSelector.css";
 import { Country, State, City } from "country-state-city";
 import Box from "@mui/material/Box";
 import { Autocomplete, TextField } from "@mui/material";
@@ -36,8 +37,8 @@ export default function CSCSelector(props) {
   }, [props.initialCountry, props.initialState, props.initialCity]);
 
   return (
-    <div style={{ display: "flex", textAlign: "center" }}>
-      <Box sx={{ width: 300 }}>
+    <div className="selector_container">
+      <Box className="selector_country">
         <Autocomplete
           value={
             !isEmpty(props?.initialCountry)
@@ -56,7 +57,14 @@ export default function CSCSelector(props) {
           }}
           id="combo-box-demo"
           options={Country.getAllCountries()}
-          filterSelectedOptions
+          filterOptions={(options, params) => {
+            const filtered = options.filter((option) =>
+              option.name
+                .toLowerCase()
+                .startsWith(params.inputValue.toLowerCase())
+            );
+            return filtered;
+          }}
           getOptionLabel={(option) => option?.name || ""}
           isOptionEqualToValue={(option, value) =>
             option?.isoCode === value?.isoCode
@@ -67,7 +75,7 @@ export default function CSCSelector(props) {
         />
       </Box>
       {country ? (
-        <Box sx={{ width: 300, marginLeft: "50px" }}>
+        <Box className="selector_state_city">
           <Autocomplete
             value={
               !isEmpty(props?.initialCountry) && !isEmpty(props?.initialState)
@@ -91,7 +99,14 @@ export default function CSCSelector(props) {
             options={State.getAllStates()
               .filter((stateValue) => stateValue?.countryCode === country)
               .sort((a, b) => a.name.localeCompare(b.name))}
-            filterSelectedOptions
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.name
+                  .toLowerCase()
+                  .startsWith(params.inputValue.toLowerCase())
+              );
+              return filtered;
+            }}
             getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.isoCode === value?.isoCode &&
@@ -104,7 +119,7 @@ export default function CSCSelector(props) {
         </Box>
       ) : null}
       {state ? (
-        <Box key={state} sx={{ width: 300, marginLeft: "50px" }}>
+        <Box key={state} className="selector_state_city">
           <Autocomplete
             value={
               !isEmpty(props?.initialState) && !isEmpty(props?.initialCity)
@@ -126,7 +141,14 @@ export default function CSCSelector(props) {
             options={City.getAllCities()
               .filter((cityValue) => cityValue?.stateCode === state)
               .sort((a, b) => a.name.localeCompare(b.name))}
-            filterSelectedOptions
+            filterOptions={(options, params) => {
+              const filtered = options.filter((option) =>
+                option.name
+                  .toLowerCase()
+                  .startsWith(params.inputValue.toLowerCase())
+              );
+              return filtered;
+            }}
             getOptionLabel={(option) => option?.name || ""}
             isOptionEqualToValue={(option, value) =>
               option?.name === value?.name &&

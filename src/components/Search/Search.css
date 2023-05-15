@@ -1,39 +1,35 @@
 .search_container {
   padding: 20px;
   min-height: 90vh;
+  margin-top: 60px;
 }
 
-.search_qualification {
-  display: flex;
-  flex-direction: row;
-  justify-content: center;
-  padding: 20px;
-}
-
-.search_qualification button {
-  width: 150px;
-  height: 30px;
-  margin: 10px;
+.search_options {
   border-style: solid;
+  border-color: gray;
   border-width: 0.5px;
-  border-color: #d0cfcf;
   border-radius: 5px;
-  cursor: pointer;
+  padding: 10px;
+  margin-bottom: 15px;
 }
 
-.search_qualification button:hover {
-  background-color: #d0cfcf;
+.search_options h2 {
+  text-align: center;
+  margin: 0;
+  margin-bottom: 10px;
 }
 
 .search_location {
   display: flex;
   flex-direction: row;
   justify-content: center;
+  min-height: 20px;
 }
 
-.search_title {
-  text-align: center;
-  margin: 0;
+.search_options_radio {
+  margin-left: 10px;
+  display: flex;
+  align-items: center;
 }
 
 .contractor_qualification2 {
@@ -44,13 +40,6 @@
   width: fit-content;
   border: none;
   border-radius: 3px;
-}
-
-.search_options {
-  margin-bottom: 5px;
-  margin-left: 10px;
-  display: flex;
-  align-items: center;
 }
 
 .MuiButtonBase-root {
@@ -79,15 +68,51 @@
   background-color: #f6f5f5;
 }
 
+.result_container {
+  margin-left: 5px;
+}
+
+.result_percent {
+  min-width: 60px;
+}
+
+.clear_button {
+  display: flex;
+  justify-content: flex-end;
+}
 .clear_button button {
   width: 100px;
-   height: 30px;
-    cursor: pointer;
-    border: none;
-    border-radius: 5px;
+  height: 40px;
+  cursor: pointer;
+  border: none;
+  border-radius: 5px;
 }
 
 .clear_button button:hover {
- background-color: #bdbaba;
+  background-color: #bdbaba;
 }
 
+.result_profile_image img {
+  width: 60px;
+  height: 60px;
+  object-fit: cover;
+  border-radius: 5px;
+}
+
+.result_no_image img {
+  width: 50px;
+  height: 50px;
+  object-fit: cover;
+  border-style: solid;
+  border-color: gray;
+  border-width: 1px;
+  border-radius: 5px;
+}
+
+.result_info {
+  margin-left: 5px;
+}
+
+.result_skills_btns {
+  display: flex;
+}

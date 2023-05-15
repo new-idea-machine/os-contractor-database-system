@@ -1,21 +1,24 @@
 import React, { useContext, useEffect, useState, useMemo } from "react";
-import { useParams, useLocation, useNavigate } from "react-router-dom";
+import { useLocation, useNavigate } from "react-router-dom";
 import { Footer, Navigation } from "../index";
 import "./Search.css";
-import { Button, Checkbox, Divider } from "@mui/material";
+import { Button, Radio } from "@mui/material";
 import Grid from "@mui/material/Unstable_Grid2";
-import { skillsContext } from "../../contexts/SkillsContext";
 import { contractorContext } from "../../contexts/ContractorContext";
-import CSCSelector from "./CSCSelector";
+import CSCSelector from "./CSCSelector/CSCSelector";
 import Avatar from "../../assets/avatar.png";
-
-let selectedQualification;
+import SearchSkills from "./SearchSkills/SearchSkills";
 
 export default function Search() {
   const navigate = useNavigate();
-  const { qualification } = useParams();
-  const { skillsList } = useContext(skillsContext);
   const { contractorList } = useContext(contractorContext);
+  const qualification = [
+    "Developer",
+    "Designer",
+    "Product Manager",
+    "Project Manager",
+  ];
+  const [selectedQualification, setSelectedQualification] = useState([]);
   const [contractors, setContractors] = useState([]);
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [country, setCountry] = React.useState("");
@@ -26,77 +29,81 @@ export default function Search() {
 
   const memoizedSearchState = useMemo(
     () => ({
-      selectedOptions: selectedSkills,
+      selectedQualification,
+      selectedSkills,
       country,
       state,
       city,
     }),
-    [selectedSkills, country, state, city]
+    [selectedSkills, selectedQualification, country, state, city]
   );
 
   useEffect(() => {
+    const clearSessionStorage = () => {
+      sessionStorage.removeItem("searchState");
+    };
+  
+    window.addEventListener("beforeunload", clearSessionStorage);
     if (searchStateFromLocation) {
-      setSelectedSkills(searchStateFromLocation.selectedOptions || []);
+      setSelectedSkills(searchStateFromLocation.selectedSkills || []);
+      setSelectedQualification(
+        searchStateFromLocation.selectedQualification || []
+      );
       setCountry(searchStateFromLocation.country || "");
       setState(searchStateFromLocation.state || "");
       setCity(searchStateFromLocation.city || "");
     } else {
       const savedState = JSON.parse(sessionStorage.getItem("searchState"));
       if (savedState) {
-        setSelectedSkills(savedState.selectedOptions || []);
+        setSelectedSkills(savedState.selectedSkills || []);
+        setSelectedQualification(savedState.selectedQualification || []);
         setCountry(savedState.country || "");
         setState(savedState.state || "");
         setCity(savedState.city || "");
       }
     }
+    return () => {
+      window.removeEventListener("beforeunload", clearSessionStorage);
+    };
   }, [searchStateFromLocation]);
 
-  const handleOptionChange = (optionId) => {
-    const newSelectedOptions = selectedSkills.includes(optionId)
-      ? selectedSkills.filter((id) => id !== optionId)
-      : [...selectedSkills, optionId];
-    setSelectedSkills(newSelectedOptions);
+  const handleOptionQualificationChange = (option) => {
+    setSelectedQualification(
+      selectedQualification.includes(option) ? [] : [option]
+    );
+    setSelectedSkills([]);
   };
-
-  useEffect(() => {
-    const checkQualification = () => {
-      if (qualification === "developers") {
-        selectedQualification = "Developer";
-      } else if (qualification === "designers") {
-        selectedQualification = "Designer";
-      } else if (qualification === "projectmanagers") {
-        selectedQualification = "Project Manager";
-      } else if (qualification === "productmanagers") {
-        selectedQualification = "Product Manager";
-      }
-    };
-    checkQualification();
-  }, [qualification]);
 
   useEffect(() => {
     sessionStorage.setItem(
       "searchState",
       JSON.stringify({
-        selectedOptions: selectedSkills,
+        selectedQualification,
+        selectedSkills: selectedSkills || [],
         country,
         state,
         city,
       })
     );
-    const contractorSkillsList = () => {
+    const contractorFilteredList = () => {
       const filteredContractors = [];
       for (const contractor of contractorList) {
         let numMatchingSkills = 0;
+
         if (selectedSkills.length > 0) {
           for (const option of selectedSkills) {
-            if (contractor?.skillIds?.includes(option)) {
+            if (contractor?.skills && contractor.skills.includes(option)) {
               numMatchingSkills++;
             }
           }
         } else {
-          // Show all contractors if no skills are selected
           numMatchingSkills = 1;
         }
+
+        // Filter contractors by qualification
+        const isMatchingQualification =
+          selectedQualification.length === 0 ||
+          selectedQualification.includes(contractor.qualification);
 
         // Filter contractors by location (country, state, and city)
         const isMatchingLocation =
@@ -104,14 +111,16 @@ export default function Search() {
           (!state || contractor.stateCode === state) &&
           (!city || contractor.city === city);
 
-        // Filter contractors by qualification
-        const whatQualification = contractor.qualification === selectedQualification;
-
         const percentMatching = selectedSkills.length
           ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
           : 100;
 
-        if (numMatchingSkills > 0 && isMatchingLocation && whatQualification) {
+        const shouldShowContractor =
+          numMatchingSkills > 0 &&
+          isMatchingLocation &&
+          isMatchingQualification;
+
+        if (shouldShowContractor) {
           filteredContractors.push({
             ...contractor,
             percentMatching,
@@ -127,8 +136,19 @@ export default function Search() {
       setContractors(filteredContractors);
     };
 
-    contractorSkillsList();
-  }, [selectedSkills, contractorList, country, state, city]);
+    contractorFilteredList();
+  }, [
+    selectedSkills,
+    selectedQualification,
+    contractorList,
+    country,
+    state,
+    city,
+  ]);
+
+  const handleClearQualification = () => {
+    setSelectedQualification([]);
+  };
 
   const handleClearLocation = () => {
     setCountry("");
@@ -136,36 +156,47 @@ export default function Search() {
     setCity("");
   };
 
-  const handleClearSkill = () => {
-    setSelectedSkills([]);
-  };
-
   return (
     <div>
       <Navigation />
-      <h1
-        style={{
-          textAlign: "center",
-          backgroundColor: "#B2B2B2",
-          padding: "3px",
-        }}
-      >
-        Developers
-      </h1>
       <div className="search_container">
-        <div
-          style={{
-            borderStyle: "solid",
-            borderColor: "gray",
-            borderWidth: "0.5px",
-            borderRadius: "5px",
-            padding: "20px",
-            marginBottom: "20px",
-          }}
-        >
-          <h2 style={{ textAlign: "center", margin: 0, marginBottom: "20px" }}>
-            Search by Location
-          </h2>
+        <div className="search_options">
+          <h2>Search by Qualification</h2>
+          <div>
+            <Grid container spacing={10} minHeight={120}>
+              <Grid
+                xs
+                display="flex"
+                justifyContent="center"
+                alignItems="center"
+              >
+                {qualification.map((option) => (
+                  <div className="search_options_radio" key={option}>
+                    <Radio
+                      checked={selectedQualification.includes(option)}
+                      onClick={() => handleOptionQualificationChange(option)}
+                    />
+                    {option}
+                    <br />
+                  </div>
+                ))}
+              </Grid>
+            </Grid>
+            <div className="clear_button">
+              <button onClick={handleClearQualification}>
+                Clear Qualification
+              </button>
+            </div>
+          </div>
+        </div>
+        <SearchSkills
+          selectedQualification={selectedQualification}
+          initialSelectedSkills={selectedSkills}
+          getSelectedSkills={(skill) => setSelectedSkills(skill)}
+        />
+
+        <div className="search_options">
+          <h2>Search by Location</h2>
 
           <div className="search_location">
             <CSCSelector
@@ -177,52 +208,10 @@ export default function Search() {
               getCity={(city) => setCity(city)}
             />
           </div>
-          <div
-            className="clear_button"
-            style={{ display: "flex", justifyContent: "flex-end" }}
-          >
+          <div className="clear_button">
             <button onClick={handleClearLocation}>Clear location</button>
           </div>
         </div>
-        <div
-          style={{
-            borderStyle: "solid",
-            borderColor: "gray",
-            borderWidth: "0.5px",
-            borderRadius: "5px",
-            padding: "20px",
-          }}
-        >
-          <h2 className="search_title">Search by Skill</h2>
-          <div>
-            <Grid container spacing={10} minHeight={160}>
-              <Grid
-                xs
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                {skillsList.map((option) => (
-                  <div className="search_options" key={option.id}>
-                    <Checkbox
-                      checked={selectedSkills.includes(option.id)}
-                      onChange={() => handleOptionChange(option.id)}
-                    />
-                    {option.title}
-                    <br />
-                  </div>
-                ))}
-              </Grid>
-            </Grid>
-            <div
-              className="clear_button"
-              style={{ display: "flex", justifyContent: "flex-end" }}
-            >
-              <button onClick={handleClearSkill}>Clear skills</button>
-            </div>
-          </div>
-        </div>
-        <Divider />
         <ul>
           {contractors.length === 0 ? (
             <div className="no-results-message">No results</div>
@@ -239,38 +228,21 @@ export default function Search() {
                   });
                 }}
               >
-                <div style={{ marginLeft: "5px" }}>
-                  <div style={{ minWidth: "60px" }}>
+                <div className="result_container">
+                  <div className="result_percent">
                     <b>{contractor?.percentMatching}%</b>
                   </div>
                   {contractor?.profileImg ? (
-                    <img
-                      style={{
-                        width: "60px",
-                        height: "60px",
-                        objectFit: "cover",
-                        borderRadius: "5px",
-                      }}
-                      src={contractor?.profileImg}
-                      alt=""
-                    />
+                    <div className="result_profile_image">
+                      <img src={contractor?.profileImg} alt="" />
+                    </div>
                   ) : (
-                    <img
-                      style={{
-                        width: "50px",
-                        height: "50px",
-                        objectFit: "cover",
-                        borderStyle: "solid",
-                        borderColor: "gray",
-                        borderWidth: "1px",
-                        borderRadius: "5px",
-                      }}
-                      src={Avatar}
-                      alt="Avatar"
-                    />
+                    <div className="result_no_image">
+                      <img src={Avatar} alt="Avatar" />
+                    </div>
                   )}
                 </div>
-                <div style={{ marginLeft: "5px" }}>
+                <div className="result_info">
                   <div>
                     <b>{contractor?.firstName}&nbsp;</b>
                     <b>{contractor?.lastName}&nbsp;</b>
@@ -280,31 +252,26 @@ export default function Search() {
                   </div>
                   <div>{contractor.summary}</div>
                   <div>
-                    {contractor?.skillIds && (
-                      <div style={{ display: "flex" }}>
-                        {contractor?.skillIds.map((resultSkill) => {
-                          const allSkills = skillsList?.filter(({ id }) =>
-                            resultSkill.includes(id)
-                          );
+                    {contractor?.skills && (
+                      <div className="result_skills_btns">
+                        {contractor?.skills.map((resultSkill) => {
                           return (
                             <div key={resultSkill}>
-                              {allSkills.map((r) => (
-                                <Button
-                                  key={r.id}
-                                  style={{
-                                    width: "auto",
-                                    borderStyle: "solid",
-                                    borderWidth: "1px",
-                                    padding: "0.2px",
-                                    marginTop: "5px",
-                                    marginBottom: "5px",
-                                    marginLeft: "5px",
-                                    textTransform: "capitalize",
-                                  }}
-                                >
-                                  {r.title}
-                                </Button>
-                              ))}
+                              <Button
+                                style={{
+                                  width: "auto",
+                                  height: "20px",
+                                  borderStyle: "solid",
+                                  borderWidth: "1px",
+                                  padding: "2px",
+                                  marginTop: "5px",
+                                  marginBottom: "5px",
+                                  marginLeft: "5px",
+                                  textTransform: "capitalize",
+                                }}
+                              >
+                                {resultSkill}
+                              </Button>
                             </div>
                           );
                         })}
