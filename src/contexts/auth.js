@@ -40,6 +40,10 @@ export default function AuthControl(props) {
 		// console.log('>><<<', user);
 	});
 
+	const isAuthenticated = () => {
+		return !!user;
+	  };
+
 	// This Function is declared to be called in the below
 	// function --createUserInDatabase-- To add the creted
 	// id of the "tech" object, to the object itself
@@ -147,6 +151,7 @@ export default function AuthControl(props) {
 		register,
 		login,
 		logout,
+		isAuthenticated
 		// signInWithEmail,
 		// emailLogin,
 	};
