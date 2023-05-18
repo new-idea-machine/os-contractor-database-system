@@ -48,21 +48,12 @@ const Navigation = () => {
             className="navbar-links"
             activeclassname="selected"
             exact="true"
-            to="/"
+            to="/contractorList"
           >
             Home
           </NavLink>
         </li>
-        <li>
-          <NavLink
-            className="navbar-links"
-            activeclassname="selected"
-            exact="true"
-            to="/contractorList"
-          >
-            Contractor List
-          </NavLink>
-        </li>
+      
         <li style={{ marginRight: "30px" }}>
           <NavLink
             className="navbar-links"
@@ -72,6 +63,18 @@ const Navigation = () => {
             onClick={() => sessionStorage.removeItem("searchState")}
           >
             Search
+          </NavLink>
+        </li>
+
+        <li style={{ marginRight: "30px" }}>
+          <NavLink
+            className="navbar-links"
+            activeclassname="selected"
+            exact="true"
+            to="/About"
+            
+          >
+            About
           </NavLink>
         </li>
         {user ? (
