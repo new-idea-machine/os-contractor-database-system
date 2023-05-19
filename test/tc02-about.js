@@ -24,4 +24,16 @@ describe("about page test", () => {
       driver.quit();
     }, 5000);
   });
+
+  //add another test
+
+  it("tec03-home", async () => {
+    let driver = await new Builder().forBrowser("firefox").build();
+
+    await driver.get("http://localhost:3000/contractorList");
+
+    await driver.findElement(
+      By.xpath("/html/body/div/div[1]/div[1]/ul/li[2]/a").click()
+    );
+  });
 });
