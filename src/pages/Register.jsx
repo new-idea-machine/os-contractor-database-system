@@ -29,15 +29,16 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 		if (
 			displayName.trim()?.length <= 0 ||
+			registerPassword.trim()?.length <= 5 ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
 		) {
 			// theDisplayName = "NO DISPLAY NAME PROVIDED";
-			toast.error('A Display Name with valid email address must be entered');
+			toast.error('A Display Name with valid email address and password must be entered');
 			setDisplayName('');
 			setRegisterEmail('');
 			setErroMessage(
-				'Display name and/or email address are not provided or invalid'
+				'Display name, password and/or email address are not provided or invalid'
 			);
 			return false;
 		} else {
