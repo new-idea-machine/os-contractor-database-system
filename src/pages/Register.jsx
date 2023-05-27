@@ -6,6 +6,7 @@ import images from '../constants/images';
 import { useEffect } from 'react';
 import Login from './Login';
 import { toast } from 'react-toastify';
+import { Password } from '@mui/icons-material';
 
 export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const { register, user, logout } = useContext(authContext);
@@ -27,21 +28,44 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const nameEmailValidation = () => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
 
+		
+
 		if (
 			displayName.trim()?.length <= 0 ||
 			registerPassword.trim()?.length <= 5 ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
-		) {
+		) 
+		
+		{
+			
+			if (registerPassword.trim()?.length <= 5 ){
+        		setRegisterPassword('');
+				toast.error('Please enter a password with at least 6 characters');
+				return false;
+				
+	
+			}
+			else if(displayName.trim()?.length <= 0 ){
 			// theDisplayName = "NO DISPLAY NAME PROVIDED";
-			toast.error('A Display Name with valid email address and password must be entered');
 			setDisplayName('');
-			setRegisterEmail('');
-			setErroMessage(
-				'Display name, password and/or email address are not provided or invalid'
-			);
+			toast.error('Please enter your display name');
 			return false;
-		} else {
+			
+			}
+
+			else if(registerEmail.trim()?.length <= 0 ||
+			!regEx.test(registerEmail)) {
+			setRegisterEmail('');
+			toast.error('Please enter valid email address');
+			return false; 
+			
+
+			}
+			
+			//return false;
+			
+		} else {			
 			let success = register(
 				registerEmail,
 				displayName.trim(),
@@ -79,6 +103,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 					<div className='boxAuth'>
 						<div className='fields2'>
 							<input
+								value={registerEmail}
 								id='emailInput'
 								type='email'
 								name='email'
@@ -89,6 +114,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								}}
 							/>
 							<input
+								value={displayName}
 								name='displayName'
 								placeholder='DisplayName...'
 								type='text'
@@ -98,6 +124,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								}}
 							/>
 							<input
+								value={registerPassword}
 								type='password'
 								placeholder='Password...'
 								autoComplete='off'
@@ -105,6 +132,10 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									setRegisterPassword(event.target.value);
 								}}
 							/>
+							<div className="info-password">
+							<i className="info-icon"> i </i>
+  								Passwords must be at least 6 characters.
+							</div>
 
 							<button id='regButton' onClick={() => nameEmailValidation()}>
 								{' '}
