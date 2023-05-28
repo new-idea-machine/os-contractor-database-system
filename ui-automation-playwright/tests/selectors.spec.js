@@ -6,12 +6,6 @@ test("Login-tc1", async ({ page }) => {
   await page.locator("id=emailInput").fill("qa@qa.com");
   await page.getByPlaceholder("Password...").fill("123456");
   await page.locator(".fields > button:nth-child(3)").click();
-  await page.getByPlaceholder("Password...").click();
-  //   await page.pause();
   await page.locator(".fields > button:nth-child(3)").click();
-  await page.pause();
-  await page
-    .locator("ul.navbar-links > li:nth-child(3) > a:nth-child(1)")
-    .click();
   await page.pause();
 });
