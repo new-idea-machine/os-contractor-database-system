@@ -1,0 +1,170 @@
+{
+  "stats": {
+    "suites": 2,
+    "tests": 3,
+    "passes": 0,
+    "pending": 0,
+    "failures": 3,
+    "start": "2023-05-19T15:03:34.115Z",
+    "end": "2023-05-19T15:03:47.762Z",
+    "duration": 13647,
+    "testsRegistered": 3,
+    "passPercent": 0,
+    "pendingPercent": 0,
+    "other": 0,
+    "hasOther": false,
+    "skipped": 0,
+    "hasSkipped": false
+  },
+  "results": [
+    {
+      "uuid": "2e3ec1cb-baab-47e8-8fe7-9088e5e52fb1",
+      "title": "",
+      "fullFile": "",
+      "file": "",
+      "beforeHooks": [],
+      "afterHooks": [],
+      "tests": [],
+      "suites": [
+        {
+          "uuid": "2b356910-9964-4f6b-8ec7-c70ea723844d",
+          "title": "Login test",
+          "fullFile": "C:\\Users\\afshi\\selenium\\afshin-projects\\os-p1\\E2E-test-automation-os-contractor-db\\test\\tc01-login.js",
+          "file": "\\test\\tc01-login.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "tc01-login",
+              "fullTitle": "Login test tc01-login",
+              "timedOut": false,
+              "duration": 4519,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser(\"firefox\").build();\nawait driver.get(\"http://localhost:3000\");\nawait driver.findElement(By.className(\"customButton4\")).click();\nawait driver\n  .findElement(By.id(\"emailInput\"))\n  .sendKeys(\"qa@qa.com\", Key.RETURN);\nawait driver\n  .findElement(By.xpath(\"/html/body/div/div[2]/div/div[2]/div[1]/input[2]\"))\n  .sendKeys(\"123456\", Key.RETURN);\nlet email = await driver\n  .findElement(By.id(\"emailInput\"))\n  .getText()\n  .then(function (value) {\n    return value;\n  });\nexpect(email).to.equal(\"qa@qa.com\");\ndriver.quit();",
+              "err": {
+                "message": "AssertionError: expected '' to equal 'qa@qa.com'",
+                "estack": "AssertionError: expected '' to equal 'qa@qa.com'\n    at Context.<anonymous> (test\\tc01-login.js:33:22)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)",
+                "diff": "+ qa@qa.com\n"
+              },
+              "uuid": "36a765f0-9be2-4c32-b690-c7a7f28174e1",
+              "parentUUID": "2b356910-9964-4f6b-8ec7-c70ea723844d",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "36a765f0-9be2-4c32-b690-c7a7f28174e1"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 4519,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        },
+        {
+          "uuid": "599122a1-1b59-4056-a432-04df797f91b4",
+          "title": "about page test",
+          "fullFile": "C:\\Users\\afshi\\selenium\\afshin-projects\\os-p1\\E2E-test-automation-os-contractor-db\\test\\tc02-about.js",
+          "file": "\\test\\tc02-about.js",
+          "beforeHooks": [],
+          "afterHooks": [],
+          "tests": [
+            {
+              "title": "tc02-about",
+              "fullTitle": "about page test tc02-about",
+              "timedOut": false,
+              "duration": 4417,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser(\"firefox\").build();\nawait driver.get(\"http://localhost:3000/contractorList\");\nawait driver\n  .findElement(By.xpath(`//*[@id=\"root\"]/div[1]/ul/li[3]/a`))\n  .click();\nawait driver\n  .findElement(\n    By.xpath(\n      `//*[@id=\"root\"]/div[1]/div[2]/div[1]/div/div[1]/div/div[1]/span/input`\n    )\n  )\n  .click();\nawait driver.findElement(By.id(\":r2:\")).click();\nsetInterval(function () {\n  driver.quit();\n}, 5000);",
+              "err": {
+                "message": "NoSuchElementError: Unable to locate element: //*[@id=\"root\"]/div[1]/div[2]/div[1]/div/div[1]/div/div[1]/span/input",
+                "estack": "NoSuchElementError: Unable to locate element: //*[@id=\"root\"]/div[1]/div[2]/div[1]/div/div[1]/div/div[1]/span/input\n    at Object.throwDecodedError (node_modules\\selenium-webdriver\\lib\\error.js:524:15)\n    at parseHttpResponse (node_modules\\selenium-webdriver\\lib\\http.js:601:13)\n    at Executor.execute (node_modules\\selenium-webdriver\\lib\\http.js:529:28)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)\n    at async Driver.execute (node_modules\\selenium-webdriver\\lib\\webdriver.js:745:17)\n    at async toWireValue (node_modules\\selenium-webdriver\\lib\\webdriver.js:145:15)\n    at async C:\\Users\\afshi\\selenium\\afshin-projects\\os-p1\\E2E-test-automation-os-contractor-db\\node_modules\\selenium-webdriver\\lib\\webdriver.js:195:16\n    at async forEachKey (node_modules\\selenium-webdriver\\lib\\webdriver.js:189:9)\n    at async convertKeys (node_modules\\selenium-webdriver\\lib\\webdriver.js:194:3)\n    at async Driver.execute (node_modules\\selenium-webdriver\\lib\\webdriver.js:743:22)\n    at async Context.<anonymous> (test\\tc02-about.js:14:5)",
+                "diff": null
+              },
+              "uuid": "b7fe9ea4-1a43-40f9-acb4-345488a49419",
+              "parentUUID": "599122a1-1b59-4056-a432-04df797f91b4",
+              "isHook": false,
+              "skipped": false
+            },
+            {
+              "title": "tec03-home",
+              "fullTitle": "about page test tec03-home",
+              "timedOut": false,
+              "duration": 4696,
+              "state": "failed",
+              "speed": null,
+              "pass": false,
+              "fail": true,
+              "pending": false,
+              "context": null,
+              "code": "let driver = await new Builder().forBrowser(\"firefox\").build();\nawait driver.get(\"http://localhost:3000/contractorList\");\nawait driver.findElement(\n  By.xpath(\"/html/body/div/div[1]/div[1]/ul/li[2]/a\").click()\n);",
+              "err": {
+                "message": "TypeError: By.xpath(...).click is not a function",
+                "estack": "TypeError: By.xpath(...).click is not a function\n    at Context.<anonymous> (test\\tc02-about.js:36:59)\n    at processTicksAndRejections (node:internal/process/task_queues:96:5)",
+                "diff": null
+              },
+              "uuid": "e9b8049d-9999-4595-a8f4-f7dcf5758be5",
+              "parentUUID": "599122a1-1b59-4056-a432-04df797f91b4",
+              "isHook": false,
+              "skipped": false
+            }
+          ],
+          "suites": [],
+          "passes": [],
+          "failures": [
+            "b7fe9ea4-1a43-40f9-acb4-345488a49419",
+            "e9b8049d-9999-4595-a8f4-f7dcf5758be5"
+          ],
+          "pending": [],
+          "skipped": [],
+          "duration": 9113,
+          "root": false,
+          "rootEmpty": false,
+          "_timeout": 0
+        }
+      ],
+      "passes": [],
+      "failures": [],
+      "pending": [],
+      "skipped": [],
+      "duration": 0,
+      "root": true,
+      "rootEmpty": true,
+      "_timeout": 0
+    }
+  ],
+  "meta": {
+    "mocha": {
+      "version": "10.2.0"
+    },
+    "mochawesome": {
+      "options": {
+        "quiet": false,
+        "reportFilename": "mochawesome",
+        "saveHtml": true,
+        "saveJson": true,
+        "consoleReporter": "spec",
+        "useInlineDiffs": false,
+        "code": true
+      },
+      "version": "7.1.3"
+    },
+    "marge": {
+      "options": null,
+      "version": "6.2.0"
+    }
+  }
+}
