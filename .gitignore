@@ -9,8 +9,6 @@
 ui-automation-playwright
 /coverage
 /ui-automation-playwright/node_modules/
-/ui-automation-playwright/tests
-/ui-automation-playwright/test-examples
 /test-results/
 ui-automation-playwright/playwright-report/
 ui-automation-playwright/playwright/.cache/
