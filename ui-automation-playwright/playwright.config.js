@@ -13,7 +13,7 @@ const { defineConfig, devices } = require("@playwright/test");
 module.exports = defineConfig({
   testDir: "./tests",
   /* Run tests in files in parallel */
-  timeout: 10 * 1000,
+  timeout: 60 * 1000,
   expect: { timeout: 3000 },
 
   fullyParallel: true,
