@@ -7,6 +7,7 @@ import { useEffect } from 'react';
 import Login from './Login';
 import { toast } from 'react-toastify';
 import { Password } from '@mui/icons-material';
+import PasswordChecklist from "react-password-checklist";
 
 export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const { register, user, logout } = useContext(authContext);
@@ -27,21 +28,22 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 	const nameEmailValidation = () => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
+		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
 
 		
 
 		if (
 			displayName.trim()?.length <= 0 ||
-			registerPassword.trim()?.length <= 5 ||
+			!strongPasswordRegex.test(registerPassword) ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
 		) 
 		
 		{
 			
-			if (registerPassword.trim()?.length <= 5 ){
+			if (!strongPasswordRegex.test(registerPassword) ){
         		setRegisterPassword('');
-				toast.error('Please enter a password with at least 6 characters');
+				toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
 				return false;
 				
 	
@@ -132,11 +134,15 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									setRegisterPassword(event.target.value);
 								}}
 							/>
-							<div className="info-password">
-							<i className="info-icon"> i </i>
-  								Passwords must be at least 6 characters.
+							
+							<div className='passwordCheck'>
+								<PasswordChecklist
+								rules={["minLength","specialChar","number","capital"]}
+								minLength={8}
+								value={registerPassword}
+								onChange={(isValid) => {}}
+								/>
 							</div>
-
 							<button id='regButton' onClick={() => nameEmailValidation()}>
 								{' '}
 								Create User

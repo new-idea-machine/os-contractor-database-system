@@ -35,7 +35,7 @@ export default function About() {
                     <img src={Avatar} alt="Avatar" />
                     </div>
                     <h2 className='teamMember'>Ada Opene</h2>
-                    <h3 className='role'>Product Owner</h3>
+                    <h3 className='role'>Project Manager</h3>
                 </div>
 
                 <div className='teamCard flexCenter'>
@@ -43,7 +43,7 @@ export default function About() {
                     <img src={Avatar} alt="Avatar" />
                     </div>
                     <h2 className='teamMember'>Nonso Afulukwe</h2>
-                    <h3 className='role'>Project Manager</h3>
+                    <h3 className='role'>Product Owner</h3>
                 </div>
                 <div className='teamCard flexCenter'>
                     <div className='imageWrapper'>
@@ -58,6 +58,13 @@ export default function About() {
                     </div>
                     <h2 className='teamMember'>Afshin Sharifnia</h2>
                     <h3 className='role'>Quality Assurance </h3>
+                </div>
+                <div className='teamCard flexCenter'>
+                    <div className='imageWrapper'>
+                    <img src={Avatar} alt="Avatar" />
+                    </div>
+                    <h2 className='teamMember'>Sanja Ivansic</h2>
+                    <h3 className='role'>Developer</h3>
                 </div>
                 <div className='teamCard flexCenter'>
                     <div className='imageWrapper'>

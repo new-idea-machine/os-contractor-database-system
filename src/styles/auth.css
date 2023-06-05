@@ -23,7 +23,7 @@
 	text-align: center;
 	flex-direction: column;
 	gap: 25px;
-	height: 70%;
+	height: 65%;
 	/* border: 2px solid rgb(0, 0, 0); */
 	/* alignItems: center,
 	height: 90vh,
@@ -39,6 +39,7 @@
 
 .boxAuth {
 	/* width: 100%; */
+	
 	height: fit-content;
 	/* border: 2px solid yellow; */
 	display: flex;
@@ -201,3 +202,20 @@
 	color: brown;
 
 }
+.passwordCheck{
+	font-style: italic;
+	color: rgb(5, 5, 5);
+	
+	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
+    font-size: 0.8rem;
+	font-style: normal;
+	padding-top: 0.3rem;
+	padding-bottom: 0.2rem;
+	
+
+}
+.sc-eqUAAy.bSdOrC.checklist-icon{
+    width: 15px;
+    height: 15px;
+}
+
