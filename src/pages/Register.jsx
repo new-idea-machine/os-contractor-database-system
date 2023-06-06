@@ -13,7 +13,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const { register, user, logout } = useContext(authContext);
 	const [registerEmail, setRegisterEmail] = useState('');
 	const [registerPassword, setRegisterPassword] = useState('');
-	const [displayName, setDisplayName] = useState('');
+	//const [displayName, setDisplayName] = useState('');
 	const [userType, setUserType] = useState('');
 	// const [registrationRunning, setRegistrationRunning] = useState(false);
 	const [errorMessage, setErroMessage] = useState();
@@ -28,12 +28,12 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 	const nameEmailValidation = () => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
-		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[a-z])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
+		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
 
 		
 
 		if (
-			displayName.trim()?.length <= 0 ||
+			//displayName.trim()?.length <= 0 ||
 			!strongPasswordRegex.test(registerPassword) ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
@@ -48,14 +48,14 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 				
 	
 			}
-			else if(displayName.trim()?.length <= 0 ){
+			/*else if(displayName.trim()?.length <= 0 ){
 			// theDisplayName = "NO DISPLAY NAME PROVIDED";
 			setDisplayName('');
 			toast.error('Please enter your display name');
 			return false;
 			
 			}
-
+			*/
 			else if(registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)) {
 			setRegisterEmail('');
@@ -70,7 +70,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 		} else {			
 			let success = register(
 				registerEmail,
-				displayName.trim(),
+				//displayName.trim(),
 				registerPassword,
 				userType
 			);
@@ -115,7 +115,8 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									setRegisterEmail(event.target.value);
 								}}
 							/>
-							<input
+							
+							{/*<input
 								value={displayName}
 								name='displayName'
 								placeholder='DisplayName...'
@@ -124,7 +125,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								onChange={(event) => {
 									setDisplayName(event.target.value);
 								}}
-							/>
+							/> */}
 							<input
 								value={registerPassword}
 								type='password'
