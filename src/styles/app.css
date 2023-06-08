@@ -141,22 +141,88 @@
 /* About page styles */ 
 
 .aboutPage {
-	min-height: 73.4vh;
-	padding: 2rem 6rem;
+	min-height: 60.4vh;
+	
+	/*padding: 2rem 6rem;*/
 	background-color: rgb(14, 13, 13);
 	
-	display: flex;
+	display: inline-block;
 	/*flex-direction: column;*/
 	/*align-items: center;*/
 	margin-top: 20px;
-	
-	background-image: url(".//../assets/handshake.jpg");
-	background-repeat: no-repeat;
-	
-	background-size: 40% 100%;
-	background-position:  right top;
 
-	
+}
+.imgContainer{
+	/*filter: grayscale(1);*/
+    position: relative;
+	text-align: center;
 
+}
+.calgaryImage {
 	
+	max-width: 100%;
+	height: auto;
+}
+
+.motto {
+	
+	position:absolute;
+	top: 200px;
+	left: 200px;
+	right:200px;
+	
+	color:#ffffff;
+	mix-blend-mode: difference;
+	width: '60%';
+    
+}
+.creators{
+	color:#ffffff;
+	
+	 text-align: center;
+}
+
+.teamContainer {
+	/* border: 2px solid rgb(255, 255, 255); */
+	margin-top: 2%;
+	min-height: fit-content;
+	/* height: 80vh; */
+	display: grid;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: wrap;
+	/* padding: 2rem 6rem; */
+	gap: 10px;
+	
+}
+.teamCard {
+	width: 400px;
+	height: 400px;
+	background: #121622ad;
+	box-shadow: 0px 5px 4px rgba(248, 151, 6, 0.541),
+	  inset 7px 2px 10px rgba(0, 0, 0, 0.25);
+	border-radius: 35px;
+	flex-direction: column;
+	/* border: 2px solid black; */
+	cursor: pointer;
+	color: #ffffff;
+	margin-bottom: 20px;
+  }
+
+ .biography{
+	margin-left: 10px;
+	margin-right: 10px;
+	text-align: center;
+ }
+ .teamCard .biography{
+	display:none;
+  }
+  .teamCard:hover .biography{
+	display:block;
+  }
+
+  .teamCard:hover .teamMember,
+  .teamCard:hover .role,
+  .teamCard:hover .imageWrapper {
+  display: none;
 }

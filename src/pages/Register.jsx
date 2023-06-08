@@ -6,12 +6,14 @@ import images from '../constants/images';
 import { useEffect } from 'react';
 import Login from './Login';
 import { toast } from 'react-toastify';
+import { Password } from '@mui/icons-material';
+import PasswordChecklist from "react-password-checklist";
 
 export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const { register, user, logout } = useContext(authContext);
 	const [registerEmail, setRegisterEmail] = useState('');
 	const [registerPassword, setRegisterPassword] = useState('');
-	const [displayName, setDisplayName] = useState('');
+	//const [displayName, setDisplayName] = useState('');
 	const [userType, setUserType] = useState('');
 	// const [registrationRunning, setRegistrationRunning] = useState(false);
 	const [errorMessage, setErroMessage] = useState();
@@ -26,25 +28,49 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 	const nameEmailValidation = () => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
+		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
+
+		
 
 		if (
-			displayName.trim()?.length <= 0 ||
-			registerPassword.trim()?.length <= 5 ||
+			//displayName.trim()?.length <= 0 ||
+			!strongPasswordRegex.test(registerPassword) ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
-		) {
+		) 
+		
+		{
+			
+			if (!strongPasswordRegex.test(registerPassword) ){
+        		setRegisterPassword('');
+				toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
+				return false;
+				
+	
+			}
+			/*else if(displayName.trim()?.length <= 0 ){
 			// theDisplayName = "NO DISPLAY NAME PROVIDED";
-			toast.error('A Display Name with valid email address and password must be entered');
 			setDisplayName('');
-			setRegisterEmail('');
-			setErroMessage(
-				'Display name, password and/or email address are not provided or invalid'
-			);
+			toast.error('Please enter your display name');
 			return false;
-		} else {
+			
+			}
+			*/
+			else if(registerEmail.trim()?.length <= 0 ||
+			!regEx.test(registerEmail)) {
+			setRegisterEmail('');
+			toast.error('Please enter valid email address');
+			return false; 
+			
+
+			}
+			
+			//return false;
+			
+		} else {			
 			let success = register(
 				registerEmail,
-				displayName.trim(),
+				//displayName.trim(),
 				registerPassword,
 				userType
 			);
@@ -79,6 +105,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 					<div className='boxAuth'>
 						<div className='fields2'>
 							<input
+								value={registerEmail}
 								id='emailInput'
 								type='email'
 								name='email'
@@ -88,7 +115,9 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									setRegisterEmail(event.target.value);
 								}}
 							/>
-							<input
+							
+							{/*<input
+								value={displayName}
 								name='displayName'
 								placeholder='DisplayName...'
 								type='text'
@@ -96,8 +125,9 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								onChange={(event) => {
 									setDisplayName(event.target.value);
 								}}
-							/>
+							/> */}
 							<input
+								value={registerPassword}
 								type='password'
 								placeholder='Password...'
 								autoComplete='off'
@@ -105,7 +135,15 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									setRegisterPassword(event.target.value);
 								}}
 							/>
-
+							
+							<div className='passwordCheck'>
+								<PasswordChecklist
+								rules={["minLength","specialChar","number","capital"]}
+								minLength={8}
+								value={registerPassword}
+								onChange={(isValid) => {}}
+								/>
+							</div>
 							<button id='regButton' onClick={() => nameEmailValidation()}>
 								{' '}
 								Create User
