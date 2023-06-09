@@ -22,7 +22,7 @@ export default function Login() {
 	const handleLogin = () => {
 		login(loginEmail, loginPassword);
 		if (user) {
-			toast.info(`welcome! ${user?.displayName}`);
+			toast.info(`welcome! ${user?.email}`);
 			navigate('/contractorlist');
 		}
 	};

@@ -13,7 +13,7 @@ import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
-	//   getDoc,
+	getDoc,
 	//   onSnapshot,
 	setDoc,
 	serverTimestamp,
@@ -32,13 +32,15 @@ export default function AuthControl(props) {
 	const children = props.children;
 	const [user, setUser] = useState({});
 
+
+	const onAuthStateChangedCallback = (currentUser) => {
+		setUser(currentUser);
+	  };
 	// This is the firebase method that checks
 	// The current user in our application from our
 	// Project's authentication
-	onAuthStateChanged(auth, (currentUser) => {
-		setUser(currentUser);
-		// console.log('>><<<', user);
-	});
+	onAuthStateChanged(auth, onAuthStateChangedCallback);
+
 
 	const isAuthenticated = () => {
 		return !!user;
@@ -65,14 +67,14 @@ export default function AuthControl(props) {
 	// defined schema relateing it to the "user" by firebase
 	// with the "firebaseUID"
 	const createUserInDatabase = async (
+		displayName,
 		registerEmail,
-		//displayName,
 		firebaseUID,
 		userType
 	) => {
 		console.log(userType, 'userType');
 		const data = {
-			//name: displayName,
+			name: displayName,
 			email: registerEmail,
 			firebaseUID: firebaseUID,
 			userType: userType,
@@ -86,21 +88,27 @@ export default function AuthControl(props) {
 	// This function registers the user with firebase
 	const register = async (
 		registerEmail,
-		//displayName,
+		displayName,
 		registerPassword,
 		userType
 	) => {
 		try {
-			await createUserWithEmailAndPassword(
+			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				registerEmail,
 				registerPassword
 			);
-			updateProfile(auth.currentUser)
+			console.log('user created');
+
+			const currentUser = userCredential.user;
+			
+			await updateProfile(currentUser, { displayName: displayName })
 				.then(() => {
 					// ...
-					const FUID = auth.currentUser.uid;
-					createUserInDatabase(registerEmail, FUID, userType);
+					
+					const FUID = currentUser.uid;
+					console.log(FUID);
+					createUserInDatabase(displayName, registerEmail, FUID, userType);
 				})
 				.catch((error) => {
 					console.log(error.message);
