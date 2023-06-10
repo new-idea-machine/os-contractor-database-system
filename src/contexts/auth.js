@@ -66,13 +66,13 @@ export default function AuthControl(props) {
 	// with the "firebaseUID"
 	const createUserInDatabase = async (
 		registerEmail,
-		displayName,
+		//displayName,
 		firebaseUID,
 		userType
 	) => {
 		console.log(userType, 'userType');
 		const data = {
-			name: displayName,
+			//name: displayName,
 			email: registerEmail,
 			firebaseUID: firebaseUID,
 			userType: userType,
@@ -86,7 +86,7 @@ export default function AuthControl(props) {
 	// This function registers the user with firebase
 	const register = async (
 		registerEmail,
-		displayName,
+		//displayName,
 		registerPassword,
 		userType
 	) => {
@@ -96,13 +96,11 @@ export default function AuthControl(props) {
 				registerEmail,
 				registerPassword
 			);
-			updateProfile(auth.currentUser, {
-				displayName: displayName,
-			})
+			updateProfile(auth.currentUser)
 				.then(() => {
 					// ...
 					const FUID = auth.currentUser.uid;
-					createUserInDatabase(registerEmail, displayName, FUID, userType);
+					createUserInDatabase(registerEmail, FUID, userType);
 				})
 				.catch((error) => {
 					console.log(error.message);
