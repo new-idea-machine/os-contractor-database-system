@@ -26,13 +26,38 @@ export default function ProfileForm() {
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
+	const [firstName, setFirstname] = useState();
+	const [lastName, setLasttname] = useState();
+	
 
 	useEffect(() => {
 		if (!currentUserProfile) {
-			// toast.info('first');
-			matchProfileToCurrentUser();
+		  matchProfileToCurrentUser();
+		} else {
+		  // Prepopulate form fields from the Firestore database if available
+		  setInitialFormData((prevState) => ({
+			...prevState,
+			email: currentUserProfile.email || '',
+			firstName: currentUserProfile.firstName || '',
+			id: currentUserProfile.id,
+			lastName: currentUserProfile.lastName || '',
+			qualification: currentUserProfile.qualification || '',
+			
+			  githubUrl: currentUserProfile.otherInfo?.githubUrl || '',
+			  linkedinUrl: currentUserProfile.otherInfo?.linkedinUrl || '',
+			
+			profileImg: currentUserProfile.profileImg || '',
+			projects: currentUserProfile.projects || [],
+			skills: currentUserProfile.skills || [],
+			summary: currentUserProfile.summary || '',
+		  }));
+		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
+		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
 		}
-	}, [user, contractorMap]);
+	  }, [user, contractorMap, currentUserProfile]);
+
+
+	 
 
 	const addSkill = () => {
 		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
@@ -48,19 +73,32 @@ export default function ProfileForm() {
 	const form = useRef();
 
 	const onChange = (e) => {
-		setInitialFormData((prevState) => ({
+		const { name, value } = e.target;
+		if (name === 'firstName') {
+		  setInitialFormData((prevState) => ({
 			...prevState,
-			[e.target.name]: e.target.value,
-		}));
-	};
+			firstName: value,
+		  }));
+		} else if (name === 'lastName') {
+		  setInitialFormData((prevState) => ({
+			...prevState,
+			lastName: value,
+		  }));
+		} else {
+		  setInitialFormData((prevState) => ({
+			...prevState,
+			[name]: value,
+		  }));
+		}
+	  };
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const data = {
 			email: currentUserProfile?.email || initialFormData?.email,
-			firstName: currentUserProfile?.firstName || initialFormData?.firstName,
+			firstName: initialFormData.firstName || currentUserProfile?.firstName || '',
 			id: currentUserProfile?.id,
-			lastName: currentUserProfile?.lastName || initialFormData?.lastName,
+			lastName: initialFormData.lastName || currentUserProfile?.lastName || '',
 			qualification: currentUserProfile?.qualification || initialFormData?.qualification,
 			otherInfo: {
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
@@ -73,7 +111,7 @@ export default function ProfileForm() {
 			skills: skills || currentUserProfile?.skills,
 			summary: currentUserProfile?.summary || initialFormData?.summary,
 			
-			
+			           
 			
 			
 		};
