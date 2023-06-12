@@ -56,7 +56,7 @@ export default function AuthControl(props) {
 		const userDocRef = doc(db, userType, id);
 		if (userDocRef) {
 			await updateDoc(userDocRef, data);
-			console.log('User successfully updated!');
+			//console.log('User successfully updated!');
 		} else {
 			console.log('object not found');
 		}
@@ -72,7 +72,7 @@ export default function AuthControl(props) {
 		firebaseUID,
 		userType
 	) => {
-		console.log(userType, 'userType');
+		//console.log(userType, 'userType');
 		const data = {
 			name: displayName,
 			email: registerEmail,
@@ -107,7 +107,7 @@ export default function AuthControl(props) {
 					// ...
 					
 					const FUID = currentUser.uid;
-					console.log(FUID);
+					//console.log(FUID);
 					createUserInDatabase(displayName, registerEmail, FUID, userType);
 				})
 				.catch((error) => {

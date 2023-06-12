@@ -3,7 +3,7 @@ import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
-	//   getDoc,
+	 getDoc,
 	onSnapshot,
 	setDoc,
 	serverTimestamp,
@@ -43,11 +43,14 @@ const ContractorContext = ({ children }) => {
 	const updateTechObject = async (data) => {
 		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'techs', data?.id);
-		if (userDocRef) {
-			await updateDoc(userDocRef, data);
-			console.log('User successfully updated!');
+		console.log('userDocRef->', userDocRef);
+		const userDocSnapshot = await getDoc(userDocRef);
+		if (userDocSnapshot.exists()) {
+  // Update the document
+  			await updateDoc(userDocRef, data);
+  			console.log('User successfully updated!');
 		} else {
-			console.log('object not found');
+  			console.log('Document not found');
 		}
 	};
 

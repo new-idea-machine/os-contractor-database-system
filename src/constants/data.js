@@ -1,5 +1,5 @@
 const techDataSchema = {
-	name: '',
+	firstName: '',
 	lastName: '',
 	email: '',
 	summary: '',
@@ -22,7 +22,11 @@ const formInputs = [
 	{
 		sectionTitle: 'Personal Info',
 		fields: [
-			{ name: 'name', label: 'Name', type: 'text', placeholder: 'Name' },
+			{ 
+				name: 'firstName', 
+				label: 'First Name', 
+				type: 'text', 
+				placeholder: 'Name' },
 			{
 				name: 'lastName',
 				label: 'Last Name',

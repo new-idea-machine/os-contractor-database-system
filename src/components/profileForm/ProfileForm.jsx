@@ -16,6 +16,7 @@ export default function ProfileForm() {
 		currentUserProfile,
 		matchProfileToCurrentUser,
 		contractorMap,
+		getFirestore
 	} = useContext(contractorContext);
 	// const [profileImageUrl, setProfileImageUrl] = useState(null);
 	const [imgUrl, setImgUrl] = useState(null);
@@ -56,19 +57,24 @@ export default function ProfileForm() {
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const data = {
-			id: currentUserProfile?.id,
-			name: currentUserProfile?.name || initialFormData?.name,
 			email: currentUserProfile?.email || initialFormData?.email,
-			summary: currentUserProfile?.summary || initialFormData?.summary,
-			profileImg: currentUserProfile?.profileImg || imgUrl,
+			firstName: currentUserProfile?.firstName || initialFormData?.firstName,
+			id: currentUserProfile?.id,
+			lastName: currentUserProfile?.lastName || initialFormData?.lastName,
 			otherInfo: {
-				linkedinUrl:
-					currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
-				resume: currentUserProfile?.resume || initialFormData?.resume,
+				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
+				
+				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			skills: skills || currentUserProfile?.skills,
+			profileImg: currentUserProfile?.profileImg || imgUrl,
 			projects: projects || currentUserProfile?.projects,
+			skills: skills || currentUserProfile?.skills,
+			summary: currentUserProfile?.summary || initialFormData?.summary,
+			
+			
+			
+			
 		};
 		console.log(data);
 		updateTechObject(data);

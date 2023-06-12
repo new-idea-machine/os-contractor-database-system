@@ -179,7 +179,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									// autoComplete='off'
 									onChange={(event) => {
 										setUserType(event.target.value);
-										console.log(event.target.value);
+										//console.log(event.target.value);
 									}}
 								/>
 								<label style={{ color: 'black' }}>Recruiter</label>
@@ -197,7 +197,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									// autoComplete='off'
 									onChange={(event) => {
 										setUserType(event.target.value);
-										console.log(event.target.value);
+										//console.log(event.target.value);
 									}}
 								/>
 								<label style={{ color: 'black' }}>Contractor</label>
