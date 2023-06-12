@@ -61,6 +61,7 @@ export default function ProfileForm() {
 			firstName: currentUserProfile?.firstName || initialFormData?.firstName,
 			id: currentUserProfile?.id,
 			lastName: currentUserProfile?.lastName || initialFormData?.lastName,
+			qualification: currentUserProfile?.qualification || initialFormData?.qualification,
 			otherInfo: {
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
 				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
