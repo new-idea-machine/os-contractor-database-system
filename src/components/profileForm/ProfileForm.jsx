@@ -26,8 +26,8 @@ export default function ProfileForm() {
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
-	const [firstName, setFirstname] = useState();
-	const [lastName, setLasttname] = useState();
+	
+
 	
 
 	useEffect(() => {
@@ -95,11 +95,11 @@ export default function ProfileForm() {
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const data = {
-			email: currentUserProfile?.email || initialFormData?.email,
+			email:  initialFormData?.email || currentUserProfile?.email,
 			firstName: initialFormData.firstName || currentUserProfile?.firstName || '',
 			id: currentUserProfile?.id,
 			lastName: initialFormData.lastName || currentUserProfile?.lastName || '',
-			qualification: currentUserProfile?.qualification || initialFormData?.qualification,
+			qualification: initialFormData?.qualification ||  currentUserProfile?.qualification,
 			otherInfo: {
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
 				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
@@ -109,7 +109,7 @@ export default function ProfileForm() {
 			profileImg: currentUserProfile?.profileImg || imgUrl,
 			projects: projects || currentUserProfile?.projects,
 			skills: skills || currentUserProfile?.skills,
-			summary: currentUserProfile?.summary || initialFormData?.summary,
+			summary: initialFormData?.summary || currentUserProfile?.summary,
 			
 			           
 			
