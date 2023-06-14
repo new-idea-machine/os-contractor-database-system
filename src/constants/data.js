@@ -1,7 +1,8 @@
 const techDataSchema = {
-	name: '',
+	firstName: '',
 	lastName: '',
 	email: '',
+	qualification: '',
 	summary: '',
 	profileImg: '',
 	otherInfo: {
@@ -22,7 +23,11 @@ const formInputs = [
 	{
 		sectionTitle: 'Personal Info',
 		fields: [
-			{ name: 'name', label: 'Name', type: 'text', placeholder: 'Name' },
+			{ 
+				name: 'firstName', 
+				label: 'First Name', 
+				type: 'text', 
+				placeholder: 'Name' },
 			{
 				name: 'lastName',
 				label: 'Last Name',
@@ -30,6 +35,7 @@ const formInputs = [
 				placeholder: 'Last Name',
 			},
 			{ name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
+			{ name: 'qualification', label: 'Qualification', type: 'text', placeholder: 'Back End Developer' },
 			{
 				name: 'linkedinUrl',
 				label: 'LinkedIn URL',

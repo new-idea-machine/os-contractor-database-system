@@ -13,7 +13,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	const { register, user, logout } = useContext(authContext);
 	const [registerEmail, setRegisterEmail] = useState('');
 	const [registerPassword, setRegisterPassword] = useState('');
-	//const [displayName, setDisplayName] = useState('');
+	const [displayName, setDisplayName] = useState('');
 	const [userType, setUserType] = useState('');
 	// const [registrationRunning, setRegistrationRunning] = useState(false);
 	const [errorMessage, setErroMessage] = useState();
@@ -33,7 +33,6 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 		
 
 		if (
-			//displayName.trim()?.length <= 0 ||
 			!strongPasswordRegex.test(registerPassword) ||
 			registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)
@@ -48,14 +47,14 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 				
 	
 			}
-			/*else if(displayName.trim()?.length <= 0 ){
+			else if(displayName.trim()?.length <= 0 ){
 			// theDisplayName = "NO DISPLAY NAME PROVIDED";
 			setDisplayName('');
 			toast.error('Please enter your display name');
 			return false;
 			
 			}
-			*/
+			
 			else if(registerEmail.trim()?.length <= 0 ||
 			!regEx.test(registerEmail)) {
 			setRegisterEmail('');
@@ -67,13 +66,14 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 			
 			//return false;
 			
-		} else {			
+		} else {	
 			let success = register(
 				registerEmail,
-				//displayName.trim(),
+				displayName.trim(),
 				registerPassword,
 				userType
 			);
+			console.log(userType, registerEmail);
 			if (!success) {
 				setErroMessage('Registration Failed');
 				return errorMessage;
@@ -82,7 +82,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 					`A login email link sent to ${registerEmail}, please check your email`
 				);
 				toast.info(`You Have successfully registered with ${registerEmail} !!`);
-				navigate('/contractorlist');
+				navigate('/contractorList');
 			}
 			return true;
 		}
@@ -116,7 +116,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								}}
 							/>
 							
-							{/*<input
+							<input
 								value={displayName}
 								name='displayName'
 								placeholder='DisplayName...'
@@ -125,7 +125,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 								onChange={(event) => {
 									setDisplayName(event.target.value);
 								}}
-							/> */}
+							/> 
 							<input
 								value={registerPassword}
 								type='password'
@@ -155,7 +155,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 									marginTop: '5px',
 								}}
 							>
-								Are you a Recruiter ?
+								You are a 
 							</div>
 							<div
 								style={{
@@ -172,16 +172,35 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 										width: '20px',
 										height: '20px',
 									}}
-									type='checkbox'
-									name='recruiter'
+									type='radio'
+									name='userType'
 									// placeholder='Yes'
 									value='recruiter'
 									// autoComplete='off'
 									onChange={(event) => {
 										setUserType(event.target.value);
+										//console.log(event.target.value);
 									}}
 								/>
-								<label style={{ color: 'black' }}>Yes</label>
+								<label style={{ color: 'black' }}>Recruiter</label>
+								<input
+									style={{
+										boxShadow: 'none',
+										cursor: 'pointer',
+										width: '20px',
+										height: '20px',
+									}}
+									type='radio'
+									name='userType'
+									// placeholder='Yes'
+									value='techs'
+									// autoComplete='off'
+									onChange={(event) => {
+										setUserType(event.target.value);
+										//console.log(event.target.value);
+									}}
+								/>
+								<label style={{ color: 'black' }}>Contractor</label>
 							</div>
 						</div>
 						<div className='optionContainer'>

@@ -27,11 +27,21 @@ export default function BackgroundLetterAvatars(props) {
   };
 
   const stringAvatar = (firstName, lastName) => {
+    if (firstName && lastName) {
+      return {
+        sx: {
+          bgcolor: stringToColor(firstName),
+        },
+        children: `${firstName[0]}${lastName[0]}`,
+      };
+    }
+  
+    // Return a default avatar if first or last name is missing
     return {
       sx: {
-        bgcolor: stringToColor(firstName),
+        bgcolor: '#000000',
       },
-      children: `${firstName[0]}${lastName[0]}`,
+      children: 'NA',
     };
   };
 

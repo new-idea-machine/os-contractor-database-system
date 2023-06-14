@@ -1,37 +1,61 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { toast } from 'react-toastify';
 import './profile.css';
 import { authContext } from '../../contexts/auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
-import { style } from '@mui/system';
-import { Padding } from '@mui/icons-material';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-export default function ProfileForm() {
+
+export default function ProfileForm(props) {
+	const navigate = useNavigate();
+
 	const { user } = useContext(authContext);
 	const {
 		updateTechObject,
 		currentUserProfile,
 		matchProfileToCurrentUser,
 		contractorMap,
+		getFirestore
 	} = useContext(contractorContext);
-	// const [profileImageUrl, setProfileImageUrl] = useState(null);
+	 //const [profileImageUrl, setProfileImageUrl] = useState(null);
 	const [imgUrl, setImgUrl] = useState(null);
-	const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
+	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
 	const [skills, setSkills] = useState([{ skill: '' }]);
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
+	const [reloadForm, setReloadForm] = useState(false);
+	
+
+	
 
 	useEffect(() => {
-		if (!currentUserProfile) {
-			// toast.info('first');
-			matchProfileToCurrentUser();
+		if (currentUserProfile || reloadForm) {
+		  setInitialFormData((prevState) => ({
+			...prevState,
+			email: currentUserProfile.email || '',
+			firstName: currentUserProfile.firstName || '',
+			id: currentUserProfile.id,
+			lastName: currentUserProfile.lastName || '',
+			qualification: currentUserProfile.qualification || '',
+			githubUrl: currentUserProfile.otherInfo?.githubUrl || '',
+			linkedinUrl: currentUserProfile.otherInfo?.linkedinUrl || '',
+			profileImg: currentUserProfile.profileImg || '',
+			projects: currentUserProfile.projects || [],
+			skills: currentUserProfile.skills || [],
+			summary: currentUserProfile.summary || '',
+		  }));
+		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
+		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
+		  setImgUrl(null);
+		  setReloadForm(false); // Reset reloadForm after form reload
 		}
-	}, [user, contractorMap]);
+	  }, [currentUserProfile, reloadForm]);
+
+	 
 
 	const addSkill = () => {
 		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
@@ -47,33 +71,42 @@ export default function ProfileForm() {
 	const form = useRef();
 
 	const onChange = (e) => {
-		setInitialFormData((prevState) => ({
-			...prevState,
-			[e.target.name]: e.target.value,
-		}));
-	};
+		const { name, value } = e.target;
+		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
+		
+	  };
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const data = {
+			email:  initialFormData?.email || '',
+			firstName: initialFormData.firstName ||'',
 			id: currentUserProfile?.id,
-			name: currentUserProfile?.name || initialFormData?.name,
-			email: currentUserProfile?.email || initialFormData?.email,
-			summary: currentUserProfile?.summary || initialFormData?.summary,
-			profileImg: currentUserProfile?.profileImg || imgUrl,
+			lastName: initialFormData.lastName || '',
+			qualification: initialFormData?.qualification ||  '',
 			otherInfo: {
-				linkedinUrl:
-					currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
-				resume: currentUserProfile?.resume || initialFormData?.resume,
+				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
+				
+				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			skills: skills || currentUserProfile?.skills,
-			projects: projects || currentUserProfile?.projects,
+			profileImg: initialFormData?.imgUrl || '',
+			projects: projects,
+			skills: skills,
+			summary: initialFormData?.summary || '',
+			
+			           
+			
+			
 		};
 		console.log(data);
-		updateTechObject(data);
+		updateTechObject(data, () => {
+			setReloadForm(true);
+			navigate('/myProfile');
+		  });
 	};
 
+	
 	return (
 		<>
 			{currentUserProfile && (

@@ -3,7 +3,7 @@ import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
-	//   getDoc,
+	 getDoc,
 	onSnapshot,
 	setDoc,
 	serverTimestamp,
@@ -15,6 +15,7 @@ import {
 	//   orderBy,
 } from 'firebase/firestore';
 import { authContext } from './auth';
+import { toast } from 'react-toastify';
 
 export const contractorContext = createContext();
 
@@ -40,14 +41,20 @@ const ContractorContext = ({ children }) => {
 			setCurrentUserProfile(matchedProfile);
 		}
 	};
-	const updateTechObject = async (data) => {
+	const updateTechObject = async (data, callback) => {
 		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'techs', data?.id);
-		if (userDocRef) {
-			await updateDoc(userDocRef, data);
-			console.log('User successfully updated!');
+		console.log('userDocRef->', userDocRef);
+		const userDocSnapshot = await getDoc(userDocRef);
+		if (userDocSnapshot.exists()) {
+  // Update the document
+  			await updateDoc(userDocRef, data);
+  			console.log('User successfully updated!');
+			  toast.info(`The changes successfully saved`);
+			  callback();
+			  matchProfileToCurrentUser();
 		} else {
-			console.log('object not found');
+  			console.log('Document not found');
 		}
 	};
 
