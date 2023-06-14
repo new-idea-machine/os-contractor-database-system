@@ -25,6 +25,9 @@ export default function Login() {
 			toast.info(`welcome! ${user?.displayName}`);
 			navigate('/contractorlist');
 		}
+		else {
+			toast.error(`Invalid login credentials!`)
+		}
 	};
 
 	// const handleLogOut = () => {

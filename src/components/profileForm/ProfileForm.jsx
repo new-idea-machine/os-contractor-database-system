@@ -52,7 +52,12 @@ export default function ProfileForm(props) {
 		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
 		  setImgUrl(null);
 		  setReloadForm(false); // Reset reloadForm after form reload
-		}
+		} else {
+			setInitialFormData(techDataSchema); // Reset form data to initial state
+			setSkills([{ skill: '' }]); // Reset skills to initial state
+			setProjects([{ projectName: '', description: '' }]); // Reset projects to initial state
+			setImgUrl(null); // Reset image URL
+		  }
 	  }, [currentUserProfile, reloadForm]);
 
 	 
