@@ -1,15 +1,16 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import { toast } from 'react-toastify';
 import './profile.css';
 import { authContext } from '../../contexts/auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
-import { style } from '@mui/system';
-import { Padding } from '@mui/icons-material';
+import { Routes, Route, useNavigate } from 'react-router-dom';
 
-export default function ProfileForm() {
+
+export default function ProfileForm(props) {
+	const navigate = useNavigate();
+
 	const { user } = useContext(authContext);
 	const {
 		updateTechObject,
@@ -18,23 +19,21 @@ export default function ProfileForm() {
 		contractorMap,
 		getFirestore
 	} = useContext(contractorContext);
-	// const [profileImageUrl, setProfileImageUrl] = useState(null);
+	 //const [profileImageUrl, setProfileImageUrl] = useState(null);
 	const [imgUrl, setImgUrl] = useState(null);
-	const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
+	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
 	const [skills, setSkills] = useState([{ skill: '' }]);
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
+	const [reloadForm, setReloadForm] = useState(false);
 	
 
 	
 
 	useEffect(() => {
-		if (!currentUserProfile) {
-		  matchProfileToCurrentUser();
-		} else {
-		  // Prepopulate form fields from the Firestore database if available
+		if (currentUserProfile || reloadForm) {
 		  setInitialFormData((prevState) => ({
 			...prevState,
 			email: currentUserProfile.email || '',
@@ -42,10 +41,8 @@ export default function ProfileForm() {
 			id: currentUserProfile.id,
 			lastName: currentUserProfile.lastName || '',
 			qualification: currentUserProfile.qualification || '',
-			
-			  githubUrl: currentUserProfile.otherInfo?.githubUrl || '',
-			  linkedinUrl: currentUserProfile.otherInfo?.linkedinUrl || '',
-			
+			githubUrl: currentUserProfile.otherInfo?.githubUrl || '',
+			linkedinUrl: currentUserProfile.otherInfo?.linkedinUrl || '',
 			profileImg: currentUserProfile.profileImg || '',
 			projects: currentUserProfile.projects || [],
 			skills: currentUserProfile.skills || [],
@@ -53,9 +50,10 @@ export default function ProfileForm() {
 		  }));
 		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
 		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
+		  setImgUrl(null);
+		  setReloadForm(false); // Reset reloadForm after form reload
 		}
-	  }, [user, contractorMap, currentUserProfile]);
-
+	  }, [currentUserProfile, reloadForm]);
 
 	 
 
@@ -74,51 +72,41 @@ export default function ProfileForm() {
 
 	const onChange = (e) => {
 		const { name, value } = e.target;
-		if (name === 'firstName') {
-		  setInitialFormData((prevState) => ({
-			...prevState,
-			firstName: value,
-		  }));
-		} else if (name === 'lastName') {
-		  setInitialFormData((prevState) => ({
-			...prevState,
-			lastName: value,
-		  }));
-		} else {
-		  setInitialFormData((prevState) => ({
-			...prevState,
-			[name]: value,
-		  }));
-		}
+		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
+		
 	  };
 
 	const onSubmit = (e) => {
 		e.preventDefault();
 		const data = {
-			email:  initialFormData?.email || currentUserProfile?.email,
-			firstName: initialFormData.firstName || currentUserProfile?.firstName || '',
+			email:  initialFormData?.email || '',
+			firstName: initialFormData.firstName ||'',
 			id: currentUserProfile?.id,
-			lastName: initialFormData.lastName || currentUserProfile?.lastName || '',
-			qualification: initialFormData?.qualification ||  currentUserProfile?.qualification,
+			lastName: initialFormData.lastName || '',
+			qualification: initialFormData?.qualification ||  '',
 			otherInfo: {
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
 				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
 				
 				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			profileImg: currentUserProfile?.profileImg || imgUrl,
-			projects: projects || currentUserProfile?.projects,
-			skills: skills || currentUserProfile?.skills,
-			summary: initialFormData?.summary || currentUserProfile?.summary,
+			profileImg: initialFormData?.imgUrl || '',
+			projects: projects,
+			skills: skills,
+			summary: initialFormData?.summary || '',
 			
 			           
 			
 			
 		};
 		console.log(data);
-		updateTechObject(data);
+		updateTechObject(data, () => {
+			setReloadForm(true);
+			navigate('/myProfile');
+		  });
 	};
 
+	
 	return (
 		<>
 			{currentUserProfile && (

@@ -15,6 +15,7 @@ import {
 	//   orderBy,
 } from 'firebase/firestore';
 import { authContext } from './auth';
+import { toast } from 'react-toastify';
 
 export const contractorContext = createContext();
 
@@ -40,7 +41,7 @@ const ContractorContext = ({ children }) => {
 			setCurrentUserProfile(matchedProfile);
 		}
 	};
-	const updateTechObject = async (data) => {
+	const updateTechObject = async (data, callback) => {
 		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'techs', data?.id);
 		console.log('userDocRef->', userDocRef);
@@ -49,6 +50,9 @@ const ContractorContext = ({ children }) => {
   // Update the document
   			await updateDoc(userDocRef, data);
   			console.log('User successfully updated!');
+			  toast.info(`The changes successfully saved`);
+			  callback();
+			  matchProfileToCurrentUser();
 		} else {
   			console.log('Document not found');
 		}
