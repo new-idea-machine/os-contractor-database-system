@@ -19,7 +19,7 @@ export default function ProfileForm(props) {
 		contractorMap,
 		getFirestore
 	} = useContext(contractorContext);
-	 //const [profileImageUrl, setProfileImageUrl] = useState(null);
+
 	const [imgUrl, setImgUrl] = useState(null);
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
@@ -27,13 +27,13 @@ export default function ProfileForm(props) {
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
-	const [reloadForm, setReloadForm] = useState(false);
+	
 	
 
 	
 
 	useEffect(() => {
-		if (currentUserProfile || reloadForm) {
+		if (currentUserProfile) {
 		  setInitialFormData((prevState) => ({
 			...prevState,
 			email: currentUserProfile.email || '',
@@ -50,10 +50,10 @@ export default function ProfileForm(props) {
 		  }));
 		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
 		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
-		  setImgUrl(null);
-		  setReloadForm(false); // Reset reloadForm after form reload
+		  
+		  
 		} 
-	  }, [currentUserProfile, reloadForm]);
+	  }, [currentUserProfile]);
 
 	 
 
@@ -90,7 +90,7 @@ export default function ProfileForm(props) {
 				
 				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			profileImg: initialFormData?.imgUrl || '',
+			profileImg: currentUserProfile?.profileImg || imgUrl,
 			projects: projects,
 			skills: skills,
 			summary: initialFormData?.summary || '',
@@ -101,7 +101,7 @@ export default function ProfileForm(props) {
 		};
 		console.log(data);
 		updateTechObject(data, () => {
-			setReloadForm(true);
+			
 			navigate('/myProfile');
 		  });
 	};
@@ -212,7 +212,7 @@ export default function ProfileForm(props) {
 						<Upload
 							setImgUrl={setImgUrl}
 							imgUrl={imgUrl}
-							// setProfileImageUrl={setProfileImageUrl}
+							profileImageUrl={imgUrl}
 						/>
 					</div>
 				</div>
