@@ -51,7 +51,6 @@ const ContractorContext = ({ children }) => {
   			await updateDoc(userDocRef, data);
   			console.log('User successfully updated!');
 			  toast.info(`The changes successfully saved`);
-			  callback();
 			  matchProfileToCurrentUser();
 		} else {
   			console.log('Document not found');
