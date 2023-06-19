@@ -39,6 +39,11 @@ export default function About() {
                 </div>
 
                 <div className='teamCard flexCenter'>
+                <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <div className='imageWrapper'>
                     <img src={Avatar} alt="Avatar" />
                     </div>
@@ -46,13 +51,28 @@ export default function About() {
                     <h3 className='role'>Product Owner</h3>
                 </div>
                 <div className='teamCard flexCenter'>
+                <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <div className='imageWrapper'>
+                    <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <img src={Avatar} alt="Avatar" />
                     </div>
                     <h2 className='teamMember'>Diego Gomez</h2>
                     <h3 className='role'>Developer</h3>
                 </div>
                 <div className='teamCard flexCenter'>
+                <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <div className='imageWrapper'>
                     <img src={Avatar} alt="Avatar" />
                     </div>
@@ -60,13 +80,28 @@ export default function About() {
                     <h3 className='role'>Quality Assurance </h3>
                 </div>
                 <div className='teamCard flexCenter'>
+                <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <div className='imageWrapper'>
+                    <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <img src={Avatar} alt="Avatar" />
                     </div>
                     <h2 className='teamMember'>Sanja Ivansic</h2>
                     <h3 className='role'>Developer</h3>
                 </div>
                 <div className='teamCard flexCenter'>
+                <div className='biography'>
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
+                        </div>
                     <div className='imageWrapper'>
                     <img src={Avatar} alt="Avatar" />
                     </div>

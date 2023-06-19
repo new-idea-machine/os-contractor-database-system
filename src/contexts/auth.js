@@ -34,7 +34,11 @@ export default function AuthControl(props) {
 
 
 	const onAuthStateChangedCallback = (currentUser) => {
-		setUser(currentUser);
+		if (currentUser) {
+			setUser(currentUser);
+		} else {
+			setUser(null);
+		}
 	  };
 	// This is the firebase method that checks
 	// The current user in our application from our
@@ -122,6 +126,7 @@ export default function AuthControl(props) {
 	const login = async (loginEmail, loginPassword) => {
 		try {
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+			console.log('logging in ..... ', loginEmail,' ', loginPassword);
 		} catch (error) {
 			console.log(error.message);
 		}
