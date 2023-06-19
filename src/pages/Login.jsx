@@ -31,7 +31,7 @@ export default function Login() {
 	  }, [user, navigate]);
 
 	  useEffect(() => {
-		const currentLoginStep = loginStep.current;
+		const currentLoginStep = loginStep?.current;
 		const currentRegisterStep = registerStep?.current;
 		const isLoginPage = currentLoginStep && currentLoginStep.contains(document.activeElement);
 		const isRegisterPage = currentRegisterStep && currentRegisterStep.contains(document.activeElement);

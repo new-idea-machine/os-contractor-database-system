@@ -35,12 +35,20 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 		if (
 			!strongPasswordRegex.test(registerPassword) ||
 			registerEmail.trim()?.length <= 0 ||
-			!regEx.test(registerEmail)
+			userType.trim()=== '' ||
+			!regEx.test(registerEmail)  
+			
 		) 
 		
 		{
+			if(registerEmail.trim()?.length <= 0 ||
+			!regEx.test(registerEmail)) {
+			setRegisterEmail('');
+			toast.error('Please enter valid email address');
+			return false; 
+			} 
 			
-			if (!strongPasswordRegex.test(registerPassword) ){
+			else if (!strongPasswordRegex.test(registerPassword) ){
         		setRegisterPassword('');
 				toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
 				return false;
@@ -55,14 +63,12 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 			
 			}
 			
-			else if(registerEmail.trim()?.length <= 0 ||
-			!regEx.test(registerEmail)) {
-			setRegisterEmail('');
-			toast.error('Please enter valid email address');
-			return false; 
 			
+			else if (userType.trim() === '') {
+				toast.error('Please select a user type (Recruiter or Contractor)');
+				return false; 
+			  }
 
-			}
 			
 			//return false;
 			
