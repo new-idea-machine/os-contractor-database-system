@@ -92,8 +92,12 @@ export default function Search() {
 
         if (selectedSkills.length > 0) {
           for (const option of selectedSkills) {
-            if (contractor?.skills && contractor.skills.includes(option)) {
-              numMatchingSkills++;
+            if (contractor?.skills) {
+              const matchingSkills = contractor.skills.filter(
+                (skill) => skill.skill === option
+              );
+              console.log("matching skills ", matchingSkills );
+              numMatchingSkills += matchingSkills.length;
             }
           }
         } else {
@@ -129,7 +133,7 @@ export default function Search() {
       }
       filteredContractors.sort((a, b) => {
         if (b.percentMatching === a.percentMatching) {
-          return a.firstName.localeCompare(b.firstName);
+          return (a.firstName || "").localeCompare(b.firstName || "");
         }
         return b.percentMatching - a.percentMatching;
       });
@@ -256,7 +260,7 @@ export default function Search() {
                       <div className="result_skills_btns">
                         {contractor?.skills.map((resultSkill) => {
                           return (
-                            <div key={resultSkill}>
+                            <div key={resultSkill.skill}>
                               <Button
                                 style={{
                                   width: "auto",
@@ -270,7 +274,7 @@ export default function Search() {
                                   textTransform: "capitalize",
                                 }}
                               >
-                                {resultSkill}
+                                {resultSkill.skill}
                               </Button>
                             </div>
                           );

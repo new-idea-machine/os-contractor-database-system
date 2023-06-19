@@ -1,5 +1,5 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { store, auth, db, fbFunctions } from '../firebaseconfig';
+import { db} from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
@@ -17,12 +17,12 @@ import {
 import { authContext } from './auth';
 import { toast } from 'react-toastify';
 
-export const contractorContext = createContext();
+export const recruiterContext = createContext();
 
-const ContractorContext = ({ children }) => {
+const RecruiterContext = ({ children }) => {
 	const { user } = useContext(authContext);
-	const [contractorList, setContractorList] = useState([]);
-	const [contractor, setContractor] = useState(null);
+	const [recruiterList, setRecruiterList] = useState([]);
+	const [recruiter, setRecruiter] = useState(null);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
 
 
@@ -31,19 +31,24 @@ const ContractorContext = ({ children }) => {
 	//     if (userUID?.firebaseUID === user?.uid) setCurrentUserProfile(userUID);
 	//   });
 	// };
-	const contractorMap = {};
-	const matchProfileToCurrentUser = () => {
-		contractorList?.forEach((tech) => {
-			contractorMap[tech.firebaseUID] = tech;
+	const recruiterMap = {};
+    const matchProfileToCurrentUser = () => {
+		recruiterList?.forEach((rec) => {
+			recruiterMap[rec.firebaseUID] = rec;
+           
 		});
-		if (user && contractorMap[user?.uid]) {
-			const matchedProfile = contractorMap[user?.uid];
+		if (user && recruiterMap[user?.uid]) {
+			const matchedProfile = recruiterMap[user?.uid];
 			setCurrentUserProfile(matchedProfile);
+            
+            console.log('MATCHED PROG-> ',matchedProfile);
 		}
+        
+       
 	};
-	const updateTechObject = async (data, callback) => {
+	const updateRecObject = async (data) => {
 		console.log('TRYING TO UPDATE', data);
-		const userDocRef = doc(db, 'techs', data?.id);
+		const userDocRef = doc(db, 'recruiter', data?.id);
 		console.log('userDocRef->', userDocRef);
 		const userDocSnapshot = await getDoc(userDocRef);
 		if (userDocSnapshot.exists()) {
@@ -57,13 +62,17 @@ const ContractorContext = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
+
+		//setting recruiters list 
+    useEffect(() => {
+		const unsubscribe = onSnapshot(collection(db, 'recruiter'), (snapshot) => {
 			const documents = snapshot.docs.map((doc) => ({
 				id: doc.id,
 				...doc.data(),
 			}));
-			setContractorList(documents);
+			setRecruiterList(documents);
+            console.log(documents);
+            matchProfileToCurrentUser();
 		});
 		return () => {
 			unsubscribe();
@@ -71,22 +80,22 @@ const ContractorContext = ({ children }) => {
 	}, []);
 
 	const appStates = {
-		contractorList,
-		setContractorList,
-		setContractor,
-		contractor,
-		updateTechObject,
+		recruiterList,
+		setRecruiterList,
+		setRecruiter,
+		recruiter,
+		updateRecObject,
 		currentUserProfile,
 		setCurrentUserProfile,
 		matchProfileToCurrentUser,
-		contractorMap,
+		recruiterMap,
 	};
 
 	return (
-		<contractorContext.Provider value={appStates}>
+		<recruiterContext.Provider value={appStates}>
 			{children}
-		</contractorContext.Provider>
+		</recruiterContext.Provider>
 	);
 };
 
-export default ContractorContext;
+export default RecruiterContext;

@@ -4,6 +4,7 @@ import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/auth";
 import { contractorContext } from "../../contexts/ContractorContext";
+import { recruiterContext } from "../../contexts/RecruiterContext";
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -21,7 +22,7 @@ const Navigation = () => {
   const { logout, user } = useContext(authContext);
   const { currentUserProfile, matchProfileToCurrentUser, contractorMap } =
     useContext(contractorContext);
-
+    const { recruiterMap } = useContext(recruiterContext);
 
   useEffect(() => {
     if (!currentUserProfile) {
@@ -105,6 +106,11 @@ const Navigation = () => {
                         />
                       )}
                     </>
+                    ) : recruiterMap && recruiterMap[user?.uid] ? ( // Add this line
+                    <BackgroundLetterAvatars
+                      currentUserFirstName={recruiterMap[user?.uid]?.firstName} // Update the props
+                      currentUserLastName={recruiterMap[user?.uid]?.lastName} // Update the props
+                    />
                   ) : null}
                 </Avatar>
               </IconButton>
