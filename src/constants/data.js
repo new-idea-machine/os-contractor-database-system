@@ -19,6 +19,18 @@ const techDataSchema = {
 	],
 };
 
+const RecDataSchema ={
+	firstName: '',
+	lastName: '',
+	email: '',
+	qualification: '',
+	linkedinUrl: '',
+	companyName: '',
+	companyInfo: '',
+	phone:  '',
+
+}
+
 const formInputs = [
 	{
 		sectionTitle: 'Personal Info',
@@ -69,4 +81,51 @@ const formInputs = [
 	},
 ];
 
-export { techDataSchema, formInputs };
+
+const recFormInputs = [
+	{
+		sectionTitle: 'Personal Info',
+		fields: [
+			{ 
+				name: 'firstName', 
+				label: 'First Name', 
+				type: 'text', 
+				placeholder: 'Name' },
+			{
+				name: 'lastName',
+				label: 'Last Name',
+				type: 'text',
+				placeholder: 'Last Name',
+			},
+			{ name: 'email', label: 'Email', type: 'email', placeholder: 'Email' },
+			{ name: 'qualification', label: 'Qualification', type: 'text', placeholder: 'Back End Developer' },
+			{
+				name: 'linkedinUrl',
+				label: 'LinkedIn URL',
+				type: 'text',
+				placeholder: 'LinkedIn URL',
+			},
+			
+		],
+	},
+	{
+		sectionTitle: 'About Info',
+		fields: [
+			{
+				name: 'companyName',
+				label: 'Company Name',
+				type: 'text',
+				placeholder: 'Company',
+			},
+			{
+				name: 'companyInfo',
+				label: 'About Us',
+				type: 'textArea',
+				placeholder: '',
+			},
+			
+		],
+	},
+];
+
+export { techDataSchema, formInputs, RecDataSchema, recFormInputs };

@@ -14,6 +14,7 @@ import {
 	//   where,
 	//   orderBy,
 } from 'firebase/firestore';
+import developerSkills from '../constants/skills/developerSkills';
 
 export const skillsContext = createContext();
 

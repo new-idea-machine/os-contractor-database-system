@@ -14,6 +14,7 @@ import {
 } from "./pages";
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
+import RecruiterContext from "./contexts/RecruiterContext";
 import AuthControl from "./contexts/auth";
 import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
@@ -26,6 +27,7 @@ function App() {
     <>
       <AuthControl>
         <ContractorContext>
+          <RecruiterContext>
           <SkillsContext>
             <Router>
               <ScrollToTop>
@@ -44,6 +46,7 @@ function App() {
               </ScrollToTop>
             </Router>
           </SkillsContext>
+          </RecruiterContext>
         </ContractorContext>
       </AuthControl>
       <ToastContainer />
