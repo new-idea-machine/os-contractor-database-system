@@ -1,4 +1,4 @@
-import React, { useContext, useState, useRef } from 'react';
+import React, { useContext, useState, useRef, useEffect} from 'react';
 import { authContext } from '../contexts/auth';
 import { useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
@@ -21,14 +21,25 @@ export default function Login() {
 
 	const handleLogin = () => {
 		login(loginEmail, loginPassword);
-		if (user) {
-			toast.info(`welcome! ${user?.displayName}`);
-			navigate('/contractorlist');
-		}
-		else {
-			toast.error(`Invalid login credentials!`)
-		}
 	};
+
+	useEffect(() => {
+		if (user) {
+		  navigate('/contractorlist');
+		  toast.info(`Welcome! ${user?.displayName}`);
+		}
+	  }, [user, navigate]);
+
+	  useEffect(() => {
+		const currentLoginStep = loginStep?.current;
+		const currentRegisterStep = registerStep?.current;
+		const isLoginPage = currentLoginStep && currentLoginStep.contains(document.activeElement);
+		const isRegisterPage = currentRegisterStep && currentRegisterStep.contains(document.activeElement);
+	
+		if (!user && isLoginPage) {
+		  toast.error('Invalid login credentials!');
+		}
+	  }, [user, loginStep, registerStep]);
 
 	// const handleLogOut = () => {
 	// 	logout();
