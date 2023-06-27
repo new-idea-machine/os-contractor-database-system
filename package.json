@@ -1,4 +1,5 @@
 {
+  "homepage": "https://new-idea-machine.github.io/os-contractor-database-system/",
   "name": "os-contractor-database-system",
   "version": "0.1.0",
   "private": true,
@@ -12,6 +13,7 @@
     "@testing-library/user-event": "^13.5.0",
     "country-state-city": "^3.1.2",
     "firebase": "^9.17.2",
+    "gh-pages": "^5.0.0",
     "react": "^18.2.0",
     "react-dom": "^18.2.0",
     "react-password-checklist": "^1.4.3",
@@ -24,6 +26,8 @@
     "web-vitals": "^2.1.4"
   },
   "scripts": {
+    "predeploy": "npm run build",
+    "deploy": "gh-pages -d build",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "test": "react-scripts test",
