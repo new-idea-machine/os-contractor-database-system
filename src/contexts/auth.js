@@ -6,8 +6,13 @@ import {
 	signOut,
 	updateProfile,
 	signInWithEmailLink,
+	GoogleAuthProvider,
+	signInWithPopup,
+	getAdditionalUserInfo,
 	sendSignInLinkToEmail,
 	isSignInWithEmailLink,
+	fetchSignInMethodsForEmail
+	
 } from 'firebase/auth';
 import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
@@ -43,8 +48,10 @@ export default function AuthControl(props) {
 	// This is the firebase method that checks
 	// The current user in our application from our
 	// Project's authentication
-	onAuthStateChanged(auth, onAuthStateChangedCallback);
-
+	useEffect(() => {
+		const unsubscribe = onAuthStateChanged(auth, onAuthStateChangedCallback);
+		return () => unsubscribe();
+	  }, []);
 
 	const isAuthenticated = () => {
 		return !!user;
@@ -54,18 +61,21 @@ export default function AuthControl(props) {
 	// function --createUserInDatabase-- To add the creted
 	// id of the "tech" object, to the object itself
 	const addDocumentIdFieldToObject = async (id, userType) => {
-		const data = {
-			id: id,
-		};
 		const userDocRef = doc(db, userType, id);
-		if (userDocRef) {
-			await updateDoc(userDocRef, data);
-			//console.log('User successfully updated!');
+		const docSnapshot = await getDoc(userDocRef);
+	  
+		if (docSnapshot.exists()) {
+		  console.log('Document already exists');
 		} else {
-			console.log('object not found');
+		  const data = {
+			id: id,
+		  };
+		  await setDoc(userDocRef, data);
+		  console.log('Document created with ID:', id);
 		}
 	};
 
+	
 	// This function is declared to be called in the below
 	// Register function to create out "tech" object with our
 	// defined schema relateing it to the "user" by firebase
@@ -97,6 +107,12 @@ export default function AuthControl(props) {
 		userType
 	) => {
 		try {
+			const signInMethods = await fetchSignInMethodsForEmail(auth, registerEmail);
+
+			if (signInMethods.length > 0) {
+				console.log('Email address is already registered');
+				return false;
+			}
 			const userCredential = await createUserWithEmailAndPassword(
 				auth,
 				registerEmail,
@@ -116,15 +132,27 @@ export default function AuthControl(props) {
 				})
 				.catch((error) => {
 					console.log(error.message);
+					return false;
 				});
+
+				return true;
 		} catch (error) {
 			console.log(error.message);
+			return false;
 		}
 	};
 
 	// This function Logs the user in
 	const login = async (loginEmail, loginPassword) => {
 		try {
+			// Check if the email address exists
+		const signInMethods = await fetchSignInMethodsForEmail(auth, loginEmail);
+		if (signInMethods.length === 0) {
+			console.log('Email address does not exist');
+			return;
+		}
+
+
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
 			console.log('logging in ..... ', loginEmail,' ', loginPassword);
 		} catch (error) {
@@ -162,7 +190,8 @@ export default function AuthControl(props) {
 		register,
 		login,
 		logout,
-		isAuthenticated
+		isAuthenticated,
+		//loginWithGoogle
 		// signInWithEmail,
 		// emailLogin,
 	};

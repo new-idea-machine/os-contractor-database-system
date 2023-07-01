@@ -29,7 +29,7 @@ async function getPath(uid) {
 		
 	  }
 	
-	  console.log('User Path:', path);
+	
 	  return path;
 	}
 
@@ -52,7 +52,7 @@ export default function UpdateProfile() {
 		};
 	
 		const uid = user?.uid;
-    console.log('UID ->', uid);
+    
     if (uid) {
       fetchUserPath(uid);
     }

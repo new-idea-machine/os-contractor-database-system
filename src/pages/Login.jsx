@@ -5,10 +5,13 @@ import '../styles/auth.css';
 import images from '../constants/images';
 import Register from './Register';
 import { toast } from 'react-toastify';
+import GoogleButton from 'react-google-button';
+
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
-	const { login, user } = useContext(authContext);
+	
+	const { login, loginWithGoogle, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
@@ -21,6 +24,9 @@ export default function Login() {
 
 	const handleLogin = () => {
 		login(loginEmail, loginPassword);
+	};
+	const handleGoogleLogin = () => {
+		loginWithGoogle();
 	};
 
 	useEffect(() => {
@@ -91,6 +97,7 @@ export default function Login() {
 								/>
 
 								<button onClick={() => handleLogin()}> Login</button>
+								<GoogleButton style={{margin: '10px'}} onClick={() => handleGoogleLogin()}/>
 								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
 							</div>
 							<div className='optionContainer'>
