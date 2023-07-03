@@ -5,13 +5,13 @@ import '../styles/auth.css';
 import images from '../constants/images';
 import Register from './Register';
 import { toast } from 'react-toastify';
-import GoogleButton from 'react-google-button';
+import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
 
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
 	
-	const { login, loginWithGoogle, user } = useContext(authContext);
+	const { login, loginWithGoogle, loginWithTwitter, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
@@ -29,6 +29,9 @@ export default function Login() {
 		loginWithGoogle();
 	};
 
+	const handleTwitterLogin = () => {
+		loginWithTwitter();
+	};
 	useEffect(() => {
 		if (user) {
 		  navigate('/contractorlist');
@@ -97,7 +100,8 @@ export default function Login() {
 								/>
 
 								<button onClick={() => handleLogin()}> Login</button>
-								<GoogleButton style={{margin: '10px'}} onClick={() => handleGoogleLogin()}/>
+								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/> 
+								<GoogleLoginButton style={{marginLeft:'20px', marginRight: '20px', marginTop: '5px', marginBottom:'10px', borderRadius: '5px'}} onClick={() => handleGoogleLogin()}/>
 								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
 							</div>
 							<div className='optionContainer'>

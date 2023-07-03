@@ -7,6 +7,7 @@ import {
 	updateProfile,
 	signInWithEmailLink,
 	GoogleAuthProvider,
+	TwitterAuthProvider,
 	signInWithPopup,
 	getAdditionalUserInfo,
 	sendSignInLinkToEmail,
@@ -72,6 +73,69 @@ export default function AuthControl(props) {
 		  };
 		  await setDoc(userDocRef, data);
 		  console.log('Document created with ID:', id);
+		}
+	};
+
+	const loginWithGoogle = async () => {
+		try {
+			const provider = new GoogleAuthProvider();
+			const userCredential = await signInWithPopup(auth, provider);
+			const { isNewUser } = getAdditionalUserInfo(userCredential)  
+			const currentUser = userCredential.user;
+			const { displayName, email, uid} = currentUser;
+			 
+		
+			 if(isNewUser){
+				console.log(isNewUser);
+				const selectedUserType = await promptUserType();
+				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
+			 }
+
+		
+			console.log('Logged in with Google');
+		  } catch (error) {
+			console.log(error.message);
+		}
+	};
+
+	const loginWithTwitter = async () => {
+		try {
+			const provider = new TwitterAuthProvider();
+			const userCredential = await signInWithPopup(auth, provider);
+			const { isNewUser } = getAdditionalUserInfo(userCredential);
+			console.log(isNewUser);
+			const currentUser = userCredential.user;
+			console.log(currentUser);
+			const { displayName, email, uid} = currentUser;
+			 
+		
+			 if(isNewUser){
+				console.log(isNewUser);
+				const selectedUserType = await promptUserType();
+				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
+			 }
+
+		
+			console.log('Logged in with twitter');
+		  } catch (error) {
+			console.log(error.message);
+		}
+	};
+
+
+	const promptUserType = async() => {
+		// Prompt the user to choose a user type
+
+		const userTypeInput = prompt('Please choose a user type: 1 for Contractor, 2 for Recruiter');
+	
+		// Validate and return the selected user type
+		if (userTypeInput === '1') {
+			return 'techs';
+		} else if (userTypeInput === '2') {
+			return 'recruiter';
+		} else {
+			// Invalid user type selected, prompt again or handle accordingly
+			return promptUserType();
 		}
 	};
 
@@ -191,7 +255,8 @@ export default function AuthControl(props) {
 		login,
 		logout,
 		isAuthenticated,
-		//loginWithGoogle
+		loginWithGoogle, 
+		loginWithTwitter
 		// signInWithEmail,
 		// emailLogin,
 	};

@@ -15,7 +15,7 @@ export default function About() {
             <div className='imgContainer'>
             <img className='calgaryImage' src={Networking}></img>
 
-        <h2 className='motto' contentEditable role='textbox' aria-multiline='true'
+        <h2 className='motto' role='textbox' aria-multiline='true'
 					
 				>
 					This application is designed to help Recruiters to find a perfect fit for their company’s next project and to help Contractors utilize their talent.   
