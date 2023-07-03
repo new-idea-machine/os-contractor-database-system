@@ -19,15 +19,11 @@ const ContractorProfile = (props) => {
   // console.log(allCountries)
   useEffect(() => {
     const contractorSkillsList = () => {
-      contractorList?.map((contractor) => {
+      contractorList?.forEach((contractor) => {
         if (id === contractor?.id || props?.data?.id === contractor?.id) {
-          const result = skillsList?.filter(({ id }) =>
-            contractor?.skillIds?.includes(id)
-          );
-          result.sort((a, b) => (a.title > b.title ? 1 : -1));
-          setContractorSkills(result);
+          setContractorSkills(contractor?.skills || []);
         }
-        return null;
+        
       });
     };
     contractorSkillsList();
@@ -162,12 +158,12 @@ const ContractorProfile = (props) => {
                   ))}
                 </div>
               )}
-              {contractor?.skillIds && (
+              {contractorSkills.length > 0  && (
                 <div>
-                  {contractorSkills?.map((resultSkill) => {
+                  {contractorSkills?.map((skill, index) => {
                     return (
                       <Button
-                        key={resultSkill.id}
+                        key={index}
                         style={{
                           width: "auto",
                           borderStyle: "solid",
@@ -177,13 +173,18 @@ const ContractorProfile = (props) => {
                           textTransform: "capitalize",
                         }}
                       >
-                        {resultSkill.title}
+                        {skill.skill}
                       </Button>
                     );
                   })}
                 </div>
               )}
+                  <div className='chatButton' >
+					          <span>Chat with  {contractor?.firstName}</span>
+				          </div>
             </div>
+
+        
           </div>
         ) : null
       )}
