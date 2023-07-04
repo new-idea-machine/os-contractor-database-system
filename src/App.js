@@ -4,6 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/app.css";
 import {
+  MyChat,
   Home,
   NotFound,
   UpdateProfile,
@@ -11,6 +12,7 @@ import {
   MyProfile,
   Login,
   About
+ 
 } from "./pages";
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
@@ -42,6 +44,7 @@ function App() {
                   <Route path="/search" element={<Search />} />
                   <Route path="/UpdateProfile" element={<UpdateProfile />} />
                   <Route path="/About" element={<About />} />
+                  <Route path="/chat" element={<MyChat/>} />
                 </Routes>
               </ScrollToTop>
             </Router>
