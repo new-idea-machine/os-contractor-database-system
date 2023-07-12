@@ -26,7 +26,7 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 	// 	}
 	// }, []);
 
-	const nameEmailValidation = () => {
+	const nameEmailValidation = async() => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
 		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
 
@@ -73,20 +73,20 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 			//return false;
 			
 		} else {	
-			let success = register(
+			const success = await register(
 				registerEmail,
 				displayName.trim(),
 				registerPassword,
 				userType
 			);
 			console.log(userType, registerEmail);
+			console.log('Success==> ', success);
 			if (!success) {
+				toast.error('The email is already in use')
 				setErroMessage('Registration Failed');
-				return errorMessage;
-			} else {
-				setErroMessage(
-					`A login email link sent to ${registerEmail}, please check your email`
-				);
+				return false;
+			} else if(success) {
+				
 				toast.info(`You Have successfully registered with ${registerEmail} !!`);
 				navigate('/contractorList');
 			}

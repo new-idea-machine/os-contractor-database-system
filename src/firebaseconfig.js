@@ -6,13 +6,12 @@ import { getStorage } from 'firebase/storage';
 import { getFunctions } from 'firebase/functions';
 
 const firebaseConfig = {
-	apiKey: "AIzaSyB903v3fgxhCTd51ugDTDcxfrp9CIsBvFU",
-	authDomain:  "open-source-techbook.firebaseapp.com",
-	projectId: "open-source-techbook",
-	storageBucket:  "open-source-techbook.appspot.com",
-	messagingSenderId: "612368218916",
-	appId: "1:612368218916:web:4bcdce6651541eef23d1b1",
-	measurementId: "G-42SVQXFVL6"
+	apiKey: process.env.REACT_APP_apiKey,
+	authDomain: process.env.REACT_APP_authDomain,
+	projectId: process.env.REACT_APP_projectId,
+	storageBucket: process.env.REACT_APP_storageBucket,
+	messagingSenderId: process.env.REACT_APP_messagingSenderId,
+	appId: process.env.REACT_APP_appId,
 };
 
 const app = initializeApp(firebaseConfig);

@@ -9,6 +9,9 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import Avatar from "../../assets/avatar.png";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
+import { authContext } from '../../contexts/auth';
+import { useNavigate } from 'react-router-dom';
+import Chat from "../Chats/Chat"; // Import the Chat component
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -16,22 +19,36 @@ const ContractorProfile = (props) => {
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const allCountries = Country.getAllCountries();
-  // console.log(allCountries)
+  const { user } = useContext(authContext);
+  const userUid = user?.uid;
+  const [receiverData, setReceiverData] = useState(null); // State variable to store the receiver data
+  const navigate = useNavigate();
   useEffect(() => {
     const contractorSkillsList = () => {
-      contractorList?.map((contractor) => {
+      contractorList?.forEach((contractor) => {
         if (id === contractor?.id || props?.data?.id === contractor?.id) {
-          const result = skillsList?.filter(({ id }) =>
-            contractor?.skillIds?.includes(id)
-          );
-          result.sort((a, b) => (a.title > b.title ? 1 : -1));
-          setContractorSkills(result);
+          setContractorSkills(contractor?.skills || []);
         }
-        return null;
+        
       });
     };
     contractorSkillsList();
   }, [id, props?.data?.id, contractorList, skillsList]);
+
+  const isOwnProfile = contractorList.some((contractor) => {
+    return contractor?.firebaseUID === userUid && (contractor?.id === id || contractor?.id === props?.data?.id);
+  });
+
+
+  const handleChatClick = (contractorId) => {
+    // Find the receiver data based on the contractor ID
+    const receiver = contractorList.find((contractor) => contractor.id === contractorId);
+    if (receiver) {
+      setReceiverData(receiver); // Set the receiver data in the state variable
+      navigate("/Chat", { state: { receiverData: receiver } });
+    }
+  };
+
   return (
     <div>
       <Navigation />
@@ -162,12 +179,12 @@ const ContractorProfile = (props) => {
                   ))}
                 </div>
               )}
-              {contractor?.skillIds && (
+              {contractorSkills.length > 0  && (
                 <div>
-                  {contractorSkills?.map((resultSkill) => {
+                  {contractorSkills?.map((skill, index) => {
                     return (
                       <Button
-                        key={resultSkill.id}
+                        key={index}
                         style={{
                           width: "auto",
                           borderStyle: "solid",
@@ -177,17 +194,26 @@ const ContractorProfile = (props) => {
                           textTransform: "capitalize",
                         }}
                       >
-                        {resultSkill.title}
+                        {skill.skill}
                       </Button>
                     );
                   })}
                 </div>
               )}
+               {!isOwnProfile && (
+                  <div className='chatButton' onClick={() => handleChatClick(contractor.id)}>
+					          <span>Chat with  {contractor?.firstName}</span>
+				          </div>
+               )}
             </div>
+
+        
           </div>
         ) : null
       )}
       <Footer />
+      {/* Pass the receiver data as a prop to the Chat component */}
+      {receiverData && <Chat receiver={receiverData} />}
     </div>
   );
 };

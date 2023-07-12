@@ -150,7 +150,7 @@ const Navigation = () => {
               transformOrigin={{ horizontal: "right", vertical: "top" }}
               anchorOrigin={{ horizontal: "right", vertical: "bottom" }}
             >
-              <MenuItem onClick={() => navigate("/myProfile")}>
+              <MenuItem onClick={() => navigate("/myProfile")} sx={{width: "160px"}}>
                 <Avatar
                   sx={{
                     width: "25px!important",

@@ -71,7 +71,6 @@ const RecruiterContext = ({ children }) => {
 				...doc.data(),
 			}));
 			setRecruiterList(documents);
-            console.log(documents);
             matchProfileToCurrentUser();
 		});
 		return () => {
