@@ -106,7 +106,7 @@ const Navigation = () => {
                         />
                       )}
                     </>
-                    ) : recruiterMap && recruiterMap[user?.uid] ? ( // Add this line
+                    ) : recruiterMap && recruiterMap[user?.uid] ? (
                     <BackgroundLetterAvatars
                       currentUserFirstName={recruiterMap[user?.uid]?.firstName} // Update the props
                       currentUserLastName={recruiterMap[user?.uid]?.lastName} // Update the props

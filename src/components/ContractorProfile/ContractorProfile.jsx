@@ -11,7 +11,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
 import { authContext } from '../../contexts/auth';
 import { useNavigate } from 'react-router-dom';
-import Chat from "../Chats/Chat"; // Import the Chat component
+
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -21,7 +21,6 @@ const ContractorProfile = (props) => {
   const allCountries = Country.getAllCountries();
   const { user } = useContext(authContext);
   const userUid = user?.uid;
-  const [receiverData, setReceiverData] = useState(null); // State variable to store the receiver data
   const navigate = useNavigate();
   useEffect(() => {
     const contractorSkillsList = () => {
@@ -40,7 +39,7 @@ const ContractorProfile = (props) => {
   });
 
 
-  const handleChatClick = (contractorId) => {
+ /* const handleChatClick = (contractorId) => {
     // Find the receiver data based on the contractor ID
     const receiver = contractorList.find((contractor) => contractor.id === contractorId);
     if (receiver) {
@@ -48,7 +47,7 @@ const ContractorProfile = (props) => {
       navigate("/Chat", { state: { receiverData: receiver } });
     }
   };
-
+**/
   return (
     <div>
       <Navigation />
@@ -201,7 +200,7 @@ const ContractorProfile = (props) => {
                 </div>
               )}
                {!isOwnProfile && (
-                  <div className='chatButton' onClick={() => handleChatClick(contractor.id)}>
+                  <div className='chatButton' onClick={() => navigate('/chat')}>
 					          <span>Chat with  {contractor?.firstName}</span>
 				          </div>
                )}
@@ -212,8 +211,7 @@ const ContractorProfile = (props) => {
         ) : null
       )}
       <Footer />
-      {/* Pass the receiver data as a prop to the Chat component */}
-      {receiverData && <Chat receiver={receiverData} />}
+     
     </div>
   );
 };

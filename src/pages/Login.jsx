@@ -33,7 +33,7 @@ export default function Login() {
 		loginWithTwitter();
 	};
 	useEffect(() => {
-		if (user) {
+		if ( user?.displayName) {
 		  navigate('/contractorlist');
 		  toast.info(`Welcome! ${user?.displayName}`);
 		}
