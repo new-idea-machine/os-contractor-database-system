@@ -22,9 +22,15 @@ export default function Login() {
 
 	const navigate = useNavigate();
 
-	const handleLogin = () => {
-		login(loginEmail, loginPassword);
-	};
+	const handleLogin = async () => {
+		try {
+		  await login(loginEmail, loginPassword);
+		} catch (error) {
+		  toast.error(error.message);
+		  setLoginPassword("");
+		  setLoginEmail("");
+		}
+	  };
 	const handleGoogleLogin = () => {
 		loginWithGoogle();
 	};

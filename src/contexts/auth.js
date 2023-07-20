@@ -221,6 +221,9 @@ export default function AuthControl(props) {
 			console.log('logging in ..... ', loginEmail,' ', loginPassword);
 		} catch (error) {
 			console.log(error.message);
+			if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code ==='auth/invalid-email') {
+				throw new Error('Invalid login credentials');
+			  }
 		}
 	};
 
