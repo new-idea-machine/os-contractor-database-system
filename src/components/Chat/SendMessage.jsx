@@ -5,14 +5,15 @@ import { authContext } from '../../contexts/auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { recruiterContext } from "../../contexts/RecruiterContext";
 
-const SendMessage = ({ scroll }) => {
+const SendMessage = ({ scroll, profileUid }) => {
   const [message, setMessage] = useState("");
   const { user } = useContext(authContext);
   const userUid = user?.uid;
   const { contractorList } = useContext(contractorContext);
   const { recruiterList } = useContext(recruiterContext);
-  console.log("User: ", userUid );
   const [userData, setUserData] = useState(null);
+  const receiverUid = profileUid;
+
 
 
   useEffect(() => {
@@ -51,6 +52,7 @@ const SendMessage = ({ scroll }) => {
       avatar: userData?.profileImg || user?.photoURL,
       createdAt: serverTimestamp(),
       uid: userData?.firebaseUID,
+      receiverUid: receiverUid,
     });
     setMessage("");
     scroll.current.scrollIntoView({ behavior: "smooth" });

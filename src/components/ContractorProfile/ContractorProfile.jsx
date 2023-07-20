@@ -11,6 +11,7 @@ import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
 import { authContext } from '../../contexts/auth';
 import { useNavigate } from 'react-router-dom';
+import { Link } from "react-router-dom";
 
 
 const ContractorProfile = (props) => {
@@ -39,15 +40,7 @@ const ContractorProfile = (props) => {
   });
 
 
- /* const handleChatClick = (contractorId) => {
-    // Find the receiver data based on the contractor ID
-    const receiver = contractorList.find((contractor) => contractor.id === contractorId);
-    if (receiver) {
-      setReceiverData(receiver); // Set the receiver data in the state variable
-      navigate("/Chat", { state: { receiverData: receiver } });
-    }
-  };
-**/
+
   return (
     <div>
       <Navigation />
@@ -200,9 +193,11 @@ const ContractorProfile = (props) => {
                 </div>
               )}
                {!isOwnProfile && (
-                  <div className='chatButton' onClick={() => navigate('/chat')}>
-					          <span>Chat with  {contractor?.firstName}</span>
-				          </div>
+                     <Link to={`/chat/${contractor.firebaseUID}`}>
+                     <div className='chatButton'>
+                       <span>Chat with {contractor?.firstName}</span>
+                     </div>
+                   </Link>
                )}
             </div>
 
@@ -210,9 +205,11 @@ const ContractorProfile = (props) => {
           </div>
         ) : null
       )}
+       
       <Footer />
-     
+      
     </div>
+    
   );
 };
 

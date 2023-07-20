@@ -46,7 +46,7 @@ function App() {
                   <Route path="/search" element={<Search />} />
                   <Route path="/UpdateProfile" element={<UpdateProfile />} />
                   <Route path="/About" element={<About />} />
-                  <Route path="/chat" element={<ChatBox />} />
+                  <Route path="/chat/:uid" element={<ChatBox />} />
                   
                 </Routes>
               </ScrollToTop>
