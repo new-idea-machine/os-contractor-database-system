@@ -26,9 +26,11 @@ export default function Login() {
 		try {
 		  await login(loginEmail, loginPassword);
 		} catch (error) {
-		  toast.error(error.message);
-		  setLoginPassword("");
-		  setLoginEmail("");
+		  console.log('Error occurred during login:', error.message);
+		  setLoginPassword('');
+		  setLoginEmail('');
+		  toast.error(error.message); 
+		  
 		}
 	  };
 	const handleGoogleLogin = () => {
@@ -92,6 +94,7 @@ export default function Login() {
 									type='email'
 									placeholder='Email...'
 									autoComplete='off'
+									value={loginEmail}
 									onChange={(event) => {
 										setLoginEmail(event.target.value);
 									}}
@@ -100,6 +103,7 @@ export default function Login() {
 									type='password'
 									placeholder='Password...'
 									autoComplete='off'
+									value={loginPassword}
 									onChange={(event) => {
 										setLoginPassword(event.target.value);
 									}}
