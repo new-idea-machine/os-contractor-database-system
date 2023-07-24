@@ -1,18 +1,22 @@
-import { BrowserRouter as Router, Routes, Route, Navigate } from "react-router-dom";
+import {
+  BrowserRouter as Router,
+  Routes,
+  Route,
+  Navigate,
+} from "react-router-dom";
 import React, { useContext } from "react";
 import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/app.css";
 import {
-  MyChat,
+  // MyChat,
   Home,
   NotFound,
   UpdateProfile,
   ContractorList,
   MyProfile,
   Login,
-  About
- 
+  About,
 } from "./pages";
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
@@ -24,31 +28,39 @@ import Search from "./components/Search/Search";
 import ProtectedRoute from "./components/ProtectedRoute";
 
 function App() {
-  
   return (
     <>
       <AuthControl>
         <ContractorContext>
           <RecruiterContext>
-          <SkillsContext>
-            <Router>
-              <ScrollToTop>
-                <Routes>
-                  <Route path="*" element={<NotFound />} />
-                  <Route path="/" element={<Home />} />
-                  <Route path="/auth" element={<Login />} />
-                  <Route path="/contractorList" element={<ContractorList />} />
-                  <Route path="/contractor/:id" element={ <ProtectedRoute><ContractorProfile /></ProtectedRoute>
-                   }/>
-                  <Route path="/myProfile" element={<MyProfile />} />
-                  <Route path="/search" element={<Search />} />
-                  <Route path="/UpdateProfile" element={<UpdateProfile />} />
-                  <Route path="/About" element={<About />} />
-                  <Route path="/chat" element={<MyChat/>} />
-                </Routes>
-              </ScrollToTop>
-            </Router>
-          </SkillsContext>
+            <SkillsContext>
+              <Router>
+                <ScrollToTop>
+                  <Routes>
+                    <Route path="*" element={<NotFound />} />
+                    <Route path="/" element={<Home />} />
+                    <Route path="/auth" element={<Login />} />
+                    <Route
+                      path="/contractorList"
+                      element={<ContractorList />}
+                    />
+                    <Route
+                      path="/contractor/:id"
+                      element={
+                        <ProtectedRoute>
+                          <ContractorProfile />
+                        </ProtectedRoute>
+                      }
+                    />
+                    <Route path="/myProfile" element={<MyProfile />} />
+                    <Route path="/search" element={<Search />} />
+                    <Route path="/UpdateProfile" element={<UpdateProfile />} />
+                    <Route path="/About" element={<About />} />
+                    {/* <Route path="/chat" element={<MyChat/>} /> */}
+                  </Routes>
+                </ScrollToTop>
+              </Router>
+            </SkillsContext>
           </RecruiterContext>
         </ContractorContext>
       </AuthControl>
