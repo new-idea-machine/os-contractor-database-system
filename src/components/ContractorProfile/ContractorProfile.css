@@ -1,109 +1,280 @@
-.contractor_profile {
+.contractor_profile_container {
   height: 100vh;
-  padding: 20px;
+  width: 100vw;
   display: flex;
-  margin-right: 20%;
-  margin-left: 20%;
-  margin-top: 20px;
+  justify-content: center;
 }
 
-.contractor_info {
-  display: flex;
-  flex-direction: column;
-  margin-top: 55px;
-}
-
-.contractor_name {
-  height: fit-content;
-  font-size: 30px;
-  padding-bottom: 10px;
-  font-weight: bold;
+.contractor_profile {
+  width: 60%;
+  max-width: 60%;
   display: flex;
   flex-direction: row;
-  align-items: center;
+  padding: 6rem;
+  justify-content: space-between;
+}
+
+.contractor_header {
+  font-size: 40px;
+  letter-spacing: 3px;
+  margin: 0;
+  padding: 0;
 }
 
 .contractor_qualification {
-  padding: 5px;
-  margin-bottom: 10px;
-  font-weight: bold;
-  background-color: #d5d1d0;
-  width: fit-content;
+  font-size: 35px;
+  letter-spacing: 3px;
+  margin-left: 4rem;
+  margin-top: 0;
+}
+
+.center {
+  width: 69%;
+  margin-right: 2rem;
+}
+
+.contractor_chips_container {
+  height: 100px;
+  width: 60%;
+  margin: auto;
+}
+
+.contractor_chips.button {
+  margin: 0;
+  height: auto;
+  background: transparent;
+  padding: 0;
   border: none;
-  border-radius: 5px;
+  position: relative;
+  overflow: hidden;
+  margin-right: 0.25rem;
+  margin-bottom: 0.25rem;
 }
 
-.contractor_links {
-  display: flex;
-  align-items: flex-start;
-}
-.contractor_links a {
-  margin-right: 20px;
-  color: rgb(48, 47, 47);
-}
-
-.contractor_summary {
-  min-width: 565px;
-  margin-bottom: 10px;
+.contractor_chips.button {
+  letter-spacing: 3px;
+  text-decoration: none;
+  font-size: 1em;
+  font-family: "Arial";
+  position: relative;
+  text-transform: uppercase;
+  color: white;
 }
 
-.image_wrapper {
-  width: 275px;
-  height: 275px;
-  min-width: 275px;
-  border-radius: 5%;
-  display: block;
-  margin-right: 20px;
-  margin-top: 55px;
-}
-
-.image_wrapper img {
-  width: 100%;
+.contractor_chips.button .hover-text {
+  position: absolute;
+  top: 0;
+  left: 0;
+  color: #ef233c;
+  width: 0;
   height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
+  border-right: 6px solid #ef233c;
+  white-space: nowrap;
+  overflow: hidden;
+  transition: width 0.5s;
 }
 
-.avatar_wrapper {
-  width: 275px;
-  height: 275px;
-  min-width: 275px;
-  display: block;
-  margin-right: 20px;
-  margin-top: 55px;
+.contractor_chips.button:hover .hover-text {
+  width: 100%;
+  filter: drop-shadow(0 0 23px #ef233c);
+}
+
+.contractor_chips.button:hover .actual-text {
+  color: transparent;
+  transition: color 0.3s;
+}
+
+.tab_container {
+  width: 5rem;
+  height: 1.5rem;
+  background-color: #161a1d;
+}
+
+.tab {
+  width: 8rem;
+  height: 1.5rem;
+  transform: skewX(20deg);
+  background-color: #161a1d;
+  margin-left: 0.5rem;
+}
+
+.tab_text {
+  transform: skewX(-20deg);
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-left: 0.25rem;
+  font-size: large;
+  text-align: left;
+  padding-top: 0.25rem;
+}
+
+.contractor_info_container {
   display: flex;
-  justify-content: flex-end;
+  flex-direction: column;
+  width: 100%;
+  padding: 1rem;
+  background-color: #161a1d;
+  height: fit-content;
+  min-height: 25rem;
 }
 
-.avatar_wrapper img {
-  width: 50%;
-  height: 50%;
+.about_me_container {
+  background-color: #2b2d42;
+  border-radius: 0 0 1rem 1rem;
+  max-width: 17rem;
+  min-width: 15rem;
+  height: fit-content;
+  min-height: 50%;
+  margin-left: 1rem;
+}
+
+.about_me {
+  padding: 1rem;
+  min-height: 15rem;
+}
+
+.about_me_header {
+  padding: 0;
+  margin: 0;
+  margin-left: 0.25rem;
+  color: #ef233c;
+  letter-spacing: 3px;
+}
+
+.about_me_name {
+  padding: 0;
+  margin: 0;
+  margin-left: 1rem;
+  color: #ef233c;
+  letter-spacing: 2px;
+}
+
+.about_me_links {
+  text-align: end;
+  height: 2rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-evenly;
+  margin-top: auto;
+  margin-bottom: 1rem;
+}
+
+.line_break {
+  width: 100%;
+}
+
+.about_me_summary {
+  margin-left: 0.5rem;
+  color: #ffffff;
+  letter-spacing: 1px;
+  margin-bottom: 0.5rem;
+}
+
+.profile_image {
+  width: 100%;
   object-fit: cover;
-  border-style: solid;
-  border-color: gray;
-  border-radius: 10px;
+}
+
+.profile_image_container {
+  display: flex;
+  justify-content: center;
+}
+
+.avatar {
+  padding: 1rem;
+  width: 80%;
+  justify-content: center;
+  align-items: center;
 }
 
 .chatButton {
   margin-top: 20px;
   width: 200px;
-	display: inline-block;
-	outline: 0;
-	border: 0;
-	cursor: pointer;
-	background: #504d4d;
-	color: #f0e6e6;
-	border-radius: 8px;
-	padding: 14px 24px 16px;
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 1;
-	transition: transform 200ms, background 200ms;
+  display: inline-block;
+  outline: 0;
+  border: 0;
+  cursor: pointer;
+  background: #504d4d;
+  color: #f0e6e6;
+  border-radius: 8px;
+  padding: 14px 24px 16px;
+  font-size: 18px;
+  font-weight: 700;
+  line-height: 1;
+  transition: transform 200ms, background 200ms;
 }
 .chatButton:hover {
-	transform: translateY(-2px);
-	line-height: 1;
-	background:#3d3b3b;
-	color: #ffffff;
-	box-shadow: 0 0 0 3px #ffffff inset;
+  transform: translateY(-2px);
+  line-height: 1;
+  background: #3d3b3b;
+  color: #ffffff;
+  box-shadow: 0 0 0 3px #ffffff inset;
+}
+
+.edit_button {
+  width: 2rem;
+  height: 2rem;
+  margin-right: 1rem;
+  border-radius: 50%;
+  background-color: #8d99ae;
+  border: none;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  transition-duration: 0.3s;
+  overflow: hidden;
+  position: relative;
+  text-decoration: none;
+  float: right;
+}
+
+.icon {
+  color: #8d99ae;
+}
+
+.icon:hover {
+  color: #ef233c;
+}
+
+.edit_icon {
+  width: 1.5rem;
+  transition-duration: 0.3s;
+  fill: #2b2d42;
+}
+
+.edit_button:hover {
+  width: 5rem;
+  border-radius: 50px;
+  transition-duration: 0.3s;
+  background-color: #ef233c;
+  align-items: center;
+}
+
+.edit_button:hover .edit_icon {
+  width: 20px;
+  transition-duration: 0.3s;
+  transform: translateY(60%);
+  -webkit-transform: rotate(360deg);
+  -moz-transform: rotate(360deg);
+  -o-transform: rotate(360deg);
+  -ms-transform: rotate(360deg);
+  transform: rotate(360deg);
+  fill: #2b2d42;
+}
+
+.edit_button::before {
+  display: none;
+  content: "Edit";
+  color: #2b2d42;
+  transition-duration: 0.3s;
+  font-size: 1rem;
+}
+
+.edit_button:hover::before {
+  display: block;
+  padding-right: 10px;
+  font-size: 1rem;
+  transform: translateY(0px);
+  transition-duration: 0.3s;
 }
