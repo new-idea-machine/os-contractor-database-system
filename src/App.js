@@ -11,7 +11,8 @@ import {
   ContractorList,
   MyProfile,
   Login,
-  About
+  About,
+  
  
 } from "./pages";
 
@@ -24,6 +25,8 @@ import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
 import Search from "./components/Search/Search";
 import ProtectedRoute from "./components/ProtectedRoute";
+import MyMessages from "./pages/MyMessages";
+import MessagesContext from "./contexts/MessagesContext";
 
 function App() {
   
@@ -33,6 +36,7 @@ function App() {
         <ContractorContext>
           <RecruiterContext>
           <SkillsContext>
+          <MessagesContext>
             <Router>
               <ScrollToTop>
                 <Routes>
@@ -47,10 +51,12 @@ function App() {
                   <Route path="/UpdateProfile" element={<UpdateProfile />} />
                   <Route path="/About" element={<About />} />
                   <Route path="/chat/:uid" element={<ChatBox />} />
+                  <Route path="/inbox" element={<MyMessages/>} />
                   
                 </Routes>
               </ScrollToTop>
             </Router>
+            </MessagesContext>
           </SkillsContext>
           </RecruiterContext>
         </ContractorContext>

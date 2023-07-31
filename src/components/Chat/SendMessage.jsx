@@ -53,6 +53,7 @@ const SendMessage = ({ scroll, profileUid }) => {
       createdAt: serverTimestamp(),
       uid: userData?.firebaseUID,
       receiverUid: receiverUid,
+      hasRead: 'false',
     });
     setMessage("");
     scroll.current.scrollIntoView({ behavior: "smooth" });

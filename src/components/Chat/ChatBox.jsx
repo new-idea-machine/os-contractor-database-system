@@ -6,6 +6,9 @@ import {
   onSnapshot,
   limit,
   where,
+  getDocs,
+  updateDoc, doc
+  
   
 } from "firebase/firestore";
 import { db } from "../../firebaseconfig";
@@ -25,6 +28,26 @@ const ChatBox = () => {
 
 
   useEffect(() => {
+
+    const updateHasRead = async () => {
+      const q = query(
+        collection(db, "messages"),
+        where("receiverUid", "==", userUid),
+        where("hasRead", "==", 'false')
+      );
+  
+      const snapshot = await getDocs(q);
+  
+      const updatePromises = snapshot.docs.map((messageDoc) => {
+        const messageRef = doc(db, "messages", messageDoc.id);
+        return updateDoc(messageRef, { hasRead: 'true' });
+      });
+
+      await Promise.all(updatePromises);
+    };
+  
+    updateHasRead();
+
     const q = query(
         collection(db, "messages"),
         where("uid", "in", [userUid, uid]),
@@ -37,6 +60,7 @@ const ChatBox = () => {
       const fetchedMessages = [];
       QuerySnapshot.forEach((doc) => {
         fetchedMessages.push({ ...doc.data(), id: doc.id });
+        
       });
       const sortedMessages = fetchedMessages.sort(
         (a, b) => a.createdAt - b.createdAt
@@ -44,12 +68,13 @@ const ChatBox = () => {
       setMessages(sortedMessages);
     });
     return () => unsubscribe;
-  }, []);
+  }, [userUid]);
 
   return (
-    
-    <main className="chat-box">
-        <Navigation />
+    <>
+    <Navigation />
+    <div className="chat-box">
+        
       <div className="messages-wrapper">
         {messages?.map((message) => (
           <Message key={message.id} message={message} />
@@ -58,7 +83,8 @@ const ChatBox = () => {
       {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
       <span ref={scroll}></span>
       <SendMessage scroll={scroll} profileUid={uid} />
-    </main>
+    </div>
+    </>
   );
 };
 
