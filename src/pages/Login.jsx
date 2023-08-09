@@ -1,6 +1,6 @@
 import React, { useContext, useState, useRef, useEffect} from 'react';
 import { authContext } from '../contexts/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/auth.css';
 import images from '../constants/images';
 import Register from './Register';
@@ -113,6 +113,7 @@ export default function Login() {
 								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/> 
 								<GoogleLoginButton style={{marginLeft:'20px', marginRight: '20px', marginTop: '5px', marginBottom:'10px', borderRadius: '5px'}} onClick={() => handleGoogleLogin()}/>
 								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
+								<Link to='/forgotPassword'>Forgot password?</Link>
 							</div>
 							<div className='optionContainer'>
 								<p style={{ color: 'black' }}>Don't have an account?</p>

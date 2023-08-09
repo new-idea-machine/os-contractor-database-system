@@ -26,6 +26,7 @@ import ScrollToTop from "./ScrollToTop";
 import Search from "./components/Search/Search";
 import ProtectedRoute from "./components/ProtectedRoute";
 import MyMessages from "./pages/MyMessages";
+import ForgotPassword from "./pages/ForgotPassword";
 import MessagesContext from "./contexts/MessagesContext";
 
 function App() {
@@ -52,6 +53,7 @@ function App() {
                   <Route path="/About" element={<About />} />
                   <Route path="/chat/:uid" element={<ChatBox />} />
                   <Route path="/inbox" element={<MyMessages/>} />
+                  <Route path="/forgotPassword" element={<ForgotPassword/>} />
                   
                 </Routes>
               </ScrollToTop>
