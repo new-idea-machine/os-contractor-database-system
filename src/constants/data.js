@@ -10,6 +10,8 @@ const techDataSchema = {
 		githubUrl: '',
 		resume: '',
 	},
+	availability:'',
+	availabilityDetails: '',
 	skills: [{ skill: '' }],
 	projects: [
 		{
@@ -71,12 +73,25 @@ const formInputs = [
 				type: 'textArea',
 				placeholder: 'Summary',
 			},
-			// {
-			// 	name: 'interest',
-			// 	label: 'Interest',
-			// 	textArea: 'true',
-			// 	placeholder: 'Interest',
-			// },
+			 {
+				name: 'availability',
+			 	label: 'Availability:',
+			 	type: 'select', 
+        		options: ['Full Time', 'Part Time', 'Other'], 
+			 },
+			 //{
+				//name: 'availabilityDetails', // New field for 'Other' option details
+				//label: 'Availability Details',
+				//type: 'textArea',
+				//placeholder: 'Please provide more details...',
+			  //},
+			 {
+				name: 'workSite',
+			 	label: 'Preferred Work Site:',
+			 	type: 'select', 
+        		options: ['On Site', 'Remote', 'Hybrid', 'Flexible'], 
+			 },
+			
 		],
 	},
 ];

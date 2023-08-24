@@ -12,7 +12,19 @@ import { Country } from "country-state-city";
 import { authContext } from '../../contexts/auth';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
+import { db} from '../../firebaseconfig';
+import {
+	collection,
+	 query,
+	getDocs,
+	 where,
+	updateDoc, 
+  getDoc,
+  doc
+} from 'firebase/firestore';
 
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
+import { recruiterContext, getFavoriteList } from '../../contexts/RecruiterContext';
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -23,6 +35,107 @@ const ContractorProfile = (props) => {
   const { user } = useContext(authContext);
   const userUid = user?.uid;
   const navigate = useNavigate();
+  const [userType, setUserType] = useState(null);
+  const { getFavoriteList } = useContext(recruiterContext);
+  const favoriteList = getFavoriteList();
+  const [isFavorite, setIsFavorite] = useState(false);
+ 
+  const addToFavorites = async () => {
+    try {
+      const favorites = await getFavoriteList();
+
+      
+      if (favorites.includes(id)) {
+        const updatedFavorites = favorites.filter((favId) => favId !== id);
+        console.log("Updated Favorites:", updatedFavorites);
+        if (user) {
+          const userFirebaseUID = user.uid;
+          const recruitersQuery = query(
+            collection(db, 'recruiter'),
+            where('firebaseUID', '==', userFirebaseUID)
+          );
+          const recruiterQuerySnapshot = await getDocs(recruitersQuery);
+
+          if (!recruiterQuerySnapshot.empty) {
+            const recruiterDocRef = recruiterQuerySnapshot.docs[0].ref;
+            await updateDoc(recruiterDocRef, { favorites: updatedFavorites });
+            console.log('Favorites updated in Firestore');
+          }
+        }
+
+        setIsFavorite(false);
+      }else {
+        const updatedFavorites = [...favorites, id];
+        console.log("Updated Favorites:", updatedFavorites);
+        if (user) {
+          const userFirebaseUID = user.uid;
+          const recruitersQuery = query(
+            collection(db, "recruiter"),
+            where("firebaseUID", "==", userFirebaseUID)
+          );
+          const recruiterQuerySnapshot = await getDocs(recruitersQuery);
+
+          if (!recruiterQuerySnapshot.empty) {
+            const recruiterDocRef = recruiterQuerySnapshot.docs[0].ref;
+            await updateDoc(recruiterDocRef, { favorites: updatedFavorites });
+            console.log("Favorites updated in Firestore");
+          }
+        }
+
+        setIsFavorite(true);
+      }
+    } catch (error) {
+      console.error("Error adding to favorites:", error);
+    }
+  };
+  useEffect(() => {
+    async function checkIfFavorite() {
+      const favorites = await getFavoriteList();
+      setIsFavorite(favorites.includes(id));
+    }
+    checkIfFavorite();
+  }, [id]);
+      
+  const getUserTypeFromFirestore = async (userUid) => {
+    const techsQuery = query(
+      collection(db, 'techs'),
+      where('firebaseUID', '==', userUid)
+    );
+    
+    const recruitersQuery = query(
+      collection(db, 'recruiter'),
+      where('firebaseUID', '==', userUid)
+    );
+    try {
+      const techsDocSnapshot = await getDocs(techsQuery);
+      const recruitersDocSnapshot = await getDocs(recruitersQuery);
+      if (!techsDocSnapshot.empty) {
+        console.log("User is a tech");
+        setUserType('techs');
+      } else if (!recruitersDocSnapshot.empty) {
+        console.log("User is a recruiter");
+        setUserType('recruiter');
+      } else {
+        console.log("User document not found");
+        return null;
+      }
+    } catch (error) {
+      console.error("Error fetching user type:", error);
+      return null;
+    }
+  };
+
+  
+
+  useEffect(() => {
+    const fetchUserType = async () => {
+       await getUserTypeFromFirestore(userUid);
+      
+    };
+    fetchUserType();
+  }, [userUid]);
+  console.log("Usertype:", userType)
+ 
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.forEach((contractor) => {
@@ -38,6 +151,9 @@ const ContractorProfile = (props) => {
   const isOwnProfile = contractorList.some((contractor) => {
     return contractor?.firebaseUID === userUid && (contractor?.id === id || contractor?.id === props?.data?.id);
   });
+
+  
+  
 
 
 
@@ -191,6 +307,19 @@ const ContractorProfile = (props) => {
                     );
                   })}
                 </div>
+               
+              )}
+               <div className="contractor_qualification">
+                Availability: {contractor?.availability === 'Other' ? contractor?.availabilityDetails : contractor?.availability}
+              </div>
+                <div className="contractor_qualification">
+                Work site preference: {contractor?.workSite}
+
+                </div>
+                {userType === 'recruiter' && (
+                <FavoriteBorderOutlinedIcon onClick={addToFavorites} style={{ cursor: 'pointer', color: isFavorite ? 'red' : 'black' }} >
+                  Add this profile to favorites
+                </FavoriteBorderOutlinedIcon>
               )}
                {!isOwnProfile && (
                      <Link to={`/chat/${contractor.firebaseUID}`}>

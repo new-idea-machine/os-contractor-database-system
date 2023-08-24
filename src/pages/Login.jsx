@@ -6,12 +6,13 @@ import images from '../constants/images';
 import Register from './Register';
 import { toast } from 'react-toastify';
 import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
+import { isSignInWithEmailLink } from 'firebase/auth';
 
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
 	
-	const { login, loginWithGoogle, loginWithTwitter, user } = useContext(authContext);
+	const { login, loginWithGoogle, loginWithTwitter, signInWithEmail, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
@@ -21,6 +22,10 @@ export default function Login() {
 	const [registerStep, setRegisterStep] = useState(null);
 
 	const navigate = useNavigate();
+
+	//useEffect(() => {
+		//signInWithEmail(); // Call signInWithEmail when the component mounts
+	  //}, []);
 
 	const handleLogin = async () => {
 		try {
@@ -44,6 +49,17 @@ export default function Login() {
 		if ( user?.displayName) {
 		  navigate('/contractorlist');
 		  toast.info(`Welcome! ${user?.displayName}`);
+		}
+		else{
+			if(isSignInWithEmailLink(authContext, window.location.href)){
+				console.log("location--> ",window.location.href);
+				console.log("sign in with link?--> ", isSignInWithEmailLink);
+				const email = localStorage.getItem('email');
+				if(!email){
+					email= window.prompt('Please provide your email');
+				}
+				signInWithEmail();
+			}
 		}
 	  }, [user, navigate]);
 

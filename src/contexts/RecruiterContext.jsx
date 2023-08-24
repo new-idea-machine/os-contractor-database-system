@@ -9,9 +9,9 @@ import {
 	serverTimestamp,
 	updateDoc,
 	collection,
-	//   query,
+	  query,
 	getDocs,
-	//   where,
+	  where,
 	//   orderBy,
 } from 'firebase/firestore';
 import { authContext } from './auth';
@@ -32,6 +32,8 @@ const RecruiterContext = ({ children }) => {
 	//   });
 	// };
 	const recruiterMap = {};
+
+
     const matchProfileToCurrentUser = () => {
 		recruiterList?.forEach((rec) => {
 			recruiterMap[rec.firebaseUID] = rec;
@@ -62,6 +64,29 @@ const RecruiterContext = ({ children }) => {
 		}
 	};
 
+	const getFavoriteList = async () => {
+		
+		try {
+			if (user) {
+			  const userFirebaseUID = user.uid;
+			  const recruitersQuery = query(
+				collection(db, 'recruiter'),
+				where('firebaseUID', '==', userFirebaseUID)
+			  );
+			  const recruiterQuerySnapshot = await getDocs(recruitersQuery);
+		
+			  if (!recruiterQuerySnapshot.empty) {
+				const recruiterData = recruiterQuerySnapshot.docs[0].data();
+				const favorites = recruiterData?.favorites || [];
+				return favorites;
+			  }
+			}
+			return [];
+		  } catch (error) {
+			console.error('Error fetching favorites:', error);
+			return [];
+		  }
+		};
 
 		//setting recruiters list 
     useEffect(() => {
@@ -88,6 +113,7 @@ const RecruiterContext = ({ children }) => {
 		setCurrentUserProfile,
 		matchProfileToCurrentUser,
 		recruiterMap,
+		getFavoriteList
 	};
 
 	return (

@@ -28,6 +28,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import MyMessages from "./pages/MyMessages";
 import ForgotPassword from "./pages/ForgotPassword";
 import MessagesContext from "./contexts/MessagesContext";
+import RecruiterFavoriteList from "./pages/RecruiterFavoriteList";
 
 function App() {
   
@@ -54,6 +55,7 @@ function App() {
                   <Route path="/chat/:uid" element={<ChatBox />} />
                   <Route path="/inbox" element={<MyMessages/>} />
                   <Route path="/forgotPassword" element={<ForgotPassword/>} />
+                  <Route path="/favorites" element={<RecruiterFavoriteList/>} />
                   
                 </Routes>
               </ScrollToTop>

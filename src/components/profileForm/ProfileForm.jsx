@@ -15,12 +15,12 @@ export default function ProfileForm(props) {
 	const {
 		updateTechObject,
 		currentUserProfile,
-		matchProfileToCurrentUser,
-		contractorMap,
-		getFirestore
+		
 	} = useContext(contractorContext);
 
 	const [imgUrl, setImgUrl] = useState(null);
+	//const [availability, setAvailability] = useState('');
+	//const [workSite, setWorkSite] = useState('');
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const [initialFormData, setInitialFormData] = useState(techDataSchema);
 	const [skills, setSkills] = useState([{ skill: '' }]);
@@ -29,11 +29,13 @@ export default function ProfileForm(props) {
 	]);
 	
 	
+	
 
 	
 
 	useEffect(() => {
 		if (currentUserProfile) {
+			console.log(currentUserProfile.availabilityDetails);
 		  setInitialFormData((prevState) => ({
 			...prevState,
 			email: currentUserProfile.email || '',
@@ -47,10 +49,16 @@ export default function ProfileForm(props) {
 			projects: currentUserProfile.projects || [],
 			skills: currentUserProfile.skills || [],
 			summary: currentUserProfile.summary || '',
+			availability: currentUserProfile.availability || '',
+			availabilityDetails: currentUserProfile.availabilityDetails || '',
+			workSite: currentUserProfile.workSite || '',
+			
 		  }));
 		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
 		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
-		  
+		  //setAvailability(currentUserProfile.availability || '');
+		  //setWorkSite(currentUserProfile.workSite || '');
+		  console.log(currentUserProfile.availabilityDetails);
 		  
 		} 
 	  }, [currentUserProfile]);
@@ -72,6 +80,8 @@ export default function ProfileForm(props) {
 
 	const onChange = (e) => {
 		const { name, value } = e.target;
+		
+		
 		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
 		
 	  };
@@ -94,11 +104,12 @@ export default function ProfileForm(props) {
 			projects: projects,
 			skills: skills,
 			summary: initialFormData?.summary || '',
-			
-			           
-			
-			
+			availability: initialFormData?.availability,
+			availabilityDetails: initialFormData?.availabilityDetails || '',
+			workSite: initialFormData?.workSite,
+
 		};
+		
 		console.log(data);
 		updateTechObject(data, () => {
 			
@@ -113,6 +124,7 @@ export default function ProfileForm(props) {
 				<div className='updateForm flexCenter'>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
 						<div className='formContainer'>
+							
 							{formInputs?.map((section) => (
 								<div key={section?.sectionTitle} className='formSection '>
 									<h3>{section?.sectionTitle}</h3>
@@ -122,10 +134,14 @@ export default function ProfileForm(props) {
 											value={initialFormData[field?.name] || ''}
 											field={field}
 											onChange={onChange}
+											
 										/>
 									))}
+									 
 								</div>
+								
 							))}
+		
 							{/* </div>
 						<div className='flexCenter formContainer'> */}
 							<div className='formSection '>
@@ -202,7 +218,7 @@ export default function ProfileForm(props) {
 								<button type='button' onClick={addSkill}>
 									Add Skill
 								</button>
-							</div>
+			     			</div>
 						</div>
 						<button className='customButton' type='submit'>
 							<span>Save</span>

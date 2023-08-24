@@ -179,7 +179,7 @@ const Navigation = () => {
                 />{" "}
                 Messages({unreadMessages})
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={() => navigate("/favorites")}>
                 <FavoriteBorderRoundedIcon
                   sx={{ width: 25, height: 25, color: "gray", marginRight: 1 }}
                 />{" "}

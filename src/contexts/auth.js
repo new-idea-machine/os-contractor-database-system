@@ -15,15 +15,13 @@ import {
 	fetchSignInMethodsForEmail
 	
 } from 'firebase/auth';
-import { store, auth, db, fbFunctions } from '../firebaseconfig';
+import { auth, db} from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
 	getDoc,
 	//   onSnapshot,
 	setDoc,
-	serverTimestamp,
-	updateDoc,
 	collection,
 	//   query,
 	//   getDocs,
@@ -185,6 +183,19 @@ export default function AuthControl(props) {
 			console.log('user created');
 
 			const currentUser = userCredential.user;
+
+			 // Send the sign-in link to the user's email
+			 const actionCodeSettings = {
+				url: 'https://open-source-techbook-81fb2.web.app/auth', 
+				handleCodeInApp: true,
+			  };
+			   sendSignInLinkToEmail(auth, registerEmail, actionCodeSettings).then(()=>{
+				localStorage.setItem('email', registerEmail);}).catch(error=>{
+					console.log(error.message);
+				})
+			  
+		  
+			  
 			
 			await updateProfile(currentUser, { displayName: displayName })
 				.then(() => {
@@ -233,23 +244,27 @@ export default function AuthControl(props) {
 
 	// Currently not in use passwordless sign In
 	const signInWithEmail = async () => {
-		let email = window.localStorage.getItem('emailForSignIn');
-		signInWithEmailLink(auth, email, window.location.href)
-			.then((result) => {
+		const email = window.localStorage.getItem('email');
+		if (isSignInWithEmailLink(auth, window.location.href)) {
+			try {
+				
+				const result = await signInWithEmailLink(auth, email, window.location.href);
+				// Clear email from storage.
+				//window.localStorage.removeItem('emailForSignIn');
 				// console.log("got here signinwith");
 				// Clear email from storage.
-				window.localStorage.setItem('emailForSignIn', email);
+				window.localStorage.setItem('email', email);
 				//window.localStorage.removeItem('emailForSignIn');
 				// You can access the new user via result.user
 				// Additional user info profile not available via:
 				// result.additionalUserInfo.profile == null
 				// You can check if the user is new or existing:
-				// result.additionalUserInfo.isNewUser
-			})
-			.catch((error) => {
-				console.log(error.message);
-			});
-	};
+				console.log('Email link sign-in successful:', result.user);
+			} catch (error) {
+			  console.log('Email link sign-in error:', error.message);
+			}
+		  }
+		};
 
 	const authFunctions = {
 		user,
@@ -258,8 +273,8 @@ export default function AuthControl(props) {
 		logout,
 		isAuthenticated,
 		loginWithGoogle, 
-		loginWithTwitter
-		// signInWithEmail,
+		loginWithTwitter,
+		signInWithEmail,
 		// emailLogin,
 	};
 
