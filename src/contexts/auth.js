@@ -186,7 +186,8 @@ export default function AuthControl(props) {
 
 			 // Send the sign-in link to the user's email
 			 const actionCodeSettings = {
-				url: 'https://open-source-techbook-81fb2.web.app/auth', 
+				//url: 'https://open-source-techbook-81fb2.web.app/auth', 
+				url: 'http://localhost:3000/auth',
 				handleCodeInApp: true,
 			  };
 			   sendSignInLinkToEmail(auth, registerEmail, actionCodeSettings).then(()=>{

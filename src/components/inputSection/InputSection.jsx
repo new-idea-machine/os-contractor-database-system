@@ -1,6 +1,6 @@
 import React from 'react';
 
-export default function InputSection({ field, onChange, value }) {
+export default function InputSection({ field, onChange, value, onDelete}) {
 	return (
 		<>
 			<label>{field?.label}</label>
@@ -26,6 +26,7 @@ export default function InputSection({ field, onChange, value }) {
 				  ))}
 				</select>
 			  ) : (
+				<div>
 				<input
 					name={field?.name}
 					value={value}
@@ -33,8 +34,15 @@ export default function InputSection({ field, onChange, value }) {
 					type={field?.type}
 					onChange={onChange}
 					aria-label={field?.label}
-					required ={field?.name !== 'linkedinUrl' && field?.name !== 'githubUrl'} 
+					required ={field?.name !== 'linkedinUrl' && field?.name !== 'githubUrl' && field?.name !=="skill"} 
 				/>
+				{field?.name === 'skill' && value && (
+            <button type="button" onClick={onDelete}>
+              Delete
+            </button>
+          )}
+				</div>
+			
 			)}
 				{field?.name === 'availability' && value === 'Other' && (
         		// Render additional text area for 'Other' option

@@ -30,7 +30,13 @@ export default function ProfileForm(props) {
 	
 	
 	
-
+	const deleteSkill = (index) => {
+		setSkills((prevSkills) => {
+		  const newSkills = [...prevSkills];
+		  newSkills.splice(index, 1); // Remove the skill at the specified index
+		  return newSkills;
+		});
+	  };
 	
 
 	useEffect(() => {
@@ -199,7 +205,7 @@ export default function ProfileForm(props) {
 										key={`skill-${index}`}
 										value={skill.skill}
 										field={{
-											name: `skill-${index}`,
+											name: `skill`,
 											label: `Skill ${index + 1}`,
 											type: 'text',
 
@@ -213,11 +219,14 @@ export default function ProfileForm(props) {
 												)
 											);
 										}}
+										onDelete={() => deleteSkill(index)}
 									/>
 								))}
-								<button type='button' onClick={addSkill}>
-									Add Skill
-								</button>
+								 
+   									 <button type="button" onClick={addSkill}>
+      									Add Skill
+    								</button>
+ 										
 			     			</div>
 						</div>
 						<button className='customButton' type='submit'>

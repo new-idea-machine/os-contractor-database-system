@@ -61,7 +61,7 @@ export default function Login() {
 				signInWithEmail();
 			}
 		}
-	  }, [user, navigate]);
+	  }, [user, navigate, signInWithEmail]);
 
 	  useEffect(() => {
 		const currentLoginStep = loginStep?.current;
