@@ -10,7 +10,7 @@ import { Password } from '@mui/icons-material';
 import PasswordChecklist from "react-password-checklist";
 
 export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
-	const { register, user, logout } = useContext(authContext);
+	const { register, user, logout, signInWithEmail } = useContext(authContext);
 	const [registerEmail, setRegisterEmail] = useState('');
 	const [registerPassword, setRegisterPassword] = useState('');
 	const [displayName, setDisplayName] = useState('');
@@ -20,11 +20,9 @@ export default function Register({ loginPage, setLoginStep, setRegisterStep }) {
 
 	const navigate = useNavigate();
 
-	// useEffect(() => {
-	// 	if (!loginPage) {
-	// 		setLoginStep(<Login />);
-	// 	}
-	// }, []);
+	//useEffect(() => {
+		//signInWithEmail(); //Call signInWithEmail when the component mounts
+	 // }, []);
 
 	const nameEmailValidation = async() => {
 		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address

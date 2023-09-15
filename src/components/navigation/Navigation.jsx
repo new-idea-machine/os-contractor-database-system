@@ -5,6 +5,7 @@ import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/auth";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { recruiterContext } from "../../contexts/RecruiterContext";
+import {messagesContext} from '../../contexts/MessagesContext';
 import Avatar from "@mui/material/Avatar";
 import Menu from "@mui/material/Menu";
 import MenuItem from "@mui/material/MenuItem";
@@ -15,6 +16,7 @@ import Tooltip from "@mui/material/Tooltip";
 import Logout from "@mui/icons-material/Logout";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
+import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 // import { toast } from "react-toastify";
 
 const Navigation = () => {
@@ -23,6 +25,7 @@ const Navigation = () => {
   const { currentUserProfile, matchProfileToCurrentUser, contractorMap } =
     useContext(contractorContext);
     const { recruiterMap } = useContext(recruiterContext);
+  const {unreadMessages} = useContext(messagesContext);
 
   useEffect(() => {
     if (!currentUserProfile) {
@@ -106,7 +109,7 @@ const Navigation = () => {
                         />
                       )}
                     </>
-                    ) : recruiterMap && recruiterMap[user?.uid] ? ( // Add this line
+                    ) : recruiterMap && recruiterMap[user?.uid] ? (
                     <BackgroundLetterAvatars
                       currentUserFirstName={recruiterMap[user?.uid]?.firstName} // Update the props
                       currentUserLastName={recruiterMap[user?.uid]?.lastName} // Update the props
@@ -170,7 +173,13 @@ const Navigation = () => {
                 />{" "}
                 Edit My Profile
               </MenuItem>
-              <MenuItem onClick={handleClose}>
+              <MenuItem onClick={() => navigate("/inbox")}>
+                <MailOutlineRoundedIcon
+                  sx={{ width: 25, height: 25, color: "gray", marginRight: 1 }}
+                />{" "}
+                Messages({unreadMessages})
+              </MenuItem>
+              <MenuItem onClick={() => navigate("/favorites")}>
                 <FavoriteBorderRoundedIcon
                   sx={{ width: 25, height: 25, color: "gray", marginRight: 1 }}
                 />{" "}

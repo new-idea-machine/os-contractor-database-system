@@ -68,3 +68,14 @@
 	border: none;
 	background: rgb(206, 203, 203);
 }
+
+.formSection_availability{
+	/* width: 100%; */
+	min-height: 100%;
+	/* border: 2px solid orange; */
+	display: flex;
+	flex-direction: column;
+	gap: 6px;
+	padding: 1rem; 
+}
+

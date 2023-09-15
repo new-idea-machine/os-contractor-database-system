@@ -1,17 +1,18 @@
 import React, { useContext, useState, useRef, useEffect} from 'react';
 import { authContext } from '../contexts/auth';
-import { useNavigate } from 'react-router-dom';
+import { useNavigate, Link } from 'react-router-dom';
 import '../styles/auth.css';
 import images from '../constants/images';
 import Register from './Register';
 import { toast } from 'react-toastify';
 import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
+import { isSignInWithEmailLink } from 'firebase/auth';
 
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
 	
-	const { login, loginWithGoogle, loginWithTwitter, user } = useContext(authContext);
+	const { login, loginWithGoogle, loginWithTwitter, signInWithEmail, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
@@ -22,9 +23,21 @@ export default function Login() {
 
 	const navigate = useNavigate();
 
-	const handleLogin = () => {
-		login(loginEmail, loginPassword);
-	};
+	//useEffect(() => {
+		//signInWithEmail(); // Call signInWithEmail when the component mounts
+	  //}, []);
+
+	const handleLogin = async () => {
+		try {
+		  await login(loginEmail, loginPassword);
+		} catch (error) {
+		  console.log('Error occurred during login:', error.message);
+		  setLoginPassword('');
+		  setLoginEmail('');
+		  toast.error(error.message); 
+		  
+		}
+	  };
 	const handleGoogleLogin = () => {
 		loginWithGoogle();
 	};
@@ -33,11 +46,22 @@ export default function Login() {
 		loginWithTwitter();
 	};
 	useEffect(() => {
-		if (user) {
+		if ( user?.displayName) {
 		  navigate('/contractorlist');
 		  toast.info(`Welcome! ${user?.displayName}`);
 		}
-	  }, [user, navigate]);
+		else{
+			if(isSignInWithEmailLink(authContext, window.location.href)){
+				console.log("location--> ",window.location.href);
+				console.log("sign in with link?--> ", isSignInWithEmailLink);
+				const email = localStorage.getItem('email');
+				if(!email){
+					email= window.prompt('Please provide your email');
+				}
+				signInWithEmail();
+			}
+		}
+	  }, [user, navigate, signInWithEmail]);
 
 	  useEffect(() => {
 		const currentLoginStep = loginStep?.current;
@@ -86,6 +110,7 @@ export default function Login() {
 									type='email'
 									placeholder='Email...'
 									autoComplete='off'
+									value={loginEmail}
 									onChange={(event) => {
 										setLoginEmail(event.target.value);
 									}}
@@ -94,6 +119,7 @@ export default function Login() {
 									type='password'
 									placeholder='Password...'
 									autoComplete='off'
+									value={loginPassword}
 									onChange={(event) => {
 										setLoginPassword(event.target.value);
 									}}
@@ -103,6 +129,7 @@ export default function Login() {
 								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/> 
 								<GoogleLoginButton style={{marginLeft:'20px', marginRight: '20px', marginTop: '5px', marginBottom:'10px', borderRadius: '5px'}} onClick={() => handleGoogleLogin()}/>
 								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
+								<Link to='/forgotPassword'>Forgot password?</Link>
 							</div>
 							<div className='optionContainer'>
 								<p style={{ color: 'black' }}>Don't have an account?</p>
