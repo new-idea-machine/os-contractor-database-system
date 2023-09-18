@@ -37,6 +37,14 @@ export default function ProfileForm(props) {
 		  return newSkills;
 		});
 	  };
+
+	  const deleteProject = (index) => {
+		setProjects((prevProjects) => {
+		  const newProjects = [...prevProjects];
+		  newProjects.splice(index, 1); 
+		  return newProjects;
+		});
+	  };
 	
 
 	useEffect(() => {
@@ -61,7 +69,7 @@ export default function ProfileForm(props) {
 			
 		  }));
 		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
-		  setProjects(currentUserProfile.projects || [{ projectName: '', description: '' }]);
+		  setProjects(currentUserProfile.projects || [{  description: '' }]);
 		  //setAvailability(currentUserProfile.availability || '');
 		  //setWorkSite(currentUserProfile.workSite || '');
 		  console.log(currentUserProfile.availabilityDetails);
@@ -78,7 +86,7 @@ export default function ProfileForm(props) {
 	const addProject = () => {
 		setProjects((prevProjects) => [
 			...prevProjects,
-			{ projectName: '', description: '' },
+			{ description: '' },
 		]);
 	};
 
@@ -158,26 +166,11 @@ export default function ProfileForm(props) {
 										// className='formSection '
 										style={{ flexDirection: 'column', display: 'flex' }}
 									>
-										<InputSection
-											value={project.projectName}
-											field={{
-												name: `projectName-${index}`,
-												label: `Project ${index + 1} Name`,
-												placeholder: `Project ${index + 1} Name`,
-											}}
-											onChange={(e) => {
-												const value = e.target.value;
-												setProjects((prevProjects) =>
-													prevProjects.map((p, i) =>
-														i === index ? { ...p, projectName: value } : p
-													)
-												);
-											}}
-										/>
+									
 										<InputSection
 											value={project.description}
 											field={{
-												name: `description-${index}`,
+												name: `description`,
 												label: `Project ${index + 1} Description`,
 												type: 'textArea',
 												placeholder: `Project ${index + 1} Description`,
@@ -190,6 +183,7 @@ export default function ProfileForm(props) {
 													)
 												);
 											}}
+											onDelete={() => deleteProject(index)}
 										/>
 									</div>
 								))}

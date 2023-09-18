@@ -5,6 +5,7 @@ export default function InputSection({ field, onChange, value, onDelete}) {
 		<>
 			<label>{field?.label}</label>
 			{field?.type === 'textArea' && field?.name !== 'availabilityDetails'? (
+				<div>
 				<textarea
 					name={field?.name}
 					value={value}
@@ -12,6 +13,13 @@ export default function InputSection({ field, onChange, value, onDelete}) {
 					onChange={onChange}
 					aria-label={field?.label}
 				/>
+					{field?.name === 'description' && value && (
+            <button type="button" onClick={onDelete}>
+              X
+            </button>
+					)}
+				</div>
+					
 			) : field?.type === 'select' ? (
 				<select
 				  name={field?.name}
@@ -36,9 +44,9 @@ export default function InputSection({ field, onChange, value, onDelete}) {
 					aria-label={field?.label}
 					required ={field?.name !== 'linkedinUrl' && field?.name !== 'githubUrl' && field?.name !=="skill"} 
 				/>
-				{field?.name === 'skill' && value && (
+				{(field?.name === 'skill' || field?.name === 'description') && value && (
             <button type="button" onClick={onDelete}>
-              Delete
+              X
             </button>
           )}
 				</div>
