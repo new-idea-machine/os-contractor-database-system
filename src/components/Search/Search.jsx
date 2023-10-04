@@ -1,31 +1,33 @@
-import React, { useContext, useEffect, useState, useMemo } from "react";
-import { useLocation, useNavigate } from "react-router-dom";
-import { Footer, Navigation } from "../index";
-import "./Search.css";
-import { Button, Radio } from "@mui/material";
-import Grid from "@mui/material/Unstable_Grid2";
-import { contractorContext } from "../../contexts/ContractorContext";
-import CSCSelector from "./CSCSelector/CSCSelector";
 import Avatar from "../../assets/avatar.png";
+import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
+import { Button, Radio } from "@mui/material";
+import CSCSelector from "./CSCSelector/CSCSelector";
+import { contractorContext } from "../../contexts/ContractorContext";
+import { Footer, Navigation } from "../index";
+import Grid from "@mui/material/Unstable_Grid2";
+import React, { useContext, useEffect, useState, useMemo } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
+import { useLocation, useNavigate } from "react-router-dom";
+import "./Search.css";
 
 export default function Search() {
   const navigate = useNavigate();
+  const [availabilityFilter, setAvailabilityFilter] = useState("all"); // Default to "all"
   const { contractorList } = useContext(contractorContext);
+  const [city, setCity] = React.useState("");
+  const [contractors, setContractors] = useState([]);
+  const [country, setCountry] = React.useState("");
+  const location = useLocation();
+  const [state, setState] = React.useState("");
+  const [selectedSkills, setSelectedSkills] = useState([]);
+  const [selectedQualification, setSelectedQualification] = useState([]);
+  const searchStateFromLocation = location.state?.searchState;
   const qualification = [
     "Developer",
     "Designer",
     "Product Manager",
     "Project Manager",
   ];
-  const [selectedQualification, setSelectedQualification] = useState([]);
-  const [contractors, setContractors] = useState([]);
-  const [selectedSkills, setSelectedSkills] = useState([]);
-  const [country, setCountry] = React.useState("");
-  const [state, setState] = React.useState("");
-  const [city, setCity] = React.useState("");
-  const location = useLocation();
-  const searchStateFromLocation = location.state?.searchState;
 
   const memoizedSearchState = useMemo(
     () => ({
@@ -142,12 +144,13 @@ export default function Search() {
 
     contractorFilteredList();
   }, [
-    selectedSkills,
-    selectedQualification,
+    availabilityFilter,
+    city,
     contractorList,
     country,
     state,
-    city,
+    selectedSkills,
+    selectedQualification,
   ]);
 
   const handleClearQualification = () => {
@@ -159,11 +162,15 @@ export default function Search() {
     setState("");
     setCity("");
   };
-
+  
   return (
     <div>
       <Navigation />
       <div className="search_container">
+      <AvailabilityFilter
+          availabilityFilter={availabilityFilter}
+          onChange={(filter) => setAvailabilityFilter(filter)}
+        />
         <div className="search_options">
           <h2>Search by Qualification</h2>
           <div>
