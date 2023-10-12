@@ -13,6 +13,8 @@ import { authContext } from '../../contexts/auth';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { db} from '../../firebaseconfig';
+import { FieldValue } from 'firebase/firestore';
+
 import {
 	collection,
 	 query,
@@ -20,8 +22,12 @@ import {
 	 where,
 	updateDoc, 
   getDoc,
-  doc
+  addDoc,
+  doc,
+  deleteDoc
+  
 } from 'firebase/firestore';
+
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { recruiterContext, getFavoriteList } from '../../contexts/RecruiterContext';
@@ -37,64 +43,56 @@ const ContractorProfile = (props) => {
   const navigate = useNavigate();
   const [userType, setUserType] = useState(null);
   const { getFavoriteList } = useContext(recruiterContext);
-  const favoriteList = getFavoriteList();
+  //const favoriteList = getFavoriteList();
   const [isFavorite, setIsFavorite] = useState(false);
  
   const addToFavorites = async () => {
     try {
-      const favorites = await getFavoriteList();
-
       
-      if (favorites.includes(id)) {
-        const updatedFavorites = favorites.filter((favId) => favId !== id);
-        console.log("Updated Favorites:", updatedFavorites);
-        if (user) {
-          const userFirebaseUID = user.uid;
-          const recruitersQuery = query(
-            collection(db, 'recruiter'),
-            where('firebaseUID', '==', userFirebaseUID)
-          );
-          const recruiterQuerySnapshot = await getDocs(recruitersQuery);
-
-          if (!recruiterQuerySnapshot.empty) {
-            const recruiterDocRef = recruiterQuerySnapshot.docs[0].ref;
-            await updateDoc(recruiterDocRef, { favorites: updatedFavorites });
-            console.log('Favorites updated in Firestore');
-          }
-        }
-
-        setIsFavorite(false);
-      }else {
-        const updatedFavorites = [...favorites, id];
-        console.log("Updated Favorites:", updatedFavorites);
-        if (user) {
-          const userFirebaseUID = user.uid;
-          const recruitersQuery = query(
-            collection(db, "recruiter"),
-            where("firebaseUID", "==", userFirebaseUID)
-          );
-          const recruiterQuerySnapshot = await getDocs(recruitersQuery);
-
-          if (!recruiterQuerySnapshot.empty) {
-            const recruiterDocRef = recruiterQuerySnapshot.docs[0].ref;
-            await updateDoc(recruiterDocRef, { favorites: updatedFavorites });
-            console.log("Favorites updated in Firestore");
-          }
-        }
-
+      const userFirebaseUID = user.uid;
+  
+      // Check if the tech user is already in favorites
+      const techDocRef = doc(db, 'techs', id);
+      const techDocSnapshot = await getDoc(techDocRef);
+      const techData = techDocSnapshot.data();
+  
+      if (!techData) {
+        // Tech user not found, handle this case accordingly
+        return;
+      }
+  
+      // Check if the tech user is in the recruiter's favorites
+      const favsQuery = query(
+        collection(db, 'favs'),
+        where('techId', '==', id),
+        where('recruiterId', '==', userFirebaseUID)
+      );
+      const favsQuerySnapshot = await getDocs(favsQuery);
+  
+      if (favsQuerySnapshot.empty) {
+        // Tech user is not in favorites, add them
+        await addDoc(collection(db, 'favs'), {
+          techId: id,
+          recruiterId: userFirebaseUID,
+        });
+        console.log("Relationship document added to 'favs' collection");
+  
         setIsFavorite(true);
+      } else {
+        // Tech user is already in favorites, remove them
+        const favsDocRef = favsQuerySnapshot.docs[0].ref;
+        await deleteDoc(favsDocRef);
+        console.log("Relationship document deleted in 'favs' collection");
+  
+        setIsFavorite(false);
       }
     } catch (error) {
-      console.error("Error adding to favorites:", error);
+      console.error("Error adding/removing from favorites:", error);
     }
   };
-  useEffect(() => {
-    async function checkIfFavorite() {
-      const favorites = await getFavoriteList();
-      setIsFavorite(favorites.includes(id));
-    }
-    checkIfFavorite();
-  }, [id]);
+  
+  
+  
       
   const getUserTypeFromFirestore = async (userUid) => {
     const techsQuery = query(

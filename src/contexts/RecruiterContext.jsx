@@ -43,15 +43,13 @@ const RecruiterContext = ({ children }) => {
 			const matchedProfile = recruiterMap[user?.uid];
 			setCurrentUserProfile(matchedProfile);
             
-            console.log('MATCHED PROG-> ',matchedProfile);
+       
 		}
         
        
 	};
 	const updateRecObject = async (data) => {
-		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, 'recruiter', data?.id);
-		console.log('userDocRef->', userDocRef);
 		const userDocSnapshot = await getDoc(userDocRef);
 		if (userDocSnapshot.exists()) {
   // Update the document
@@ -65,28 +63,30 @@ const RecruiterContext = ({ children }) => {
 	};
 
 	const getFavoriteList = async () => {
-		
 		try {
-			if (user) {
-			  const userFirebaseUID = user.uid;
-			  const recruitersQuery = query(
-				collection(db, 'recruiter'),
-				where('firebaseUID', '==', userFirebaseUID)
-			  );
-			  const recruiterQuerySnapshot = await getDocs(recruitersQuery);
-		
-			  if (!recruiterQuerySnapshot.empty) {
-				const recruiterData = recruiterQuerySnapshot.docs[0].data();
-				const favorites = recruiterData?.favorites || [];
-				return favorites;
-			  }
-			}
-			return [];
-		  } catch (error) {
-			console.error('Error fetching favorites:', error);
-			return [];
+		  if (user) {
+			const userFirebaseUID = user.uid;
+			const favoritesQuery = query(
+			  collection(db, 'favs'),
+			  where('recruiterId', '==', userFirebaseUID)
+			);
+			const favoritesQuerySnapshot = await getDocs(favoritesQuery);
+	  
+			const favoriteTechIds = favoritesQuerySnapshot.docs.map((doc) => {
+				const data = doc.data();
+				
+				return data.techId;
+			  });
+			 
+			return favoriteTechIds;
 		  }
-		};
+		  return [];
+		} catch (error) {
+		  console.error('Error fetching favorites:', error);
+		  return [];
+		}
+	  };
+	  
 
 		//setting recruiters list 
     useEffect(() => {
