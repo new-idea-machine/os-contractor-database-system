@@ -5,8 +5,12 @@ import { Footer, Navigation } from '../components';
 import { recruiterContext, getFavoriteList } from '../contexts/RecruiterContext';
 import { db} from '../firebaseconfig';
 import {
+	collection,
+	query,
+	where,
+	getDocs,
 	doc,
-	 getDoc,
+	getDoc
 	
 } from 'firebase/firestore';
 
@@ -23,6 +27,7 @@ export default function RecruiterFavoriteList() {
 			setFavoriteList(favorites);
 		};
 		fetchFavorites();
+		console.log(favoriteList);
 	}, [getFavoriteList]);
 
 	useEffect(() => {

@@ -1,9 +1,10 @@
-import React from 'react';
+
 import { initializeApp } from 'firebase/app';
 import { getAuth } from 'firebase/auth';
 import { getFirestore } from 'firebase/firestore';
 import { getStorage } from 'firebase/storage';
 import { getFunctions } from 'firebase/functions';
+
 
 const firebaseConfig = {
 	apiKey: process.env.REACT_APP_apiKey,
@@ -20,4 +21,4 @@ const db = getFirestore(app);
 const fbFunctions = getFunctions(app);
 const auth = getAuth(app);
 
-export { store, auth, db, fbFunctions };
+export { store, auth, db, fbFunctions, app };

@@ -15,7 +15,7 @@ const techDataSchema = {
 	skills: [{ skill: '' }],
 	projects: [
 		{
-			projectName: '',
+			
 			description: '',
 		},
 	],
