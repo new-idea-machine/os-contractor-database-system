@@ -50,6 +50,7 @@ const Navigation = () => {
         <li style={{ marginLeft: "60px" }}>
           <NavLink
             className="navbar-links"
+            style={{ color:  "var(--navigation-colour-distinct)" }}
             activeclassname="selected"
             exact="true"
             to="/contractorList"
@@ -57,7 +58,7 @@ const Navigation = () => {
             Home
           </NavLink>
         </li>
-      
+
         <li style={{ marginRight: "30px" }}>
           <NavLink
             className="navbar-links"
@@ -76,7 +77,7 @@ const Navigation = () => {
             activeclassname="selected"
             exact="true"
             to="/About"
-            
+
           >
             About
           </NavLink>

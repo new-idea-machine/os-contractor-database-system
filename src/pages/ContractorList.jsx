@@ -5,18 +5,17 @@ import { Footer, Navigation } from '../components';
 
 export default function ContractorList() {
 	const { contractorList } = useContext(contractorContext);
-	
+
 	return (
 		<>
 			<Navigation />
 			<div className='contractorListPage'>
-				<h1 style={{ textAlign: 'center', color: 'white'}}>
+				<h1 style={{ textAlign: 'center' }}>
 					Our Available Contractors
 				</h1>
 				<p
 					style={{
 						textAlign: 'center',
-						color: 'white',
 						width: '60%',
 					}}
 				>
