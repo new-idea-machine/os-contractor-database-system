@@ -1,12 +1,9 @@
 .appLogin {
-	background: url('../assets/bg.png');
-	background-position: center;
-	background-size: cover;
-	background-repeat: repeat;
-	background-attachment: fixed;
-	/* background: linear-gradient(252.44deg, #dc489c 0%, #2e22ab 100%); */
+	background-color: var(--navigation-colour-background);
+	color: var(--navigation-colour);
 	height: 100vh;
 }
+
 .backButton {
 	z-index: 2;
 	position: absolute;
@@ -39,7 +36,7 @@
 
 .boxAuth {
 	/* width: 100%; */
-	
+
 	height: fit-content;
 	/* border: 2px solid yellow; */
 	display: flex;
@@ -186,15 +183,15 @@
 
 .info-password {
 
-	
+
     text-align: center;
 	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 0.7rem;
 	font-style: normal;
 	padding-top: 0.3rem;
 	padding-bottom: 0.2rem;
-    
-	
+
+
     color: #2b2b2b;
 }
 .info-icon {
@@ -205,13 +202,13 @@
 .passwordCheck{
 	font-style: italic;
 	color: rgb(5, 5, 5);
-	
+
 	font-family:'Trebuchet MS', 'Lucida Sans Unicode', 'Lucida Grande', 'Lucida Sans', Arial, sans-serif;
     font-size: 0.8rem;
 	font-style: normal;
 	padding-top: 0.3rem;
 	padding-bottom: 0.2rem;
-	
+
 
 }
 .sc-eqUAAy.bSdOrC.checklist-icon{

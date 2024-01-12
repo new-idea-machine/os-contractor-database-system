@@ -2,7 +2,6 @@ import React, { useContext, useState, useRef, useEffect} from 'react';
 import { authContext } from '../contexts/auth';
 import { useNavigate, Link } from 'react-router-dom';
 import '../styles/auth.css';
-import images from '../constants/images';
 import Register from './Register';
 import { toast } from 'react-toastify';
 import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
@@ -11,7 +10,7 @@ import { isSignInWithEmailLink } from 'firebase/auth';
 // import Nav from '../../components/NavBar';
 
 export default function Login() {
-	
+
 	const { login, loginWithGoogle, loginWithTwitter, signInWithEmail, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
@@ -34,8 +33,8 @@ export default function Login() {
 		  console.log('Error occurred during login:', error.message);
 		  setLoginPassword('');
 		  setLoginEmail('');
-		  toast.error(error.message); 
-		  
+		  toast.error(error.message);
+
 		}
 	  };
 	const handleGoogleLogin = () => {
@@ -68,7 +67,7 @@ export default function Login() {
 		const currentRegisterStep = registerStep?.current;
 		const isLoginPage = currentLoginStep && currentLoginStep.contains(document.activeElement);
 		const isRegisterPage = currentRegisterStep && currentRegisterStep.contains(document.activeElement);
-	
+
 		if (!user && isLoginPage) {
 		  toast.error('Invalid login credentials!');
 		}
@@ -97,11 +96,6 @@ export default function Login() {
 			<div className='appLogin'>
 				{loginStep && (
 					<div className='loginContainer' ref={loginPage}>
-						<div className='boxAuthTop flexCenter'>
-							<div className='logoContainer'>
-								<img src={images.team} alt='' />
-							</div>
-						</div>
 						<div className='boxAuth'>
 							{/* <h2 style={{ color: 'var(--color-golden)' }}> Login </h2> */}
 							<div className='fields'>
@@ -126,7 +120,7 @@ export default function Login() {
 								/>
 
 								<button onClick={() => handleLogin()}> Login</button>
-								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/> 
+								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/>
 								<GoogleLoginButton style={{marginLeft:'20px', marginRight: '20px', marginTop: '5px', marginBottom:'10px', borderRadius: '5px'}} onClick={() => handleGoogleLogin()}/>
 								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
 								<Link to='/forgotPassword'>Forgot password?</Link>
