@@ -1,54 +1,37 @@
-/* Colour Palette */
-
 :root {
-	--colour-background-primary:  #f9faff;
-	--colour-background-secondary-1:  #2e3955;
-	--colour-background-secondary-2:  rgba(65, 110, 151, 0.2);
-	--colour-background-secondary-3:  #ffffff;
+	/* Colour Palette */
 
-	--colour-primary:  #2e3955;
-	--colour-secondary-1:  #d9e7e8;
-	/* --colour-secondary-2:  #e6eff0; */
-	--colour-secondary-2:  #416E97;
-	--colour-secondary-3:  #e3474b;
-	--colour-secondary-4:  #444444;
+	--colour-background-primary: #f9faff;
+	--colour-background-secondary-1: #2e3955;
+	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
+	--colour-background-secondary-3: #ffffff;
 
-	/* --main-colour-background:  var(--colour-background-primary);
-	--main-colour:  var(--colour-primary);
-	--main-colour-distinct:  var(--colour-secondary-3);
+	--colour-primary: #2e3955;
+	--colour-secondary-1: #d9e7e8;
+	/* --colour-secondary-2: #e6eff0; */
+	--colour-secondary-2: #416E97;
+	--colour-secondary-3: #e3474b;
+	--colour-secondary-4: #444444;
 
-	--navigation-colour-background:  var(--colour-background-secondary-1);
-	--navigation-colour:  var(--colour-secondary-1);
-	--navigation-colour-distinct:  var(--colour-secondary-3);
+	/* Colour Assignments */
 
-	--card-colour-background:  var(--colour-background-secondary-3);
-	--card-colour:  var(--colour-secondary-2);
-	--card-colour-distinct:  var(--colour-secondary-3); */
+	--main-colour-background: var(--colour-background-primary);
+	--main-colour: var(--colour-primary);
+	--main-colour-distinct: var(--colour-secondary-3);
+
+	--navigation-colour-background: var(--colour-background-secondary-1);
+	--navigation-colour: var(--colour-secondary-1);
+	--navigation-colour-distinct: var(--colour-secondary-3);
+
+	--card-colour-background: var(--colour-background-secondary-3);
+	--card-colour: var(--colour-secondary-2);
+	--card-colour-distinct: var(--colour-secondary-3);
+	--card-colour-qualification: var(--colour-secondary-2);
 }
-
-/* Colour Assignments */
 
 body {
-	background-color: var(--colour-background-primary);
-	color: var(--colour-primary);
-}
-
-.distinct {
-	color: var(--colour-secondary-3);
-}
-
-.navigation {
-	background-color: var(--colour-background-secondary-1);
-	color: var(--colour-secondary-1);
-}
-
-.card {
-	background-color: var(--colour-background-secondary-3);
-	color: var(--colour-primary);
-}
-
-a {
-	color:  var(--colour-secondary-2);
+	background-color: var(--main-colour-background);
+	color: var(--main-colour);
 }
 
 .homePage {
