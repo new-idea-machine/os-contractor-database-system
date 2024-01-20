@@ -5,6 +5,7 @@
 	--colour-background-secondary-1: #2e3955;
 	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
 	--colour-background-secondary-3: #ffffff;
+	--colour-background-secondary-4: #e3474b;
 
 	--colour-primary: #2e3955;
 	--colour-secondary-1: #d9e7e8;
@@ -12,6 +13,9 @@
 	--colour-secondary-2: #416E97;
 	--colour-secondary-3: #e3474b;
 	--colour-secondary-4: #444444;
+	--colour-secondary-5: #d9d9d9;
+	--colour-secondary-6: #919191;
+	--colour-secondary-7: #ffffff;
 
 	/* Colour Assignments */
 
@@ -27,11 +31,33 @@
 	--card-colour: var(--colour-secondary-2);
 	--card-colour-distinct: var(--colour-secondary-3);
 	--card-colour-qualification: var(--colour-secondary-2);
+
+	--button-colour-background: var(--colour-background-secondary-4);
+	--button-colour: var(--colour-secondary-7);
+
+	--input-checkbox-colour: var(--colour-background-secondary-2);
+	--input-text-colour-border: var(--colour-secondary-5);
+	--input-text-colour: var(--colour-secondary-6);
 }
 
 body {
 	background-color: var(--main-colour-background);
 	color: var(--main-colour);
+}
+
+button {
+	background-color: var(--button-colour-background);
+	color: var(--button-colour);
+}
+
+input {
+	border-color: var(--input-text-colour-border);
+	color:  var(--input-text-colour);
+}
+
+input[type="radio"],
+input[type="checkbox"] {
+  accent-color: var(--input-checkbox-colour);
 }
 
 .homePage {
