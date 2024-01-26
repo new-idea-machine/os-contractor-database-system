@@ -44,7 +44,7 @@ export default function Search() {
     const clearSessionStorage = () => {
       sessionStorage.removeItem("searchState");
     };
-  
+
     window.addEventListener("beforeunload", clearSessionStorage);
     if (searchStateFromLocation) {
       setSelectedSkills(searchStateFromLocation.selectedSkills || []);
@@ -165,7 +165,7 @@ export default function Search() {
     setState("");
     setCity("");
   };
-  
+
   function filterContractorsByAvailability(contractorList, availabilityFilter) {
     return contractorList.filter((contractor) => {
       if (availabilityFilter === "all") {
@@ -178,7 +178,7 @@ export default function Search() {
       return false; // Default to not including the contractor
     });
   }
-  
+
   return (
     <div>
       <Navigation />
@@ -282,25 +282,11 @@ export default function Search() {
                   <div>
                     {contractor?.skills && (
                       <div className="result_skills_btns">
-                        {contractor?.skills.map((resultSkill) => {
+                        {contractor?.skills.map((resultSkill, index) => {
                           return (
-                            <div key={resultSkill.skill}>
-                              <Button
-                                style={{
-                                  width: "auto",
-                                  height: "20px",
-                                  borderStyle: "solid",
-                                  borderWidth: "1px",
-                                  padding: "2px",
-                                  marginTop: "5px",
-                                  marginBottom: "5px",
-                                  marginLeft: "5px",
-                                  textTransform: "capitalize",
-                                }}
-                              >
-                                {resultSkill.skill}
-                              </Button>
-                            </div>
+                            <span key={index} className="badge">
+                              {resultSkill.skill}
+                            </span>
                           );
                         })}
                       </div>

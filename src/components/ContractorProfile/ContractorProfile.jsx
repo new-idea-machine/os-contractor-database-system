@@ -20,12 +20,12 @@ import {
 	 query,
 	getDocs,
 	 where,
-	updateDoc, 
+	updateDoc,
   getDoc,
   addDoc,
   doc,
   deleteDoc
-  
+
 } from 'firebase/firestore';
 
 
@@ -45,22 +45,22 @@ const ContractorProfile = (props) => {
   const { getFavoriteList } = useContext(recruiterContext);
   //const favoriteList = getFavoriteList();
   const [isFavorite, setIsFavorite] = useState(false);
- 
+
   const addToFavorites = async () => {
     try {
-      
+
       const userFirebaseUID = user.uid;
-  
+
       // Check if the tech user is already in favorites
       const techDocRef = doc(db, 'techs', id);
       const techDocSnapshot = await getDoc(techDocRef);
       const techData = techDocSnapshot.data();
-  
+
       if (!techData) {
         // Tech user not found, handle this case accordingly
         return;
       }
-  
+
       // Check if the tech user is in the recruiter's favorites
       const favsQuery = query(
         collection(db, 'favs'),
@@ -68,7 +68,7 @@ const ContractorProfile = (props) => {
         where('recruiterId', '==', userFirebaseUID)
       );
       const favsQuerySnapshot = await getDocs(favsQuery);
-  
+
       if (favsQuerySnapshot.empty) {
         // Tech user is not in favorites, add them
         await addDoc(collection(db, 'favs'), {
@@ -76,30 +76,30 @@ const ContractorProfile = (props) => {
           recruiterId: userFirebaseUID,
         });
         console.log("Relationship document added to 'favs' collection");
-  
+
         setIsFavorite(true);
       } else {
         // Tech user is already in favorites, remove them
         const favsDocRef = favsQuerySnapshot.docs[0].ref;
         await deleteDoc(favsDocRef);
         console.log("Relationship document deleted in 'favs' collection");
-  
+
         setIsFavorite(false);
       }
     } catch (error) {
       console.error("Error adding/removing from favorites:", error);
     }
   };
-  
-  
-  
-      
+
+
+
+
   const getUserTypeFromFirestore = async (userUid) => {
     const techsQuery = query(
       collection(db, 'techs'),
       where('firebaseUID', '==', userUid)
     );
-    
+
     const recruitersQuery = query(
       collection(db, 'recruiter'),
       where('firebaseUID', '==', userUid)
@@ -123,24 +123,24 @@ const ContractorProfile = (props) => {
     }
   };
 
-  
+
 
   useEffect(() => {
     const fetchUserType = async () => {
        await getUserTypeFromFirestore(userUid);
-      
+
     };
     fetchUserType();
   }, [userUid]);
   console.log("Usertype:", userType)
- 
+
   useEffect(() => {
     const contractorSkillsList = () => {
       contractorList?.forEach((contractor) => {
         if (id === contractor?.id || props?.data?.id === contractor?.id) {
           setContractorSkills(contractor?.skills || []);
         }
-        
+
       });
     };
     contractorSkillsList();
@@ -150,8 +150,8 @@ const ContractorProfile = (props) => {
     return contractor?.firebaseUID === userUid && (contractor?.id === id || contractor?.id === props?.data?.id);
   });
 
-  
-  
+
+
 
 
 
@@ -289,23 +289,13 @@ const ContractorProfile = (props) => {
                 <div>
                   {contractorSkills?.map((skill, index) => {
                     return (
-                      <Button
-                        key={index}
-                        style={{
-                          width: "auto",
-                          borderStyle: "solid",
-                          borderWidth: "1px",
-                          padding: "2px",
-                          marginLeft: "5px",
-                          textTransform: "capitalize",
-                        }}
-                      >
+                      <span key={index} className="badge">
                         {skill.skill}
-                      </Button>
+                      </span>
                     );
                   })}
                 </div>
-               
+
               )}
                <div className="contractor_qualification">
                 Availability: {contractor?.availability === 'Other' ? contractor?.availabilityDetails : contractor?.availability}
@@ -328,15 +318,15 @@ const ContractorProfile = (props) => {
                )}
             </div>
 
-        
+
           </div>
         ) : null
       )}
-       
+
       <Footer />
-      
+
     </div>
-    
+
   );
 };
 

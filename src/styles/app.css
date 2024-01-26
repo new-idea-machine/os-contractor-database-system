@@ -32,12 +32,21 @@
 	--card-colour-distinct: var(--colour-secondary-3);
 	--card-colour-qualification: var(--colour-secondary-2);
 
+	--badge-colour-background: var(--colour-background-secondary-1);
+	--badge-colour: var(--colour-secondary-7);
+
 	--button-colour-background: var(--colour-background-secondary-4);
 	--button-colour: var(--colour-secondary-7);
 
 	--input-checkbox-colour: var(--colour-background-secondary-2);
 	--input-text-colour-border: var(--colour-secondary-5);
 	--input-text-colour: var(--colour-secondary-6);
+
+	--link-colour: var(--colour-secondary-2);
+}
+
+a {
+	color:  var(--link-colour);
 }
 
 body {
@@ -58,6 +67,19 @@ input {
 input[type="radio"],
 input[type="checkbox"] {
   accent-color: var(--input-checkbox-colour);
+}
+
+.badge {
+	display: inline-block;
+  margin: 10px;
+  border: none;
+  border-radius: 5px;
+	padding: 5px;
+  width: fit-content;
+  background-color: var(--badge-colour-background);
+	color: var(--badge-colour);
+  font-weight: bold;
+	text-transform: "capitalize"
 }
 
 .homePage {
