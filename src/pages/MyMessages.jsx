@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from 'react';
 import { Footer, Navigation } from '../components';
 import {messagesContext} from '../contexts/MessagesContext';
-import { Link } from 'react-router-dom'; 
+import { Link } from 'react-router-dom';
 //import Avatar from "./../assets/avatar.png";
 //import { Avatar } from '@mui/joy';
 //import "..components/Chat/Chat.css";
@@ -12,18 +12,18 @@ import { auth } from "../firebaseconfig";
 export default function MyMessages() {
 	const { chatsList } = useContext(messagesContext);
     const [user] = useAuthState(auth);
-    
 
-  
-	
+
+
+
 	return (
 		<>
-        
+
 			<Navigation />
 
             <div className='messagesListPage'>
-				<h1 style={{ textAlign: 'center', color: 'black', margin:'20px' }}>
-					
+				<h1 style={{ textAlign: 'center', margin:'20px' }}>
+					Messages
 				</h1>
 
 				<ul className='listContainer'>
@@ -40,7 +40,7 @@ export default function MyMessages() {
 										width="100"
 										height="100"
 									/>):(<Avatar
-                                            
+
                                             alt="Avatar"
                                             key={message.id}
 										    className="chat-bubble__left"
@@ -53,7 +53,7 @@ export default function MyMessages() {
 						))}
 				</ul>
 			</div>
-		
+
 			<Footer />
 		</>
 	);
