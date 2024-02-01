@@ -54,7 +54,7 @@ body {
 	color: var(--main-colour);
 }
 
-button {
+button, input[type="button"], input[type="reset"], input[type="submit"] {
 	background-color: var(--button-colour-background);
 	color: var(--button-colour);
 }
