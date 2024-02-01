@@ -1,6 +1,6 @@
 import Avatar from "../../assets/avatar.png";
 import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
-import { Button, Radio } from "@mui/material";
+import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { Footer, Navigation } from "../index";
