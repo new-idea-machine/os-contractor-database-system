@@ -15,7 +15,7 @@ export default function ProfileForm(props) {
 	const {
 		updateTechObject,
 		currentUserProfile,
-		
+
 	} = useContext(contractorContext);
 
 	const [imgUrl, setImgUrl] = useState(null);
@@ -27,9 +27,9 @@ export default function ProfileForm(props) {
 	const [projects, setProjects] = useState([
 		{ projectName: '', description: '' },
 	]);
-	
-	
-	
+
+
+
 	const deleteSkill = (index) => {
 		setSkills((prevSkills) => {
 		  const newSkills = [...prevSkills];
@@ -41,11 +41,11 @@ export default function ProfileForm(props) {
 	  const deleteProject = (index) => {
 		setProjects((prevProjects) => {
 		  const newProjects = [...prevProjects];
-		  newProjects.splice(index, 1); 
+		  newProjects.splice(index, 1);
 		  return newProjects;
 		});
 	  };
-	
+
 
 	useEffect(() => {
 		if (currentUserProfile) {
@@ -66,18 +66,18 @@ export default function ProfileForm(props) {
 			availability: currentUserProfile.availability || '',
 			availabilityDetails: currentUserProfile.availabilityDetails || '',
 			workSite: currentUserProfile.workSite || '',
-			
+
 		  }));
 		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
 		  setProjects(currentUserProfile.projects || [{  description: '' }]);
 		  //setAvailability(currentUserProfile.availability || '');
 		  //setWorkSite(currentUserProfile.workSite || '');
 		  console.log(currentUserProfile.availabilityDetails);
-		  
-		} 
+
+		}
 	  }, [currentUserProfile]);
 
-	 
+
 
 	const addSkill = () => {
 		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
@@ -94,10 +94,10 @@ export default function ProfileForm(props) {
 
 	const onChange = (e) => {
 		const { name, value } = e.target;
-		
-		
+
+
 		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
-		
+
 	  };
 
 	const onSubmit = (e) => {
@@ -111,7 +111,7 @@ export default function ProfileForm(props) {
 			otherInfo: {
 				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
 				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
-				
+
 				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
 			profileImg: currentUserProfile?.profileImg || imgUrl,
@@ -123,22 +123,22 @@ export default function ProfileForm(props) {
 			workSite: initialFormData?.workSite,
 
 		};
-		
+
 		console.log(data);
 		updateTechObject(data, () => {
-			
+
 			navigate('/myProfile');
 		  });
 	};
 
-	
+
 	return (
 		<>
 			{currentUserProfile && (
 				<div className='updateForm flexCenter'>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
 						<div className='formContainer'>
-							
+
 							{formInputs?.map((section) => (
 								<div key={section?.sectionTitle} className='formSection '>
 									<h3>{section?.sectionTitle}</h3>
@@ -148,14 +148,14 @@ export default function ProfileForm(props) {
 											value={initialFormData[field?.name] || ''}
 											field={field}
 											onChange={onChange}
-											
+
 										/>
 									))}
-									 
+
 								</div>
-								
+
 							))}
-		
+
 							{/* </div>
 						<div className='flexCenter formContainer'> */}
 							<div className='formSection '>
@@ -166,7 +166,7 @@ export default function ProfileForm(props) {
 										// className='formSection '
 										style={{ flexDirection: 'column', display: 'flex' }}
 									>
-									
+
 										<InputSection
 											value={project.description}
 											field={{
@@ -216,14 +216,14 @@ export default function ProfileForm(props) {
 										onDelete={() => deleteSkill(index)}
 									/>
 								))}
-								 
+
    									 <button type="button" onClick={addSkill}>
       									Add Skill
     								</button>
- 										
+
 			     			</div>
 						</div>
-						<button className='customButton' type='submit'>
+						<button type='submit'>
 							<span>Save</span>
 						</button>
 					</form>

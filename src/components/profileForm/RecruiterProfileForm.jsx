@@ -22,7 +22,7 @@ export default function RecruiterProfileForm(props) {
 	} = useContext(recruiterContext);
 
 	const [initialFormData, setInitialFormData] = useState(RecDataSchema);
-	
+
 
 
 	useEffect(() => {
@@ -39,12 +39,12 @@ export default function RecruiterProfileForm(props) {
             companyName: currentUserProfile.companyName || '',
 			companyInfo: currentUserProfile.companyInfo || '',
 			phone: currentUserProfile.phone || '',
-			
+
 		  }));
-		  
-		  
-		  
-		} 
+
+
+
+		}
 	  }, [currentUserProfile]);
 
 
@@ -53,7 +53,7 @@ export default function RecruiterProfileForm(props) {
 	const onChange = (e) => {
 		const { name, value } = e.target;
 		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
-		
+
 	  };
 
 	const onSubmit = (e) => {
@@ -65,29 +65,29 @@ export default function RecruiterProfileForm(props) {
 			lastName: initialFormData?.lastName || '',
 			qualification: initialFormData?.qualification ||  '',
 			linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
-				
+
 				//resume: currentUserProfile?.resume || initialFormData?.resume,
-			
+
             companyName: initialFormData?.companyName || '',
 			companyInfo: initialFormData?.companyInfo || '',
 			phone: initialFormData?.phone || '',
-			
-			           
-			
-			
+
+
+
+
 		};
 		console.log(data);
 		updateRecObject(data, () => {
-			
+
 			navigate('/myProfile');
 		  });
 	};
 
-	
+
 	return (
 		<>
 			{currentUserProfile && (
-                
+
 				<div className='updateForm flexCenter'>
                     <h1>recruiter</h1>
 					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
@@ -107,15 +107,15 @@ export default function RecruiterProfileForm(props) {
 							))}
 							{/* </div>
 						<div className='flexCenter formContainer'> */}
-							
 
-							
+
+
 						</div>
-						<button className='customButton' type='submit'>
+						<button type='submit'>
 							<span>Save</span>
 						</button>
 					</form>
-					
+
 				</div>
 			)}
 		</>
