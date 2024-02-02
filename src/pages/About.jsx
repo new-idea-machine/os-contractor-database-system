@@ -13,22 +13,21 @@ export default function About() {
         <Navigation />
         <div className='aboutPage'>
             <div className='imgContainer'>
-            <img className='calgaryImage' src={Networking}></img>
-
-        <h2 className='motto' role='textbox' aria-multiline='true'
-					
-				>
-					This application is designed to help Recruiters to find a perfect fit for their company’s next project and to help Contractors utilize their talent.   
-				</h2>
-                </div>
 
         <h2 className='creators'> Meet our Team: </h2>
+
+        <h2 className='motto' role='textbox' aria-multiline='true'
+
+				>
+					This application is designed to help Recruiters to find a perfect fit for their company’s next project and to help Contractors utilize their talent.
+				</h2>
+                </div>
 
             <div className='teamContainer'>
                 <div className='teamCard flexCenter'>
                     <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
@@ -40,8 +39,8 @@ export default function About() {
 
                 <div className='teamCard flexCenter'>
                 <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
@@ -52,14 +51,14 @@ export default function About() {
                 </div>
                 <div className='teamCard flexCenter'>
                 <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
                     <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <img src={Avatar} alt="Avatar" />
@@ -69,8 +68,8 @@ export default function About() {
                 </div>
                 <div className='teamCard flexCenter'>
                 <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
@@ -81,14 +80,14 @@ export default function About() {
                 </div>
                 <div className='teamCard flexCenter'>
                 <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
                     <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <img src={Avatar} alt="Avatar" />
@@ -98,8 +97,8 @@ export default function About() {
                 </div>
                 <div className='teamCard flexCenter'>
                 <div className='biography'>
-                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor 
-                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud 
+                    Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor
+                    incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                     exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
                         </div>
                     <div className='imageWrapper'>
@@ -108,12 +107,12 @@ export default function About() {
                     <h2 className='teamMember'>Irina Skachedub</h2>
                     <h3 className='role'>Developer</h3>
                 </div>
-               
-            </div>    
+
+            </div>
 
         </div>
-    
-        
+
+
         <Footer />
         </>
 
