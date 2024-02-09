@@ -15,8 +15,8 @@ export default function Home() {
 			<VideoContainer />
 
 			<main>
-				<header id="top_left"><h2>CONTRACTOR DB</h2></header>
-				<section id="middle">
+				<header><h2>CONTRACTOR DB</h2></header>
+				<section>
 					<h1>Welcome to our contractor database system,</h1>
 					<p>
 						a software application that enables users to store, manage, and
@@ -31,8 +31,8 @@ export default function Home() {
 						</div>
 					}
 				</section>
-				<footer id="bottom_left"><h3>CONTRACTOR DB</h3></footer>
-				<footer id="bottom_right">&copy; New Idea Machine 2023. All rights reserved.</footer>
+				<footer><h3>CONTRACTOR DB</h3></footer>
+				<footer>&copy; New Idea Machine 2023. All rights reserved.</footer>
 			</main>
 		</>
 	);
