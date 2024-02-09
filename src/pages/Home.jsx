@@ -2,7 +2,8 @@ import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
 import { authContext } from '../contexts/auth';
-import VideoContainer from '../components/videoContainer/VideoContainer';
+
+import video from '../assets/work-space.mp4';
 
 import './Home.css';
 
@@ -12,10 +13,18 @@ export default function Home() {
 
 	return (
 		<>
-			<VideoContainer />
+			<video
+				src={video}
+				type='video/mp4'
+				loop
+				controls={false}
+				muted
+				autoPlay
+			/>
 
 			<main>
 				<header><h2>CONTRACTOR DB</h2></header>
+
 				<section>
 					<h1>Welcome to our contractor database system,</h1>
 					<p>
@@ -31,6 +40,7 @@ export default function Home() {
 						</div>
 					}
 				</section>
+
 				<footer><h3>CONTRACTOR DB</h3></footer>
 				<footer>&copy; New Idea Machine 2023. All rights reserved.</footer>
 			</main>
