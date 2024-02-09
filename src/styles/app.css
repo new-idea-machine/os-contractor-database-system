@@ -19,6 +19,9 @@
 
 	/* Colour Assignments */
 
+	--homepage-colour-background: var(--colour-background-secondary-1);
+	--homepage-colour: var(--colour-secondary-7);
+
 	--main-colour-background: var(--colour-background-primary);
 	--main-colour: var(--colour-primary);
 	--main-colour-distinct: var(--colour-secondary-3);
