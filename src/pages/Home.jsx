@@ -23,7 +23,7 @@ export default function Home() {
 			/>
 
 			<main>
-				<header><h2>CONTRACTOR DB</h2></header>
+				<header><h2>CONTRACTOR <b>DB</b></h2></header>
 
 				<section>
 					<h1>Welcome to our contractor database system,</h1>
@@ -32,16 +32,16 @@ export default function Home() {
 						access information related to contractors.
 					</p>
 					{user ?
-						<div className='customButton4' onClick={() => navigate('auth')}>
-							<span>Log In Or Sign Up</span>
-						</div> :
-						<div className='customButton4' onClick={() => logout()}>
+						<button onClick={() => logout()}>
 							<span>Logout</span>
-						</div>
-					}
+						</button> :
+						<button onClick={() => navigate('auth')}>
+						<span>Log In or Sign Up</span>
+					</button>
+				}
 				</section>
 
-				<footer><h3>CONTRACTOR DB</h3></footer>
+				<footer><h3>CONTRACTOR <b>DB</b></h3></footer>
 				<footer>&copy; New Idea Machine 2023. All rights reserved.</footer>
 			</main>
 		</>
