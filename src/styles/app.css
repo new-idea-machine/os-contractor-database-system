@@ -91,6 +91,24 @@ input[type="checkbox"] {
 	text-transform: "capitalize"
 }
 
+/* Layout */
+
+nav {
+	position: fixed;
+	top: 0px;
+	bottom: 0px;
+	left: 0px;
+	width:  300px;
+	background-color: var(--navigation-colour-background);
+	color: var(--navigation-colour);
+}
+
+main {
+	margin-left: 300px;
+}
+
+/* Other Styles */
+
 .homePage {
 	height: 73.4vh;
 	padding: 2rem 6rem;

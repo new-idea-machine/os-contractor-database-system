@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import "./navigation.css";
+import "./Navigation.css";
 import { useNavigate } from "react-router-dom";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/auth";
@@ -17,7 +17,26 @@ import Logout from "@mui/icons-material/Logout";
 import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded";
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
-// import { toast } from "react-toastify";
+
+function getURLPath(URL) {
+  /*
+  This function returns the part portion of "URL" (which MUST be a well-formed uniform resource
+  locator).
+
+  An URL consists of the following parts:
+
+    <scheme>://[server:[port]][/[path]][?<parameters>][#<anchor>]
+  */
+
+  const URLPattern = /^([^:]+):\/\/([^/:]*):?(\d*)\/?([^?#]*)\??([^#]*)#?(.*)/gi;
+  const URLParts = URLPattern.exec(URL);
+
+  /*
+  The path part is in element 4, which is returned without leading or trailing slashes.
+  */
+
+  return (URLParts ? URLParts[4].replace(/^\/+|\/+$/g, "") : "");
+}
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -44,10 +63,12 @@ const Navigation = () => {
     setAnchorEl(null);
   };
 
+  const currentPage = getURLPath(window.location);
+
   return (
-    <div className="navbar-container">
-      <ul className="navbar-links">
-        <li style={{ marginLeft: "60px" }}>
+    <nav>
+      <ul>
+        <li>
           <NavLink
             className="navbar-links"
             style={{ color:  "var(--navigation-colour-distinct)" }}
@@ -59,7 +80,7 @@ const Navigation = () => {
           </NavLink>
         </li>
 
-        <li style={{ marginRight: "30px" }}>
+        <li>
           <NavLink
             className="navbar-links"
             activeclassname="selected"
@@ -71,7 +92,7 @@ const Navigation = () => {
           </NavLink>
         </li>
 
-        <li style={{ marginRight: "30px" }}>
+        <li>
           <NavLink
             className="navbar-links"
             activeclassname="selected"
@@ -216,7 +237,7 @@ const Navigation = () => {
           </li>
         )}
       </ul>
-    </div>
+    </nav>
   );
 };
 
