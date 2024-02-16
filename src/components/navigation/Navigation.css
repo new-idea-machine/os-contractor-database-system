@@ -2,10 +2,15 @@ nav {
   display: grid;
   grid-template-rows: auto;
   grid-template-columns: 1;
+  justify-items: center;
 }
 
 nav > ul {
+  display: grid;
+  grid-template-rows: auto;
+  grid-template-columns: 1;
   list-style-type: none;
+  justify-items: center;
 }
 
 /* .navbar-container {
