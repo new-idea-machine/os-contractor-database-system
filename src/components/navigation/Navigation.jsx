@@ -18,11 +18,11 @@ import FavoriteBorderRoundedIcon from "@mui/icons-material/FavoriteBorderRounded
 import BackgroundLetterAvatars from "./BackgroundLetterAvatars";
 import MailOutlineRoundedIcon from '@mui/icons-material/MailOutlineRounded';
 
-import avatar from "../../assets/avatar.png";
+import avatar from "../../assets/avatar.svg";
 
 function getURLPath(URL) {
   /*
-  This function returns the part portion of "URL" (which MUST be a well-formed uniform resource
+  This function returns the path portion of "URL" (which MUST be a valid uniform resource
   locator).
 
   An URL consists of the following parts:
@@ -76,7 +76,7 @@ const Navigation = () => {
           <img src={currentUserProfile?.profileImg} alt="Profile" /> :
           <img src={avatar} alt="Profile" />
         } */}
-        <img src={currentUserProfile.profileImg ? currentUserProfile.profileImg : avatar} alt="Profile" />
+        <img src={currentUserProfile?.profileImg ? currentUserProfile.profileImg : avatar} alt="Profile" />
       </div>
 
 
@@ -103,9 +103,9 @@ const Navigation = () => {
       <ul>
         <li>
           <NavLink
-            active={currentPage === "contractorlist"}
-            activeclassname="selected"
-            exact="true"
+            // active={currentPage === "contractorList"}
+            // activeclassname="selected"
+            // exact="true"
             to="/contractorList"
           >
             Home
@@ -114,9 +114,9 @@ const Navigation = () => {
 
         <li>
           <NavLink
-            active={currentPage === "search"}
-            activeclassname="selected"
-            exact="true"
+            // active={currentPage === "search"}
+            // activeclassname="selected"
+            // exact="true"
             to="/search"
             onClick={() => sessionStorage.removeItem("searchState")}
           >
@@ -126,9 +126,9 @@ const Navigation = () => {
 
         <li>
           <NavLink
-            active={currentPage === "About"}
-            activeclassname="selected"
-            exact="true"
+            // active={currentPage === "About"}
+            // activeclassname="selected"
+            // exact="true"
             to="/About"
           >
             About
@@ -137,10 +137,10 @@ const Navigation = () => {
 
         <li>
           <NavLink
-            active={currentPage.substring(0, 5) === "chat/"}
-            activeclassname="selected"
-            exact="true"
-            to="/About"
+            // active={currentPage.substring(0, 5) === "chat/"}
+            // activeclassname="selected"
+            // exact="true"
+            to="/chat"
           >
             Chat
           </NavLink>

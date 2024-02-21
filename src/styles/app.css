@@ -28,7 +28,7 @@
 
 	--navigation-colour-background: var(--colour-background-secondary-1);
 	--navigation-colour: var(--colour-secondary-1);
-	--navigation-colour-distinct: var(--colour-secondary-3);
+	--navigation-colour-current: var(--colour-secondary-3);
 
 	--card-colour-background: var(--colour-background-secondary-3);
 	--card-colour: var(--colour-secondary-2);
@@ -78,6 +78,20 @@ input[type="checkbox"] {
   accent-color: var(--input-checkbox-colour);
 }
 
+nav {
+	background-color: var(--navigation-colour-background);
+	color: var(--navigation-colour);
+}
+
+nav a, nav a:link, nav a:visited {
+	color: var(--navigation-colour);
+	text-decoration: none;
+}
+
+nav ul li a.active {
+	color: var(--navigation-colour-current);
+}
+
 .badge {
 	display: inline-block;
   margin: 10px;
@@ -112,8 +126,6 @@ nav {
 	bottom: 0px;
 	left: 0px;
 	width:  300px;
-	background-color: var(--navigation-colour-background);
-	color: var(--navigation-colour);
 }
 
 main {
