@@ -4,24 +4,16 @@ following layout:
 
 +-----------------+
 |      Title      |
-|                 |
 +-----------------+
-|                 |
 | Profile Picture |
-|                 |
 +-----------------+
-|                 |
 |   Display Name  |
-|                 |
 +-----------------+
-|                 |
 |    Main Menu    |
-|                 |
 +-----------------+
 |                 |
 |   Inbox Link    |
 +-----------------+
-
 */
 
 nav {
@@ -50,51 +42,3 @@ nav > *:last-child {
   align-self: end;
   margin-bottom: 1rem;
 }
-
-/* .navbar-container {
-  width: 100%;
-  height: 55px;
-  background: var(--navigation-colour-background);
-  position: fixed;
-  z-index: 100;
-  top: 0;
-  display: flex;
-  flex-direction: row;
-  max-width: 100%;
-}
-
-.navbar-links {
-  margin: 0;
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: row;
-  align-items: center;
-  justify-content: flex-end;
-  margin-right: 60px;
-  font-size: 19px;
-  color: var(--navigation-colour);
-  text-decoration: none;
-  }
-
-ul {
-  list-style-type: none;
-}
-
-.navbar-links:hover {
-  color: rgb(196, 201, 200);
-} */
-
-.image_container {
-  width: 45px;
-  height: 45px;
-  border-radius: 50%;
-}
-
-.image_container img {
-  width: 100%;
-  height: 100%;
-  object-fit: cover;
-  border-radius: inherit;
-}
-
