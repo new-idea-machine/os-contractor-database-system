@@ -71,34 +71,44 @@ const Navigation = () => {
     <nav>
       <h2>CONTRACTOR <b>DB</b></h2>
 
-      <div className="profilePicture">
-        {/* {currentUserProfile?.profileImg ?
-          <img src={currentUserProfile?.profileImg} alt="Profile" /> :
-          <img src={avatar} alt="Profile" />
-        } */}
-        <img src={currentUserProfile?.profileImg ? currentUserProfile.profileImg : avatar} alt="Profile" />
-      </div>
+      <NavLink
+        // active={currentPage === "contractorList"}
+        // activeclassname="selected"
+        // exact="true"
+        to="/myProfile"
+      >
+        <div className="profilePicture">
+          {/* {currentUserProfile?.profileImg ?
+            <img src={currentUserProfile?.profileImg} alt="Profile" /> :
+            <img src={avatar} alt="Profile" />
+          } */}
+          <img src={currentUserProfile?.profileImg ? currentUserProfile.profileImg : avatar} alt="Profile" />
+        </div>
 
+        {/* <Avatar sx={{ width: 45, height: 45 }}>
+          {currentUserProfile?.profileImg ?
+            <div className="image_container">
+              <img src={currentUserProfile.profileImg} alt="" />
+            </div> :
+            <BackgroundLetterAvatars
+              currentUserFirstName={currentUserProfile?.firstName}
+              currentUserLastName={currentUserProfile?.lastName}
+            />
+            // (recruiterMap && recruiterMap[user?.uid] ?
+            //   <BackgroundLetterAvatars
+            //     currentUserFirstName={recruiterMap[user?.uid]?.firstName} // Update the props
+            //     currentUserLastName={recruiterMap[user?.uid]?.lastName} // Update the props
+            //   /> :
+            //   null)
+          }
+        </Avatar> */}
+        {/* <MenuItem onClick={() => navigate("/updateProfile")}> */}
+        {/* <MenuItem onClick={() => navigate("/myProfile")} sx={{width: "160px"}}> */}
+      </NavLink>
 
-      {/* <Avatar sx={{ width: 45, height: 45 }}>
-        {currentUserProfile?.profileImg ?
-          <div className="image_container">
-            <img src={currentUserProfile.profileImg} alt="" />
-          </div> :
-          <BackgroundLetterAvatars
-            currentUserFirstName={currentUserProfile?.firstName}
-            currentUserLastName={currentUserProfile?.lastName}
-          />
-          // (recruiterMap && recruiterMap[user?.uid] ?
-          //   <BackgroundLetterAvatars
-          //     currentUserFirstName={recruiterMap[user?.uid]?.firstName} // Update the props
-          //     currentUserLastName={recruiterMap[user?.uid]?.lastName} // Update the props
-          //   /> :
-          //   null)
-        }
-      </Avatar> */}
-      {/* <MenuItem onClick={() => navigate("/updateProfile")}> */}
-      {/* <MenuItem onClick={() => navigate("/myProfile")} sx={{width: "160px"}}> */}
+      <p>
+        {user?.displayName ? user.displayName : "&nbsp;"}
+      </p>
 
       <ul>
         <li>
@@ -137,15 +147,27 @@ const Navigation = () => {
 
         <li>
           <NavLink
-            // active={currentPage.substring(0, 5) === "chat/"}
+            // active={currentPage === ""}
             // activeclassname="selected"
             // exact="true"
-            to="/chat"
+            to="/"
+            onClick={() => logout()}
           >
-            Chat
+            Log Out
           </NavLink>
         </li>
       </ul>
+
+      <div>
+        <NavLink
+          // active={currentPage.substring(0, 5) === "inbox"}
+          // activeclassname="selected"
+          // exact="true"
+          to="/inbox"
+        >
+          Inbox
+        </NavLink>
+      </div>
     </nav>
   );
 };

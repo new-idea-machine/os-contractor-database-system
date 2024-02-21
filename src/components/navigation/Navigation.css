@@ -1,16 +1,54 @@
+/*
+The navigation bar appears vertically on the left of the viewport and has the
+following layout:
+
++-----------------+
+|      Title      |
+|                 |
++-----------------+
+|                 |
+| Profile Picture |
+|                 |
++-----------------+
+|                 |
+|   Display Name  |
+|                 |
++-----------------+
+|                 |
+|    Main Menu    |
+|                 |
++-----------------+
+|                 |
+|   Inbox Link    |
++-----------------+
+
+*/
+
 nav {
   display: grid;
-  grid-template-rows: auto;
+  grid-template-rows: max-content max-content max-content max-content 1fr;
   grid-template-columns: 1;
+  row-gap: 1rem;
   justify-items: center;
+  align-items: center;
 }
 
 nav > ul {
-  display: grid;
+  display: inline-grid;
   grid-template-rows: auto;
   grid-template-columns: 1;
+  row-gap: 2rem;
+  grid-auto-rows: 1rem;
+  justify-content: center;
+  justify-items: left;
+  align-items: center;
+  margin-top: 3rem;
   list-style-type: none;
-  justify-items: center;
+}
+
+nav > *:last-child {
+  align-self: end;
+  margin-bottom: 1rem;
 }
 
 /* .navbar-container {

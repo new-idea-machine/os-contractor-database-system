@@ -86,9 +86,10 @@ nav {
 nav a, nav a:link, nav a:visited {
 	color: var(--navigation-colour);
 	text-decoration: none;
+  font-weight: bold;
 }
 
-nav ul li a.active {
+nav a.active {
 	color: var(--navigation-colour-current);
 }
 
@@ -106,6 +107,7 @@ nav ul li a.active {
 }
 
 div.profilePicture {
+	display: inline-block;
   width: 130px;
   height: 130px;
   border-radius: 50%;
