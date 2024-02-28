@@ -12,7 +12,7 @@ export default function Home() {
 	const navigate = useNavigate();
 
 	return (
-		<>
+		<div id="Home">
 			<video
 				src={video}
 				type='video/mp4'
@@ -44,6 +44,6 @@ export default function Home() {
 				<footer><h3>CONTRACTOR <b>DB</b></h3></footer>
 				<footer>&copy; New Idea Machine 2023. All rights reserved.</footer>
 			</main>
-		</>
+		</div>
 	);
 }

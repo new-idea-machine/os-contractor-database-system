@@ -1,77 +1,78 @@
-/*
-<video> and <main> take up the entire viewport but <video> appears below
-<main>.
-*/
+div#Home {
+  /*
+  <video> and <main> take up the entire viewport but <video> appears behind
+  <main>.
+  */
 
-video {
-	position: fixed;
-	top: 0px;
-	right: 0px;
-	bottom: 0px;
-	left: 0px;
-	width: 100%;
-	height: 100%;
-	object-fit: cover;
-	background-color: var(--homepage-colour-background);
-}
+  video {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-/*
-<main> and its children are laid out in the following 3-row, 2-column grid:
+  /*
+  <main> and its children are laid out in the following 3-row, 2-column grid:
 
-+---------------------+
-|<header>             |
-|                     |
-|                     |
-+---------------------+
-|                     |
-|      <section>      |
-|                     |
-+----------+----------+
-|          |          |
-|          |          |
-|<footer>  |  <footer>|
-+----------+----------+
-*/
+  +---------------------+
+  |<header>             |
+  |                     |
+  |                     |
+  +---------------------+
+  |                     |
+  |      <section>      |
+  |                     |
+  +----------+----------+
+  |          |          |
+  |          |          |
+  |<footer>  |  <footer>|
+  +----------+----------+
+  */
 
-main {
-	position: fixed;
-  top: 0px;
-  right: 0px;
-  bottom: 0px;
-  left: 0px;
-  z-index: 1;
-	display: grid;
-	grid-template-rows: 1fr 1fr 1fr;
-  grid-template-columns: 1fr 1fr;
-  gap: 2px 2px;
-  justify-items: stretch;
-  align-items: stretch;
-  color: var(--homepage-colour);
-}
+  main {
+    position: fixed;
+    top: 0px;
+    right: 0px;
+    bottom: 0px;
+    left: 0px;
+    z-index: 1;
+    display: grid;
+    grid-template-rows: 1fr 1fr 1fr;
+    grid-template-columns: 1fr 1fr;
+    gap: 2px 2px;
+    justify-items: stretch;
+    align-items: stretch;
+    color:  var(--home-colour);
+  }
 
-main header {
-  grid-column: 1 / span 2;
-  align-self: start;
-  justify-self: start;
-}
+  main header {
+    grid-column: 1 / span 2;
+    align-self: start;
+    justify-self: start;
+  }
 
-main section {
-  grid-column: 1 / span 2;
-  align-self: center;
-  justify-self: center;
-  text-align: center;
-}
+  main section {
+    grid-column: 1 / span 2;
+    align-self: center;
+    justify-self: center;
+    text-align: center;
+  }
 
-main footer {
-  align-self: end;
-  justify-self: start;
-}
+  main footer {
+    align-self: end;
+    justify-self: start;
+  }
 
-main footer + footer {
-  justify-self: end;
-}
+  main footer + footer {
+    justify-self: end;
+  }
 
-main h1 {
-	font-size: 42px;
-	line-height: 42px;
+  main h1 {
+    font-size: 42px;
+    line-height: 42px;
+  }
 }

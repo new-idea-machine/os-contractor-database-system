@@ -1,14 +1,14 @@
 :root {
 	/* Colour Palette */
 
-	--colour-background-primary: #f9faff;
-	--colour-background-secondary-1: #2e3955;
+	--colour-background-primary: #2e3955;
+	--colour-background-secondary-1: #f9faff;
 	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
 	--colour-background-secondary-3: #ffffff;
 	--colour-background-secondary-4: #e3474b;
 
-	--colour-primary: #2e3955;
-	--colour-secondary-1: #d9e7e8;
+	--colour-primary: #d9e7e8;
+	--colour-secondary-1: #2e3955;
 	/* --colour-secondary-2: #e6eff0; */
 	--colour-secondary-2: #416E97;
 	--colour-secondary-3: #e3474b;
@@ -19,16 +19,18 @@
 
 	/* Colour Assignments */
 
-	--homepage-colour-background: var(--colour-background-secondary-1);
-	--homepage-colour: var(--colour-secondary-7);
+	--colour-background: var(--colour-background-primary);
+	--colour: var(--colour-primary);
 
-	--main-colour-background: var(--colour-background-primary);
-	--main-colour: var(--colour-primary);
-	--main-colour-distinct: var(--colour-secondary-3);
+	--home-colour:  var(--colour-secondary-7);
 
-	--navigation-colour-background: var(--colour-background-secondary-1);
-	--navigation-colour: var(--colour-secondary-1);
-	--navigation-colour-current: var(--colour-secondary-3);
+	--content-colour-background: var(--colour-background-secondary-1);
+	--content-colour: var(--colour-secondary-1);
+	--content-colour-distinct: var(--colour-secondary-3);
+
+	--navigation-link-colour: var(--colour-secondary-7);
+	--navigation-link-colour-active: var(--colour-secondary-3);
+	--navigation-colour-contractor-name:  var(--colour-secondary-7);
 
 	--card-colour-background: var(--colour-background-secondary-3);
 	--card-colour: var(--colour-secondary-2);
@@ -53,8 +55,8 @@ a {
 }
 
 body {
-	background-color: var(--main-colour-background);
-	color: var(--main-colour);
+	background-color: var(--colour-background);
+	color: var(--colour);
 }
 
 button, input[type="button"], input[type="reset"], input[type="submit"] {
@@ -78,19 +80,23 @@ input[type="checkbox"] {
   accent-color: var(--input-checkbox-colour);
 }
 
-nav {
-	background-color: var(--navigation-colour-background);
-	color: var(--navigation-colour);
+nav *.ContractorName {
+  color: var(--navigation-colour-contractor-name);
 }
 
 nav a, nav a:link, nav a:visited {
-	color: var(--navigation-colour);
+	color: var(--navigation-link-colour);
 	text-decoration: none;
   font-weight: bold;
 }
 
 nav a.active {
-	color: var(--navigation-colour-current);
+	color: var(--navigation-link-colour-active);
+}
+
+nav + main {
+  color: var(--content-colour);
+	background-color: var(--content-colour-background);
 }
 
 .badge {
@@ -130,7 +136,7 @@ nav {
 	width:  300px;
 }
 
-main {
+nav + main {
 	margin-left: 300px;
 }
 
@@ -156,16 +162,6 @@ main {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.contractorListPage {
-	min-height: 73.4vh;
-	padding: 2rem 6rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-	margin-top: 20px;
-	/* border: 2px solid red; */
 }
 
 .listContainer {

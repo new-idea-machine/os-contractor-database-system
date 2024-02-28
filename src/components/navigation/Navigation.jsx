@@ -31,7 +31,7 @@ const Navigation = () => {
         </div>
       </NavLink>
 
-      <p>
+      <p className="ContractorName">
         {user?.displayName ? user.displayName : "&nbsp;"}
       </p>
 
