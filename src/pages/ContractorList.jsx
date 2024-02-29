@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
-import { Footer, Navigation } from '../components';
+import { Navigation } from '../components';
 
 export default function ContractorList() {
 	const { contractorList } = useContext(contractorContext);
@@ -9,31 +9,24 @@ export default function ContractorList() {
 	return (
 		<>
 			<Navigation />
-			<div className='contractorListPage'>
-				<h1 style={{ textAlign: 'center' }}>
-					Our Available Contractors
-				</h1>
-				<p
-					style={{
-						textAlign: 'center',
-						width: '60%',
-					}}
-				>
+			<main>
+				<h1>Our Available Contractors</h1>
+
+				<p>
 					&quot;Our success is determined by new developers finding career
 					positions in other companies. We foster skill, determine will, and
 					help to establish the right attitude in new devs, reducing your risk
 					of hiring for your own development team.&quot;
 				</p>
-				<div className='listContainer'>
-					{contractorList.length > 0 &&
-						contractorList?.map((person) => (
-							<div key={person?.id}>
-								<ContractorCard data={person} />
-							</div>
-						))}
-				</div>
-			</div>
-			<Footer />
+
+				<section className='listContainer'>
+					{contractorList.map((person, index) => (
+						<div key={index}>
+							<ContractorCard data={person} />
+						</div>
+					))}
+				</section>
+			</main>
 		</>
 	);
 }

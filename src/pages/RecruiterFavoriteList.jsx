@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState} from 'react';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
-import { Footer, Navigation } from '../components';
+import { Navigation } from '../components';
 import { recruiterContext, getFavoriteList } from '../contexts/RecruiterContext';
 import { db} from '../firebaseconfig';
 import {
@@ -11,7 +11,7 @@ import {
 	getDocs,
 	doc,
 	getDoc
-	
+
 } from 'firebase/firestore';
 
 
@@ -48,11 +48,11 @@ export default function RecruiterFavoriteList() {
 	return (
 		<>
 			<Navigation />
-			<div className='contractorListPage'>
+			<main className='contractorListPage'>
 				<h1 style={{ textAlign: 'center', color: 'white'}}>
 					My Favorites List
 				</h1>
-				
+
 				<div className='listContainer'>
 					{favoriteProfiles.length > 0 &&
 						favoriteProfiles?.map((person) => (
@@ -61,8 +61,7 @@ export default function RecruiterFavoriteList() {
 							</div>
 						))}
 				</div>
-			</div>
-			<Footer />
+			</main>
 		</>
 	);
 }

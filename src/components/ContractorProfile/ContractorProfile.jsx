@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
 import { useParams } from "react-router-dom";
-import { Footer, Navigation } from "../index";
+import { Navigation } from "../index";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
@@ -322,8 +322,6 @@ const ContractorProfile = (props) => {
           </div>
         ) : null
       )}
-
-      <Footer />
 
     </div>
 

@@ -126,7 +126,7 @@ input {
   list-style: none; /* Remove default bullets */
   padding: 0;
   margin: 0;
-  display: flex;
-  flex-direction: column; /* Display list items vertically */
-  align-items:flex-start;
+  /* display: flex; */
+  /* flex-direction: column; Display list items vertically */
+  /* align-items:flex-start; */
 }

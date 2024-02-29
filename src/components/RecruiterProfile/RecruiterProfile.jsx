@@ -1,7 +1,7 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./RecruiterProfile.css";
 import { useParams } from "react-router-dom";
-import { Footer, Navigation } from "../index";
+import { Navigation } from "../index";
 import { recruiterContext } from "../../contexts/RecruiterContext";
 import { Button } from "@mui/material";
 import Avatar from "../../assets/avatar.png";
@@ -15,7 +15,7 @@ const RecruiterProfile = (props) => {
   const { recruiterList } = useContext(recruiterContext);
 
 
-   
+
   return (
     <div>
       <Navigation />
@@ -39,7 +39,7 @@ const RecruiterProfile = (props) => {
                 {recruiter?.qualification}
               </div>
 
-        
+
 
               <div className="recruiter_links">
                 {recruiter?.linkedinUrl && (
@@ -51,7 +51,7 @@ const RecruiterProfile = (props) => {
                 <LinkedinIcon style={{fontSize:"40px"}}/>
                   </a>
                 )}
-              
+
               </div>
               <div className="recruiter_summary"><b style={{ paddingLeft: "5px", fontSize:"20px" }}>Company:</b> {recruiter?.companyName}</div>
               {recruiter?.companyName && (
@@ -72,14 +72,13 @@ const RecruiterProfile = (props) => {
                   </div>
                 </div>
               )}
-             
-                
-            
+
+
+
             </div>
           </div>
         ) : null
       )}
-      <Footer />
     </div>
   );
 };

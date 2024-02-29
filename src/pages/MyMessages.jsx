@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from 'react';
-import { Footer, Navigation } from '../components';
+import { Navigation } from '../components';
 import {messagesContext} from '../contexts/MessagesContext';
 import { Link } from 'react-router-dom';
 //import Avatar from "./../assets/avatar.png";
@@ -18,10 +18,8 @@ export default function MyMessages() {
 
 	return (
 		<>
-
 			<Navigation />
-
-            <div className='messagesListPage'>
+			<main className='messagesListPage'>
 				<h1 style={{ textAlign: 'center', margin:'20px' }}>
 					Messages
 				</h1>
@@ -52,9 +50,7 @@ export default function MyMessages() {
 							</li>
 						))}
 				</ul>
-			</div>
-
-			<Footer />
+			</main>
 		</>
 	);
 }

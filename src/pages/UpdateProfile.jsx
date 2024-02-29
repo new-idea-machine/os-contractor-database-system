@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState  } from "react";
-import { Footer, Navigation } from '../components';
+import { Navigation } from '../components';
 import ProfileForm from '../components/profileForm/ProfileForm';
 import RecruiterProfileForm from '../components/profileForm/RecruiterProfileForm';
 import { authContext } from '../contexts/auth';
@@ -12,11 +12,11 @@ async function getPath(uid) {
 	try {
 		const  techsQuery = query(collection(db, 'techs'), where('firebaseUID', '==', uid));
 		const recruiterQuery = query(collection(db, 'recruiter'), where('firebaseUID', '==', uid));
-	
+
 		const [techsSnapshot, recruiterSnapshot] = await Promise.all([getDocs(techsQuery), getDocs(recruiterQuery)]);
 
-		
-	
+
+
 		if (!techsSnapshot.empty) {
 		  path = <ProfileForm />;
 		} else if (!recruiterSnapshot.empty) {
@@ -26,10 +26,10 @@ async function getPath(uid) {
 		}
 	  } catch (error) {
 		console.error('Error retrieving user document:', error);
-		
+
 	  }
-	
-	
+
+
 	  return path;
 	}
 
@@ -50,20 +50,21 @@ export default function UpdateProfile() {
 			setUserPath(null);
 		  }
 		};
-	
+
 		const uid = user?.uid;
-    
+
     if (uid) {
       fetchUserPath(uid);
     }
   }, [user]);
-	
+
 
 	return (
 		<>
 			<Navigation />
-			{userPath}
-			<Footer />
+			<main>
+				{userPath}
+			</main>
 		</>
 	);
 }

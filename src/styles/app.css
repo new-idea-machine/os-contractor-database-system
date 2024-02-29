@@ -138,6 +138,7 @@ nav {
 
 nav + main {
 	margin-left: 300px;
+	padding: 30px 50px 30px 50px;
 }
 
 /* Other Styles */
@@ -165,16 +166,12 @@ nav + main {
 }
 
 .listContainer {
-	/* border: 2px solid rgb(255, 255, 255); */
-	margin-top: 2%;
-	min-height: fit-content;
-	/* height: 80vh; */
-	display: flex;
-	justify-content: space-evenly;
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax(300px, 1fr) );
+	/* justify-content: space-evenly; */
 	align-items: center;
-	flex-wrap: wrap;
-	/* padding: 2rem 6rem; */
-	gap: 10px;
+	min-height: fit-content;
+	/* gap: 10px; */
 }
 
 .customButton4 {

@@ -3,7 +3,7 @@ import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
 import { contractorContext } from "../../contexts/ContractorContext";
-import { Footer, Navigation } from "../index";
+import { Navigation } from "../index";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext, useEffect, useState, useMemo } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
@@ -182,8 +182,8 @@ export default function Search() {
   return (
     <div>
       <Navigation />
-      <div className="search_container">
-      <AvailabilityFilter
+      <main className="search_container">
+        <AvailabilityFilter
           availabilityFilter={availabilityFilter}
           setAvailabilityFilter={setAvailabilityFilter}
           onChange={(filter) => setAvailabilityFilter(filter)}
@@ -297,8 +297,7 @@ export default function Search() {
             ))
           )}
         </ul>
-      </div>
-      <Footer />
+      </main>
     </div>
   );
 }
