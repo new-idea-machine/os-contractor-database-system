@@ -1,0 +1,60 @@
+.aboutPage {
+	min-height: 60.4vh;
+
+	/*padding: 2rem 6rem;*/
+
+	display: inline-block;
+	/*flex-direction: column;*/
+	/*align-items: center;*/
+	margin-top: 20px;
+
+}
+.imgContainer{
+	/*filter: grayscale(1);*/
+    position: relative;
+	text-align: center;
+
+}
+
+.teamContainer {
+	display: grid;
+	grid-template-columns: repeat( auto-fit, minmax(400px, 1fr) );
+	/* justify-content: space-evenly; */
+	align-items: center;
+	min-height: fit-content;
+	/* gap: 10px; */
+}
+
+.teamCard {
+	width: 400px;
+	height: 400px;
+	box-shadow: 0px 5px 4px ,
+	  inset 7px 2px 10px ;
+	border-radius: 35px;
+	flex-direction: column;
+	/* border: 2px solid black; */
+	cursor: pointer;
+	margin-bottom: 20px;
+  }
+
+	.teamCard .role {
+		color: var(--card-colour-qualification);
+	}
+
+ .biography{
+	margin-left: 10px;
+	margin-right: 10px;
+	text-align: center;
+ }
+ .teamCard .biography{
+	display:none;
+  }
+  .teamCard:hover .biography{
+	display:block;
+  }
+
+  .teamCard:hover .teamMember,
+  .teamCard:hover .role,
+  .teamCard:hover .imageWrapper {
+  display: none;
+}
