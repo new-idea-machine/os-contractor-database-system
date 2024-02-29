@@ -2,8 +2,8 @@ import React, { useContext } from 'react';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
 import { Navigation } from '../components';
+import ProfilePicture from '../components/ProfilePicture';
 import Networking from ".//../assets/networking.jpg";
-import Avatar from ".//../assets/avatar.png";
 
 export default function About() {
   return (
@@ -25,9 +25,7 @@ export default function About() {
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </div>
-            <div className='imageWrapper'>
-              <img src={Avatar} alt="Avatar" />
-            </div>
+            <ProfilePicture profileImage={null} size="200px" />
             <h2 className='teamMember'>Ada Opene</h2>
             <h3 className='role'>Project Manager</h3>
           </div>
@@ -38,9 +36,7 @@ export default function About() {
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </div>
-            <div className='imageWrapper'>
-              <img src={Avatar} alt="Avatar" />
-            </div>
+            <ProfilePicture profileImage={null} size="200px" />
             <h2 className='teamMember'>Nonso Afulukwe</h2>
             <h3 className='role'>Product Owner</h3>
           </div>
@@ -56,7 +52,7 @@ export default function About() {
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                 exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </div>
-              <img src={Avatar} alt="Avatar" />
+              <ProfilePicture profileImage={null} size="200px" />
             </div>
             <h2 className='teamMember'>Diego Gomez</h2>
             <h3 className='role'>Developer</h3>
@@ -67,9 +63,7 @@ export default function About() {
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </div>
-            <div className='imageWrapper'>
-              <img src={Avatar} alt="Avatar" />
-            </div>
+            <ProfilePicture profileImage={null} size="200px" />
             <h2 className='teamMember'>Afshin Sharifnia</h2>
             <h3 className='role'>Quality Assurance </h3>
           </div>
@@ -85,7 +79,7 @@ export default function About() {
                 incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
                 exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
               </div>
-              <img src={Avatar} alt="Avatar" />
+              <ProfilePicture profileImage={null} size="200px" />
             </div>
             <h2 className='teamMember'>Sanja Ivansic</h2>
             <h3 className='role'>Developer</h3>
@@ -96,9 +90,7 @@ export default function About() {
               incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud
               exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.
             </div>
-            <div className='imageWrapper'>
-              <img src={Avatar} alt="Avatar" />
-            </div>
+            <ProfilePicture profileImage={null} size="200px" />
             <h2 className='teamMember'>Irina Skachedub</h2>
             <h3 className='role'>Developer</h3>
           </div>

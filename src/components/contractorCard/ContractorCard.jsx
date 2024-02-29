@@ -1,7 +1,7 @@
 import React from "react";
 import "./contractorCard.css";
 import { useNavigate } from "react-router-dom";
-import Avatar from "../../assets/avatar.png";
+import ProfilePicture from "../ProfilePicture";
 
 export default function ContractorCard({ data }) {
   const navigate = useNavigate();
@@ -14,13 +14,8 @@ export default function ContractorCard({ data }) {
         className="contractorCard flexCenter"
         onClick={() => navigate(`/contractor/${data?.id}`)}
       >
-        <div className="imageWrapper">
-          {data?.profileImg ? (
-            <img src={data?.profileImg} alt="Contractor headshot" />
-          ) : (
-            <img src={Avatar} alt="Avatar" />
-          )}
-        </div>
+        <ProfilePicture profileImage={data?.profileImg} size="130px" />
+
         <h1 onClick={() => console.log(data?.name)}>
           {data?.firstName}&nbsp;{data?.lastName}
         </h1>

@@ -4,10 +4,9 @@ import { authContext } from "../../contexts/auth";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { recruiterContext } from "../../contexts/RecruiterContext";
 import { messagesContext } from "../../contexts/MessagesContext";
+import ProfilePicture from "../ProfilePicture";
 
 import "./Navigation.css";
-
-import avatar from "../../assets/avatar.svg";
 
 const Navigation = () => {
   const { logout, user } = useContext(authContext);
@@ -25,10 +24,8 @@ const Navigation = () => {
     <nav>
       <h2>CONTRACTOR <b>DB</b></h2>
 
-      <NavLink to="/myProfile">
-        <div className="profilePicture">
-          <img src={currentUserProfile?.profileImg ? currentUserProfile.profileImg : avatar} alt="Profile" />
-        </div>
+      <NavLink to="/UpdateProfile">
+        <ProfilePicture profileImage={currentUserProfile?.profileImg} size="130px" />
       </NavLink>
 
       <p className="ContractorName">
