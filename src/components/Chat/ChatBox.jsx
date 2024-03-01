@@ -76,8 +76,8 @@ const ChatBox = () => {
     <main className="chat-box">
 
       <div className="messages-wrapper">
-        {messages?.map((message) => (
-          <Message key={message.id} message={message} />
+        {messages?.map((message, index) => (
+          <Message key={index} message={message} />
         ))}
       </div>
       {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
