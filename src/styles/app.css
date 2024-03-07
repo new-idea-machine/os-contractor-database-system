@@ -1,55 +1,3 @@
-:root {
-	/* Colour Palette */
-
-	--colour-background-primary: #2e3955;
-	--colour-background-secondary-1: #f9faff;
-	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
-	--colour-background-secondary-3: #ffffff;
-	--colour-background-secondary-4: #e3474b;
-
-	--colour-primary: #d9e7e8;
-	--colour-secondary-1: #2e3955;
-	/* --colour-secondary-2: #e6eff0; */
-	--colour-secondary-2: #416E97;
-	--colour-secondary-3: #e3474b;
-	--colour-secondary-4: #444444;
-	--colour-secondary-5: #d9d9d9;
-	--colour-secondary-6: #919191;
-	--colour-secondary-7: #ffffff;
-
-	/* Colour Assignments */
-
-	--colour-background: var(--colour-background-primary);
-	--colour: var(--colour-primary);
-
-	--home-colour:  var(--colour-secondary-7);
-
-	--content-colour-background: var(--colour-background-secondary-1);
-	--content-colour: var(--colour-secondary-1);
-	--content-colour-distinct: var(--colour-secondary-3);
-
-	--navigation-link-colour: var(--colour-secondary-7);
-	--navigation-link-colour-active: var(--colour-secondary-3);
-	--navigation-colour-contractor-name:  var(--colour-secondary-7);
-
-	--card-colour-background: var(--colour-background-secondary-3);
-	--card-colour: var(--colour-secondary-2);
-	--card-colour-distinct: var(--colour-secondary-3);
-	--card-colour-qualification: var(--colour-secondary-2);
-
-	--badge-colour-background: var(--colour-background-secondary-1);
-	--badge-colour: var(--colour-secondary-7);
-
-	--button-colour-background: var(--colour-background-secondary-4);
-	--button-colour: var(--colour-secondary-7);
-
-	--input-checkbox-colour: var(--colour-background-secondary-2);
-	--input-text-colour-border: var(--colour-secondary-5);
-	--input-text-colour: var(--colour-secondary-6);
-
-	--link-colour: var(--colour-secondary-2);
-}
-
 a {
 	color:  var(--link-colour);
 }
@@ -80,6 +28,16 @@ input[type="checkbox"] {
   accent-color: var(--input-checkbox-colour);
 }
 
+main {
+	background-color: var(--navigation-colour-background);
+	color: var(--navigation-colour);
+}
+
+nav {
+	background-color: var(--navigation-colour-background);
+	color: var(--navigation-colour);
+}
+
 nav *.ContractorName {
   color: var(--navigation-colour-contractor-name);
 }
@@ -95,8 +53,8 @@ nav a.active {
 }
 
 nav + main {
-  color: var(--content-colour);
-	background-color: var(--content-colour-background);
+  color: inherit;
+	background-color: inherit;
 }
 
 .badge {
