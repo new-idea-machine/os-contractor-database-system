@@ -8,6 +8,15 @@ import ProfilePicture from "../ProfilePicture";
 
 import "./Navigation.css";
 
+import { ReactComponent as IconAbout } from "../../assets/icons/about.svg";
+import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
+import { ReactComponent as IconEdit } from "../../assets/icons/edit.svg";
+import { ReactComponent as IconHFavourites } from "../../assets/icons/favourites.svg";
+import { ReactComponent as IconHome } from "../../assets/icons/home.svg";
+import { ReactComponent as IconLogout } from "../../assets/icons/logout.svg";
+import { ReactComponent as IconProfile } from "../../assets/icons/profile.svg";
+import { ReactComponent as IconSearch } from "../../assets/icons/search.svg";
+
 const Navigation = () => {
   const { logout, user } = useContext(authContext);
   const { currentUserProfile, matchProfileToCurrentUser, contractorMap } = useContext(contractorContext);
@@ -35,32 +44,32 @@ const Navigation = () => {
       <ul>
         <li>
           <NavLink to="/contractorList">
-            Home
+            <IconHome />{" "}Home
           </NavLink>
         </li>
 
         <li>
           <NavLink to="/search" onClick={() => sessionStorage.removeItem("searchState")}>
-            Search
+            <IconSearch />{" "}Search
           </NavLink>
         </li>
 
         <li>
           <NavLink to="/About">
-            About
+            <IconAbout />{" "}About
           </NavLink>
         </li>
 
         <li>
           <NavLink to="/" onClick={() => logout()}>
-            Log Out
+            <IconLogout />{" "}Log Out
           </NavLink>
         </li>
       </ul>
 
       <div>
         <NavLink to="/inbox">
-          Inbox
+          <IconChat />
         </NavLink>
       </div>
     </nav>
