@@ -48,7 +48,12 @@ div#Home {
     justify-items: stretch;
     align-items: stretch;
     background-color: transparent;
-    color:  var(--home-colour);
+    color: var(--home-colour);
+    text-shadow:
+      1px 1px 2px var(--navigation-colour-background),
+      1px -1px 2px var(--navigation-colour-background),
+      -1px -1px 2px var(--navigation-colour-background),
+      -1px 1px 2px var(--navigation-colour-background);
   }
 
   main header {
