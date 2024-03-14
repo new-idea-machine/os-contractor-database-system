@@ -109,15 +109,6 @@ nav + main {
 	align-items: center;
 }
 
-.listContainer {
-	display: grid;
-	grid-template-columns: repeat( auto-fit, minmax(300px, 1fr) );
-	/* justify-content: space-evenly; */
-	align-items: center;
-	min-height: fit-content;
-	/* gap: 10px; */
-}
-
 .customButton4 {
 	display: inline-block;
 	outline: 0;

@@ -1,5 +1,6 @@
 import React from 'react';
 import { Navigation } from '../components';
+import ResponsiveGrid from '../components/ResponsiveGrid';
 import ProfilePicture from '../components/ProfilePicture';
 
 import './About.css';
@@ -33,7 +34,7 @@ export default function About() {
           their talent.
         </p>
 
-        <section className='teamContainer'>
+				<ResponsiveGrid minColumnWidth="410px" rowGap="10px">
           {teamMembers.map((member, index) =>
             <div className='teamCard flexCenter' key={index}>
               <div className='biography'>{member.biography}</div>
@@ -43,7 +44,7 @@ export default function About() {
             </div>
             )
           }
-        </section>
+        </ResponsiveGrid>
       </main>
     </>
   );

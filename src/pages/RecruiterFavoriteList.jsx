@@ -1,8 +1,9 @@
 import React, { useContext, useEffect, useState} from 'react';
-import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
-import { Navigation } from '../components';
 import { recruiterContext, getFavoriteList } from '../contexts/RecruiterContext';
+import { Navigation } from '../components';
+import ResponsiveGrid from '../components/ResponsiveGrid';
+import ContractorCard from '../components/contractorCard/ContractorCard';
 import { db} from '../firebaseconfig';
 import {
 	collection,
@@ -53,14 +54,14 @@ export default function RecruiterFavoriteList() {
 					My Favorites List
 				</h1>
 
-				<div className='listContainer'>
+				<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
 					{favoriteProfiles.length > 0 &&
-						favoriteProfiles?.map((person) => (
-							<div key={person?.id}>
+						favoriteProfiles?.map((person, index) => (
+							<div key={index}>
 								<ContractorCard data={person} />
 							</div>
 						))}
-				</div>
+				</ResponsiveGrid>
 			</main>
 		</>
 	);

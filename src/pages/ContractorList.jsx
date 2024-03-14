@@ -1,7 +1,8 @@
 import React, { useContext } from 'react';
-import ContractorCard from '../components/contractorCard/ContractorCard';
 import { contractorContext } from '../contexts/ContractorContext';
 import { Navigation } from '../components';
+import ResponsiveGrid from '../components/ResponsiveGrid';
+import ContractorCard from '../components/contractorCard/ContractorCard';
 
 export default function ContractorList() {
 	const { contractorList } = useContext(contractorContext);
@@ -19,13 +20,13 @@ export default function ContractorList() {
 					of hiring for your own development team.&quot;
 				</p>
 
-				<section className='listContainer'>
+				<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
 					{contractorList.map((person, index) => (
 						<div key={index}>
 							<ContractorCard data={person} />
 						</div>
 					))}
-				</section>
+				</ResponsiveGrid>
 			</main>
 		</>
 	);
