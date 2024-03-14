@@ -26,17 +26,22 @@ export default function Login() {
 		//signInWithEmail(); // Call signInWithEmail when the component mounts
 	  //}, []);
 
-	const handleLogin = async () => {
+	const handleLogin = async (submitEvent) => {
+		submitEvent.preventDefault();
+
 		try {
-		  await login(loginEmail, loginPassword);
+		  const result = await login(loginEmail, loginPassword);
+
+			if (result === 'auth/user-not-found')
+				navigate('/register');
 		} catch (error) {
-		  console.log('Error occurred during login:', error.message);
+			console.log('Error occurred during login:', error.message);
 		  setLoginPassword('');
 		  setLoginEmail('');
 		  toast.error(error.message);
-
 		}
-	  };
+	};
+
 	const handleGoogleLogin = () => {
 		loginWithGoogle();
 	};
@@ -45,7 +50,7 @@ export default function Login() {
 		loginWithTwitter();
 	};
 	useEffect(() => {
-		if ( user?.displayName) {
+		if (user?.displayName) {
 		  navigate('/contractorlist');
 		  toast.info(`Welcome! ${user?.displayName}`);
 		}
@@ -73,81 +78,39 @@ export default function Login() {
 		}
 	  }, [user, loginStep, registerStep]);
 
-	// const handleLogOut = () => {
-	// 	logout();
-	// 	navigate('/');
-	// };
-
-	const handleFormChange = () => {
-		setLoginStep(null);
-		setRegisterStep(registerPage);
-	};
-	// if (!user)
 	return (
 		<>
-			{/* <Nav noneLinks={'none'} noneLogin={'none'} /> */}
-			{/* <div className=''> */}
-			<div className='backButton'>
-				<div className='customButton2' onClick={() => navigate(-1)}>
-					Back
-				</div>
-			</div>
-
 			<div className='appLogin'>
-				{loginStep && (
-					<div className='loginContainer' ref={loginPage}>
-						<div className='boxAuth'>
-							{/* <h2 style={{ color: 'var(--color-golden)' }}> Login </h2> */}
-							<div className='fields'>
-								<input
-									id='emailInput'
-									type='email'
-									placeholder='Email...'
-									autoComplete='off'
-									value={loginEmail}
-									onChange={(event) => {
-										setLoginEmail(event.target.value);
-									}}
-								/>
-								<input
-									type='password'
-									placeholder='Password...'
-									autoComplete='off'
-									value={loginPassword}
-									onChange={(event) => {
-										setLoginPassword(event.target.value);
-									}}
-								/>
+				<button onClick={() => navigate(-1)}>
+					Back
+				</button>
 
-								<button onClick={() => handleLogin()}> Login</button>
-								<TwitterLoginButton style={{margin: '10px', borderRadius: '5px'}} onClick={() => handleTwitterLogin()}/>
-								<GoogleLoginButton style={{marginLeft:'20px', marginRight: '20px', marginTop: '5px', marginBottom:'10px', borderRadius: '5px'}} onClick={() => handleGoogleLogin()}/>
-								{/* <button onClick={() => handleLogOut()}> Logout</button> */}
-								<Link to='/forgotPassword'>Forgot password?</Link>
-							</div>
-							<div className='optionContainer'>
-								<p style={{ color: 'black' }}>Don't have an account?</p>
-								<button className='' onClick={handleFormChange}>
-									<span style={{ textDecoration: 'underline' }}>Register</span>
-								</button>
-							</div>
-						</div>
-					</div>
-				)}
-				{registerStep && (
-					<div className='optionContainer' ref={registerPage}>
-						{
-							<Register
-								loginPage={loginPage}
-								setLoginStep={setLoginStep}
-								setRegisterStep={setRegisterStep}
-							/>
-						}
-					</div>
-				)}
+				<form onSubmit={(event) => handleLogin(event)}>
+					<input
+						name='Email'
+						type='email'
+						placeholder='Email...'
+						autoComplete='off'
+						value={loginEmail}
+						onChange={(event) => setLoginEmail(event.target.value)}
+					/><br />
+
+					<input
+						name='Password'
+						type='password'
+						placeholder='Password...'
+						autoComplete='off'
+						value={loginPassword}
+						onChange={(event) => setLoginPassword(event.target.value)}
+					/><br />
+
+					<input type='submit' value='Login or Register' />{" "}
+					<input type='button' value='Forgot password' />
+				</form>
+
+				<TwitterLoginButton onClick={() => handleTwitterLogin()}/>
+				<GoogleLoginButton onClick={() => handleGoogleLogin()}/>
 			</div>
-
-			{/* </div> */}
 		</>
 	);
 }

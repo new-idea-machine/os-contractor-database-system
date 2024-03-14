@@ -4,7 +4,7 @@ import { ToastContainer } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import "./styles/app.css";
 import {
- 
+
   Home,
   NotFound,
   UpdateProfile,
@@ -12,9 +12,10 @@ import {
   MyProfile,
   Login,
   About,
-  
- 
+
 } from "./pages";
+
+import Register from "./pages/Register";
 
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
@@ -31,7 +32,7 @@ import MessagesContext from "./contexts/MessagesContext";
 import RecruiterFavoriteList from "./pages/RecruiterFavoriteList";
 
 function App() {
-  
+
   return (
     <>
       <AuthControl>
@@ -44,7 +45,8 @@ function App() {
                 <Routes>
                   <Route path="*" element={<NotFound />} />
                   <Route path="/" element={<Home />} />
-                  <Route path="/auth" element={<Login />} />
+                  <Route path="/login" element={<Login />} />
+                  <Route path="/register" element={<Register />} />
                   <Route path="/contractorList" element={<ContractorList />} />
                   <Route path="/contractor/:id" element={ <ProtectedRoute><ContractorProfile /></ProtectedRoute>
                    }/>
@@ -56,7 +58,7 @@ function App() {
                   <Route path="/inbox" element={<MyMessages/>} />
                   <Route path="/forgotPassword" element={<ForgotPassword/>} />
                   <Route path="/favorites" element={<RecruiterFavoriteList/>} />
-                  
+
                 </Routes>
               </ScrollToTop>
             </Router>

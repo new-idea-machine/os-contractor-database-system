@@ -13,7 +13,7 @@ import {
 	sendSignInLinkToEmail,
 	isSignInWithEmailLink,
 	fetchSignInMethodsForEmail
-	
+
 } from 'firebase/auth';
 import { auth, db} from '../firebaseconfig';
 import {
@@ -62,7 +62,7 @@ export default function AuthControl(props) {
 	const addDocumentIdFieldToObject = async (id, userType) => {
 		const userDocRef = doc(db, userType, id);
 		const docSnapshot = await getDoc(userDocRef);
-	  
+
 		if (docSnapshot.exists()) {
 		  console.log('Document already exists');
 		} else {
@@ -78,18 +78,18 @@ export default function AuthControl(props) {
 		try {
 			const provider = new GoogleAuthProvider();
 			const userCredential = await signInWithPopup(auth, provider);
-			const { isNewUser } = getAdditionalUserInfo(userCredential)  
+			const { isNewUser } = getAdditionalUserInfo(userCredential)
 			const currentUser = userCredential.user;
 			const { displayName, email, uid} = currentUser;
-			 
-		
+
+
 			 if(isNewUser){
 				console.log(isNewUser);
 				const selectedUserType = await promptUserType();
 				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
 			 }
 
-		
+
 			console.log('Logged in with Google');
 		  } catch (error) {
 			console.log(error.message);
@@ -105,15 +105,15 @@ export default function AuthControl(props) {
 			const currentUser = userCredential.user;
 			console.log(currentUser);
 			const { displayName, email, uid} = currentUser;
-			 
-		
+
+
 			 if(isNewUser){
 				console.log(isNewUser);
 				const selectedUserType = await promptUserType();
 				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
 			 }
 
-		
+
 			console.log('Logged in with twitter');
 		  } catch (error) {
 			console.log(error.message);
@@ -125,7 +125,7 @@ export default function AuthControl(props) {
 		// Prompt the user to choose a user type
 
 		const userTypeInput = prompt('Please choose a user type: 1 for Contractor, 2 for Recruiter');
-	
+
 		// Validate and return the selected user type
 		if (userTypeInput === '1') {
 			return 'techs';
@@ -137,7 +137,7 @@ export default function AuthControl(props) {
 		}
 	};
 
-	
+
 	// This function is declared to be called in the below
 	// Register function to create out "tech" object with our
 	// defined schema relateing it to the "user" by firebase
@@ -186,7 +186,7 @@ export default function AuthControl(props) {
 
 			 // Send the sign-in link to the user's email
 			 const actionCodeSettings = {
-				//url: 'https://open-source-techbook-81fb2.web.app/auth', 
+				//url: 'https://open-source-techbook-81fb2.web.app/auth',
 				url: 'http://localhost:3000/auth',
 				handleCodeInApp: true,
 			  };
@@ -194,14 +194,14 @@ export default function AuthControl(props) {
 				localStorage.setItem('email', registerEmail);}).catch(error=>{
 					console.log(error.message);
 				})
-			  
-		  
-			  
-			
+
+
+
+
 			await updateProfile(currentUser, { displayName: displayName })
 				.then(() => {
 					// ...
-					
+
 					const FUID = currentUser.uid;
 					//console.log(FUID);
 					createUserInDatabase(displayName, registerEmail, FUID, userType);
@@ -222,19 +222,20 @@ export default function AuthControl(props) {
 	const login = async (loginEmail, loginPassword) => {
 		try {
 			// Check if the email address exists
-		const signInMethods = await fetchSignInMethodsForEmail(auth, loginEmail);
-		if (signInMethods.length === 0) {
-			console.log('Email address does not exist');
-			return;
-		}
-
+			const signInMethods = await fetchSignInMethodsForEmail(auth, loginEmail);
+			if (signInMethods.length === 0) {
+				console.log('Email address does not exist');
+				return 'auth/user-not-found';
+			}
 
 			await signInWithEmailAndPassword(auth, loginEmail, loginPassword);
+			return 'signed-in';
 		} catch (error) {
-			console.log(error.message);
-			if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code ==='auth/invalid-email') {
-				throw new Error('Invalid login credentials');
-			  }
+			console.log(error?.message);
+			// if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code ==='auth/invalid-email') {
+			// 	throw new Error('Invalid login credentials');
+			// }
+			return error?.code;
 		}
 	};
 
@@ -248,7 +249,7 @@ export default function AuthControl(props) {
 		const email = window.localStorage.getItem('email');
 		if (isSignInWithEmailLink(auth, window.location.href)) {
 			try {
-				
+
 				const result = await signInWithEmailLink(auth, email, window.location.href);
 				// Clear email from storage.
 				//window.localStorage.removeItem('emailForSignIn');
@@ -273,7 +274,7 @@ export default function AuthControl(props) {
 		login,
 		logout,
 		isAuthenticated,
-		loginWithGoogle, 
+		loginWithGoogle,
 		loginWithTwitter,
 		signInWithEmail,
 		// emailLogin,
