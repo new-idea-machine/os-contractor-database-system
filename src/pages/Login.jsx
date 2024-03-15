@@ -1,32 +1,34 @@
 import React, { useContext, useState, useRef, useEffect} from 'react';
 import { authContext } from '../contexts/auth';
-import { useNavigate, Link } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
-import Register from './Register';
 import { toast } from 'react-toastify';
 import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
-import { isSignInWithEmailLink } from 'firebase/auth';
-
-// import Nav from '../../components/NavBar';
+import { getAuth, isSignInWithEmailLink, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function Login() {
-
 	const { login, loginWithGoogle, loginWithTwitter, signInWithEmail, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
 	const loginPage = useRef();
-	const registerPage = useRef();
 
 	const [loginStep, setLoginStep] = useState(loginPage);
 	const [registerStep, setRegisterStep] = useState(null);
 
 	const navigate = useNavigate();
 
-	//useEffect(() => {
-		//signInWithEmail(); // Call signInWithEmail when the component mounts
-	  //}, []);
+	async function resetPassword() {
+    try {
+			const auth = getAuth();
+			await sendPasswordResetEmail(auth, loginEmail);
+			setLoginEmail('');
+			toast.info('Password reset link sent successfully!  Please check your email.');
+		} catch (error) {
+			toast.info('This e-mail address isn\'t in our system.  You can enter a password now to start registering.');
+		}
+	};
 
-	const handleLogin = async (submitEvent) => {
+	async function handleLogin(submitEvent) {
 		submitEvent.preventDefault();
 
 		try {
@@ -42,13 +44,14 @@ export default function Login() {
 		}
 	};
 
-	const handleGoogleLogin = () => {
+	function handleGoogleLogin() {
 		loginWithGoogle();
 	};
 
-	const handleTwitterLogin = () => {
+	function handleTwitterLogin() {
 		loginWithTwitter();
 	};
+
 	useEffect(() => {
 		if (user?.displayName) {
 		  navigate('/contractorlist');
@@ -79,38 +82,36 @@ export default function Login() {
 	  }, [user, loginStep, registerStep]);
 
 	return (
-		<>
-			<div className='appLogin'>
-				<button onClick={() => navigate(-1)}>
-					Back
-				</button>
+		<div className='appLogin'>
+			<button onClick={() => navigate(-1)}>
+				Back
+			</button>
 
-				<form onSubmit={(event) => handleLogin(event)}>
-					<input
-						name='Email'
-						type='email'
-						placeholder='Email...'
-						autoComplete='off'
-						value={loginEmail}
-						onChange={(event) => setLoginEmail(event.target.value)}
-					/><br />
+			<form onSubmit={(event) => handleLogin(event)}>
+				<input
+					name='Email'
+					type='email'
+					placeholder='Email...'
+					autoComplete='off'
+					value={loginEmail}
+					onChange={(event) => setLoginEmail(event.target.value)}
+				/><br />
 
-					<input
-						name='Password'
-						type='password'
-						placeholder='Password...'
-						autoComplete='off'
-						value={loginPassword}
-						onChange={(event) => setLoginPassword(event.target.value)}
-					/><br />
+				<input
+					name='Password'
+					type='password'
+					placeholder='Password...'
+					autoComplete='off'
+					value={loginPassword}
+					onChange={(event) => setLoginPassword(event.target.value)}
+				/><br />
 
-					<input type='submit' value='Login or Register' />{" "}
-					<input type='button' value='Forgot password' />
-				</form>
+				<input type='submit' value='Login or Register' />{" "}
+				<input type='button' value='Forgot password' onClick={resetPassword}/>
+			</form>
 
-				<TwitterLoginButton onClick={() => handleTwitterLogin()}/>
-				<GoogleLoginButton onClick={() => handleGoogleLogin()}/>
-			</div>
-		</>
+			<TwitterLoginButton onClick={() => handleTwitterLogin()}/>
+			<GoogleLoginButton onClick={() => handleGoogleLogin()}/>
+		</div>
 	);
 }
