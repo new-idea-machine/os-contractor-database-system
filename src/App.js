@@ -10,12 +10,10 @@ import {
   UpdateProfile,
   ContractorList,
   MyProfile,
-  Login,
+  Auth,
   About,
 
 } from "./pages";
-
-import Register from "./pages/Register";
 
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
@@ -45,8 +43,7 @@ function App() {
                 <Routes>
                   <Route path="*" element={<NotFound />} />
                   <Route path="/" element={<Home />} />
-                  <Route path="/login" element={<Login />} />
-                  <Route path="/register" element={<Register />} />
+                  <Route path="/auth" element={<Auth />} />
                   <Route path="/contractorList" element={<ContractorList />} />
                   <Route path="/contractor/:id" element={ <ProtectedRoute><ContractorProfile /></ProtectedRoute>
                    }/>

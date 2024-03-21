@@ -3,7 +3,7 @@ import UpdateProfile from './UpdateProfile';
 import NotFound from './NotFound';
 import MyProfile from './MyProfile';
 import ContractorList from './ContractorList';
-import Login from './Login';
+import Auth from './Auth';
 import About from './About';
 
 export {
@@ -12,6 +12,6 @@ export {
 	NotFound,
 	MyProfile,
 	ContractorList,
-	Login,
+	Auth,
 	About
 };

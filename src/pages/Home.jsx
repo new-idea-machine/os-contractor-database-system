@@ -35,7 +35,7 @@ export default function Home() {
 						<button onClick={() => logout()}>
 							<span>Logout</span>
 						</button> :
-						<button onClick={() => navigate('login')}>
+						<button onClick={() => navigate('auth')}>
 						<span>Log In or Sign Up</span>
 					</button>
 				}

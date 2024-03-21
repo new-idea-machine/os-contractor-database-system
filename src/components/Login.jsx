@@ -6,7 +6,7 @@ import { toast } from 'react-toastify';
 import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
 import { getAuth, isSignInWithEmailLink, sendPasswordResetEmail } from 'firebase/auth';
 
-export default function Login() {
+export default function Login({ setCredentials }) {
 	const { login, loginWithGoogle, loginWithTwitter, signInWithEmail, user } = useContext(authContext);
 	const [loginEmail, setLoginEmail] = useState('');
 	const [loginPassword, setLoginPassword] = useState('');
@@ -28,18 +28,24 @@ export default function Login() {
 		}
 	};
 
-	async function handleLogin(submitEvent) {
+	async function handleEmailLogin(submitEvent) {
 		submitEvent.preventDefault();
 
-		try {
-		  const result = await login(loginEmail, loginPassword);
+    const formElements = submitEvent.target.elements;
+    const email = formElements.Email.value;
+    const password = formElements.Password.value;
 
-			if (result === 'auth/user-not-found')
-				navigate('/register');
+		try {
+		  const result = await login(email, password);
+
+			if (result === 'auth/user-not-found') {
+        setCredentials({ email, password });
+      }
+      else if (result === 'auth/wrong-password') {
+		    toast.error('The password is incorrect.');
+      }
 		} catch (error) {
-			console.log('Error occurred during login:', error.message);
-		  setLoginPassword('');
-		  setLoginEmail('');
+			console.error(`Error occurred during login:  ${error.message}`);
 		  toast.error(error.message);
 		}
 	};
@@ -83,18 +89,12 @@ export default function Login() {
 
 	return (
 		<div className='appLogin'>
-			<button onClick={() => navigate(-1)}>
-				Back
-			</button>
-
-			<form onSubmit={(event) => handleLogin(event)}>
+			<form onSubmit={(event) => handleEmailLogin(event)}>
 				<input
 					name='Email'
 					type='email'
 					placeholder='Email...'
 					autoComplete='off'
-					value={loginEmail}
-					onChange={(event) => setLoginEmail(event.target.value)}
 				/><br />
 
 				<input
@@ -102,11 +102,9 @@ export default function Login() {
 					type='password'
 					placeholder='Password...'
 					autoComplete='off'
-					value={loginPassword}
-					onChange={(event) => setLoginPassword(event.target.value)}
 				/><br />
 
-				<input type='submit' value='Login or Register' />{" "}
+				<input type='submit' value='Login or Register' />{' '}
 				<input type='button' value='Forgot password' onClick={resetPassword}/>
 			</form>
 
