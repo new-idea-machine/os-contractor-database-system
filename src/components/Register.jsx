@@ -21,73 +21,48 @@ export default function Register({ credentials, setCredentials }) {
 	const navigate = useNavigate();
 
 	async function handleEmailRegistration(submitEvent) {
-		const regEx = /[a-zA-Z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,8}(.[a-z{2,8}])?/g; //regex for email address
-		const strongPasswordRegex = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
-
     submitEvent.preventDefault();
 
+		const passwordStrength = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
+
     const formElements = submitEvent.target.elements;
+    const displayName = formElements.DisplayName.value.trim();
+    const registerPassword = formElements.Password.value;
+    const userType = formElements.userType.value;
 
+    let fieldsAreValid = true;
 
-		if (
-			!strongPasswordRegex.test(registerPassword) ||
-			registerEmail.trim()?.length <= 0 ||
-			userType.trim()=== '' ||
-			!regEx.test(registerEmail)
+    if (displayName.length <= 0) {
+      toast.error('Please enter your display name');
+      fieldsAreValid = false;
+    }
 
-		)
+    if (!passwordStrength.test(registerPassword)) {
+      toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
+      fieldsAreValid = false;
+    }
 
-		{
-			if(registerEmail.trim()?.length <= 0 ||
-			!regEx.test(registerEmail)) {
-			setRegisterEmail('');
-			toast.error('Please enter valid email address');
-			return false;
-			}
+    if (userType === '') {
+      toast.error('Please select a user type (Recruiter or Contractor)');
+      fieldsAreValid = false;
+    }
 
-			else if (!strongPasswordRegex.test(registerPassword) ){
-        		setRegisterPassword('');
-				toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
-				return false;
+		if (fieldsAreValid) {
+      try {
+        const success = await register(credentials.email, displayName, registerPassword, userType);
 
-
-			}
-			else if(displayName.trim()?.length <= 0 ){
-			// theDisplayName = "NO DISPLAY NAME PROVIDED";
-			setDisplayName('');
-			toast.error('Please enter your display name');
-			return false;
-
-			}
-
-
-			else if (userType.trim() === '') {
-				toast.error('Please select a user type (Recruiter or Contractor)');
-				return false;
-			  }
-
-
-			//return false;
-
-		} else {
-			const success = await register(
-				registerEmail,
-				displayName.trim(),
-				registerPassword,
-				userType
-			);
-			console.log(userType, registerEmail);
-			console.log('Success==> ', success);
-			if (!success) {
-				toast.error('The email is already in use')
-				setErroMessage('Registration Failed');
-				return false;
-			} else if(success) {
-
-				toast.info(`You Have successfully registered with ${registerEmail} !!`);
-				navigate('/contractorList');
-			}
-			return true;
+        if (!success) {
+          toast.error('The email is already in use');
+          setCredentials(null);
+        }
+        else {
+          toast.info(`You have successfully registered with "${credentials.email}"!`);
+          navigate('/contractorList');
+        }
+      } catch (error) {
+        console.error(`Error occurred during registration:  ${error.message}`);
+        toast.error(error.message);
+      }
 		}
 	};
 
@@ -120,7 +95,7 @@ export default function Register({ credentials, setCredentials }) {
 
         <input
           defaultValue={displayName}
-          name='displayName'
+          name='DisplayName'
           placeholder='DisplayName...'
           type='text'
           autoComplete='off'
@@ -128,6 +103,7 @@ export default function Register({ credentials, setCredentials }) {
 
         <input
           defaultValue={credentials.password}
+          name='Password'
           type='password'
           placeholder='Password...'
           autoComplete='off'
