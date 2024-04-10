@@ -19,7 +19,7 @@ import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
 import ChatBox from "./components/Chat/ChatBox";
 import RecruiterContext from "./contexts/RecruiterContext";
-import AuthControl from "./contexts/auth";
+import AuthControl from "./contexts/Auth";
 import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
 import Search from "./components/Search/Search";

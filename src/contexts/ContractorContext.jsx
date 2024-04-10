@@ -14,7 +14,7 @@ import {
 	//   where,
 	//   orderBy,
 } from 'firebase/firestore';
-import { authContext } from './auth';
+import { authContext } from './Auth';
 import { toast } from 'react-toastify';
 
 export const contractorContext = createContext();

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from "react";
 import { NavLink } from "react-router-dom";
-import { authContext } from "../../contexts/auth";
+import { authContext } from "../../contexts/Auth";
 import { contractorContext } from "../../contexts/ContractorContext";
 import { recruiterContext } from "../../contexts/RecruiterContext";
 import { messagesContext } from "../../contexts/MessagesContext";

@@ -1,6 +1,6 @@
 import React, { useContext, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { authContext } from '../contexts/auth';
+import { authContext } from '../contexts/Auth';
 import ContractorProfile from '../components/ContractorProfile/ContractorProfile';
 import RecruiterProfile from '../components/RecruiterProfile/RecruiterProfile';
 import { contractorContext } from '../contexts/ContractorContext';

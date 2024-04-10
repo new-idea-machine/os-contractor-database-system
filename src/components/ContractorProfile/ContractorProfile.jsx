@@ -9,7 +9,7 @@ import GitHubIcon from "@mui/icons-material/GitHub";
 import Avatar from "../../assets/avatar.png";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
-import { authContext } from '../../contexts/auth';
+import { authContext } from '../../contexts/Auth';
 import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { db} from '../../firebaseconfig';

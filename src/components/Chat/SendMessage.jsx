@@ -1,7 +1,7 @@
 import React, { useState, useContext,  useEffect } from "react";
 import { auth, db } from "../../firebaseconfig";
 import { addDoc, collection, serverTimestamp, query, where, getDoc, doc } from "firebase/firestore";
-import { authContext } from '../../contexts/auth';
+import { authContext } from '../../contexts/Auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { recruiterContext } from "../../contexts/RecruiterContext";
 
@@ -21,7 +21,7 @@ const SendMessage = ({ scroll, profileUid }) => {
 
         contractorList.map((contractor) => {
             if (userUid === contractor?.firebaseUID) {
-                setUserData(contractor);   
+                setUserData(contractor);
             }
             else {
                 recruiterList.map((recruiter) => {
@@ -31,7 +31,7 @@ const SendMessage = ({ scroll, profileUid }) => {
                 })
             }
         });
-       
+
 
     };
     fetchUserData();
@@ -44,7 +44,7 @@ const SendMessage = ({ scroll, profileUid }) => {
       alert("Enter valid message");
       return;
     }
-    
+
     await addDoc(collection(db, "messages"), {
       text: message,
       name: userData?.firstName,

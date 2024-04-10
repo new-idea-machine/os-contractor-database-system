@@ -16,7 +16,7 @@ import Message from "./Message";
 import SendMessage from "./SendMessage";
 import Navigation from "../navigation/Navigation";
 import "./Chat.css";
-import { authContext } from '../../contexts/auth';
+import { authContext } from '../../contexts/Auth';
 import { useParams } from "react-router-dom";
 
 const ChatBox = () => {

@@ -1,6 +1,6 @@
 import React from "react";
 import {Navigate} from 'react-router-dom';
-import AuthControl, { UserAuth } from "../contexts/auth";
+import AuthControl, { UserAuth } from "../contexts/Auth";
 
 const ProtectedRoute = ({children}) => {
     const {user} = UserAuth();
@@ -9,7 +9,7 @@ const ProtectedRoute = ({children}) => {
     }
 
     return children;
-    
+
 };
 
 export default ProtectedRoute;

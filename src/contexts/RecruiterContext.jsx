@@ -14,7 +14,7 @@ import {
 	  where,
 	//   orderBy,
 } from 'firebase/firestore';
-import { authContext } from './auth';
+import { authContext } from './Auth';
 import { toast } from 'react-toastify';
 
 export const recruiterContext = createContext();
@@ -37,16 +37,16 @@ const RecruiterContext = ({ children }) => {
     const matchProfileToCurrentUser = () => {
 		recruiterList?.forEach((rec) => {
 			recruiterMap[rec.firebaseUID] = rec;
-           
+
 		});
 		if (user && recruiterMap[user?.uid]) {
 			const matchedProfile = recruiterMap[user?.uid];
 			setCurrentUserProfile(matchedProfile);
-            
-       
+
+
 		}
-        
-       
+
+
 	};
 	const updateRecObject = async (data) => {
 		const userDocRef = doc(db, 'recruiter', data?.id);
@@ -71,13 +71,13 @@ const RecruiterContext = ({ children }) => {
 			  where('recruiterId', '==', userFirebaseUID)
 			);
 			const favoritesQuerySnapshot = await getDocs(favoritesQuery);
-	  
+
 			const favoriteTechIds = favoritesQuerySnapshot.docs.map((doc) => {
 				const data = doc.data();
-				
+
 				return data.techId;
 			  });
-			 
+
 			return favoriteTechIds;
 		  }
 		  return [];
@@ -86,9 +86,9 @@ const RecruiterContext = ({ children }) => {
 		  return [];
 		}
 	  };
-	  
 
-		//setting recruiters list 
+
+		//setting recruiters list
     useEffect(() => {
 		const unsubscribe = onSnapshot(collection(db, 'recruiter'), (snapshot) => {
 			const documents = snapshot.docs.map((doc) => ({

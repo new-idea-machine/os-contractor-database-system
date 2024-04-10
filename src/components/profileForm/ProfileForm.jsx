@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './profile.css';
-import { authContext } from '../../contexts/auth';
+import { authContext } from '../../contexts/Auth';
 import { contractorContext } from '../../contexts/ContractorContext';
 import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';

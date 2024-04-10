@@ -14,7 +14,7 @@ import {
 	   where,
 	   orderBy,
 } from 'firebase/firestore';
-import { authContext } from './auth';
+import { authContext } from './Auth';
 import { contractorContext } from './ContractorContext';
 import { recruiterContext } from "./RecruiterContext";
 
@@ -44,8 +44,8 @@ const MessagesContext = ({ children }) => {
               collection(db, 'messages'),
               where('receiverUid', '==', user.uid)
             );
-        
-    
+
+
             try {
                 const querySnapshot = await getDocs(q);
 
@@ -82,10 +82,10 @@ const MessagesContext = ({ children }) => {
               } catch (error) {
                 console.error('Error fetching messages:', error);
                 setChatsList([]); // Return an empty array if there's an error
-                
+
               }
             }
-    
+
       };
 
       const getUnreadMessages = () => {
@@ -94,7 +94,7 @@ const MessagesContext = ({ children }) => {
         }, 0);
         return totalUnreadMessages;
       };
-    
+
 
 	useEffect(() => {
 		if (user && user.uid) {
@@ -103,7 +103,7 @@ const MessagesContext = ({ children }) => {
           }
         }, [user]);
 
-   
+
 
 	const appStates = {
 		setChatsList,

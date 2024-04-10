@@ -1,7 +1,7 @@
 import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
 
-import { authContext } from '../contexts/auth';
+import { authContext } from '../contexts/Auth';
 
 import video from '../assets/work-space.mp4';
 
