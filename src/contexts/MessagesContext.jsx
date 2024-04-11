@@ -14,7 +14,7 @@ import {
 	   where,
 	   orderBy,
 } from 'firebase/firestore';
-import { authContext } from './Auth';
+import { authContext } from './Authorization';
 import { contractorContext } from './ContractorContext';
 import { recruiterContext } from "./RecruiterContext";
 
