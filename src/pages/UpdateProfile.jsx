@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState  } from "react";
 import { Navigation } from '../components';
 import ProfileForm from '../components/profileForm/ProfileForm';
 import RecruiterProfileForm from '../components/profileForm/RecruiterProfileForm';
-import { authContext } from '../contexts/Auth';
+import { authContext } from '../contexts/Authorization';
 import { collection, getDocs, doc, getDoc, query, where, limit} from 'firebase/firestore';
 import { store, auth, db, fbFunctions } from '../firebaseconfig';
 

@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { authContext } from '../contexts/Auth';
+import { authContext } from '../contexts/Authorization';
 import { useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
 import images from '../constants/images';

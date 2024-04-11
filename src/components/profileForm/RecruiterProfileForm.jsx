@@ -1,6 +1,6 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './profile.css';
-import { authContext } from '../../contexts/Auth';
+import { authContext } from '../../contexts/Authorization';
 import { recruiterContext } from '../../contexts/RecruiterContext';
 import { RecDataSchema, recFormInputs } from '../../constants/data';
 import InputSection from '../inputSection/InputSection';
