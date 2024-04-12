@@ -18,7 +18,6 @@
     "react-dom": "^18.2.0",
     "react-firebase-auth-hooks": "^1.0.0",
     "react-firebase-hooks": "^5.1.1",
-    "react-google-button": "^0.7.2",
     "react-password-checklist": "^1.4.3",
     "react-router-dom": "^6.8.2",
     "react-router-hash-link": "^2.4.3",

@@ -1,22 +1,22 @@
-import React, { useState } from 'react';
+import React, { useContext } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { authContext } from '../contexts/Authorization';
 import Login from '../components/Login';
 import Register from '../components/Register';
 
 export default function Auth() {
-  const [credentials, setCredentials] = useState(null);
-  const navigate = useNavigate();
+	const navigate = useNavigate();
+	const { credential } = useContext(authContext);
 
-  return (
+	console.log(`Rendering Auth page ("credential" is ${credential === null ? "" : "not "}null)`);
+
+	return (
 		<>
 			<button onClick={() => navigate(-1)}>
 				Back
 			</button>
 
-      {credentials === null ?
-        <Login setCredentials={setCredentials} /> :
-        <Register credentials={credentials} setCredentials={setCredentials} />
-      }
+			{credential === null ? <Login /> : <Register />}
 		</>
   );
 }

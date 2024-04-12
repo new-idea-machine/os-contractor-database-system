@@ -12,7 +12,8 @@ import {
 	getAdditionalUserInfo,
 	sendSignInLinkToEmail,
 	isSignInWithEmailLink,
-	fetchSignInMethodsForEmail
+	fetchSignInMethodsForEmail,
+	deleteUser
 
 } from 'firebase/auth';
 import { auth, db} from '../firebaseconfig';
@@ -34,14 +35,17 @@ export const authContext = React.createContext();
 
 export default function AuthControl(props) {
 	const children = props.children;
-	const [user, setUser] = useState({});
+	const [credential, setCredential] = useState(null);
+	const [user, setUser] = useState(null);
+	const [userProfile, setUserProfile] = useState(null);
 
-
-	const onAuthStateChangedCallback = (currentUser) => {
-		if (currentUser) {
-			setUser(currentUser);
+	const onAuthStateChangedCallback = (newUser) => {
+		if (newUser) {
+			setUser(newUser);
 		} else {
+			// setCredential(null);
 			setUser(null);
+			// setUserProfile(null);
 		}
 	  };
 	// This is the firebase method that checks
@@ -77,16 +81,23 @@ export default function AuthControl(props) {
 	const loginWithGoogle = async () => {
 		try {
 			const provider = new GoogleAuthProvider();
-			const userCredential = await signInWithPopup(auth, provider);
+		 	const userCredential = await signInWithPopup(auth, provider);
+			console.log(userCredential);
 			const { isNewUser } = getAdditionalUserInfo(userCredential)
 			const currentUser = userCredential.user;
-			const { displayName, email, uid} = currentUser;
+			const { displayName, email} = currentUser;
 
 
 			 if(isNewUser){
-				console.log(isNewUser);
-				const selectedUserType = await promptUserType();
-				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
+				console.log("New user -- trying to steer towards Register component...");
+				setCredential({
+					providerId:  "Google",
+					email,
+					userCredential,
+					displayName,
+			 	});
+				await deleteUser(currentUser);
+				// setUser(null);
 			 }
 
 
@@ -269,7 +280,10 @@ export default function AuthControl(props) {
 		};
 
 	const authFunctions = {
+		credential,
+		setCredential,
 		user,
+		userProfile,
 		register,
 		login,
 		logout,
