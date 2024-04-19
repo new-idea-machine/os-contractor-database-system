@@ -3,7 +3,7 @@ import { authContext } from '../contexts/Authorization';
 import { useNavigate } from 'react-router-dom';
 import '../styles/auth.css';
 import { toast } from 'react-toastify';
-import { GoogleLoginButton, TwitterLoginButton } from "react-social-login-buttons";
+import { GoogleLoginButton, XLoginButton } from "react-social-login-buttons";
 import { getAuth, isSignInWithEmailLink, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function Login() {
@@ -116,7 +116,7 @@ export default function Login() {
 				<input type='button' value='Forgot password' onClick={resetPassword}/>
 			</form>
 
-			<TwitterLoginButton onClick={loginWithTwitter}/>
+			<XLoginButton onClick={loginWithTwitter}/>
 			<GoogleLoginButton onClick={loginWithGoogle}/>
 		</div>
 	);
