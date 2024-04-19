@@ -13,7 +13,8 @@ import {
 	sendSignInLinkToEmail,
 	isSignInWithEmailLink,
 	fetchSignInMethodsForEmail,
-	deleteUser
+	deleteUser,
+	signInWithCredential
 
 } from 'firebase/auth';
 import { auth, db} from '../firebaseconfig';
@@ -87,18 +88,19 @@ export default function AuthControl(props) {
 			const currentUser = userCredential.user;
 			const { displayName, email} = currentUser;
 
+			console.log(`Is ${isNewUser ? "" : "not "}a new user`);
 
-			 if(isNewUser){
-				console.log("New user -- trying to steer towards Register component...");
+
+			if(isNewUser){
 				setCredential({
-					providerId:  "Google",
+					providerId: "Google",
 					email,
-					userCredential,
+					providerCredential: GoogleAuthProvider.credentialFromResult(userCredential),
 					displayName,
 			 	});
 				await deleteUser(currentUser);
 				// setUser(null);
-			 }
+			}
 
 
 			console.log('Logged in with Google');
@@ -174,40 +176,51 @@ export default function AuthControl(props) {
 
 	// This function registers the user with firebase
 	const register = async (
-		registerEmail,
 		displayName,
 		registerPassword,
 		userType
 	) => {
-		try {
-			const signInMethods = await fetchSignInMethodsForEmail(auth, registerEmail);
+		console.log("User clicked on \"Register\" button");
 
-			if (signInMethods.length > 0) {
-				console.log('Email address is already registered');
-				return false;
+		try {
+			let userCredential = null;
+
+			if (credential?.providerId === "Google") {
+				console.log("Signing in with Google...");
+				console.log(credential);
+				userCredential = await signInWithCredential(auth, credential.providerCredential);
+				console.log("Got userCredential...");
+				const { isNewUser } = getAdditionalUserInfo(userCredential)
+
+				console.log(isNewUser);
+				console.log('Registered with Google');
+			} else {
+				const signInMethods = await fetchSignInMethodsForEmail(auth, credential.email);
+
+				if (signInMethods.length > 0) {
+					console.log('Email address is already registered');
+					return false;
+				}
+				userCredential = await createUserWithEmailAndPassword(
+					auth,
+					credential.email,
+					registerPassword
+				);
+				console.log('user created');
+
+				// Send the sign-in link to the user's email
+				const actionCodeSettings = {
+					//url: 'https://open-source-techbook-81fb2.web.app/auth',
+					url: 'http://localhost:3000/auth',
+					handleCodeInApp: true,
+				};
+				sendSignInLinkToEmail(auth, credential.email, actionCodeSettings).then(()=>{
+					localStorage.setItem('email', credential.email);}).catch(error=>{
+						console.log(error.message);
+					})
 			}
-			const userCredential = await createUserWithEmailAndPassword(
-				auth,
-				registerEmail,
-				registerPassword
-			);
-			console.log('user created');
 
 			const currentUser = userCredential.user;
-
-			 // Send the sign-in link to the user's email
-			 const actionCodeSettings = {
-				//url: 'https://open-source-techbook-81fb2.web.app/auth',
-				url: 'http://localhost:3000/auth',
-				handleCodeInApp: true,
-			  };
-			   sendSignInLinkToEmail(auth, registerEmail, actionCodeSettings).then(()=>{
-				localStorage.setItem('email', registerEmail);}).catch(error=>{
-					console.log(error.message);
-				})
-
-
-
 
 			await updateProfile(currentUser, { displayName: displayName })
 				.then(() => {
@@ -215,13 +228,14 @@ export default function AuthControl(props) {
 
 					const FUID = currentUser.uid;
 					//console.log(FUID);
-					createUserInDatabase(displayName, registerEmail, FUID, userType);
+					createUserInDatabase(displayName, credential.email, FUID, userType);
 				})
 				.catch((error) => {
 					console.log(error.message);
 					return false;
 				});
 
+				setCredential(null);
 				return true;
 		} catch (error) {
 			console.log(error.message);

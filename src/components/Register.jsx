@@ -20,14 +20,14 @@ export default function Register() {
 
 	const navigate = useNavigate();
 
-	async function handleEmailRegistration(submitEvent) {
-		submitEvent.preventDefault();
+	async function handleRegistrationFormSubmit(event) {
+		event.preventDefault();
 
 		const passwordStrength = /^(?=.*[0-9])(?=.*[A-Z])(?=.*\W)(?!.* ).{8,}$/;
 
-		const formElements = submitEvent.target.elements;
+		const formElements = event.target.elements;
 		const displayName = formElements.DisplayName.value.trim();
-		const registerPassword = formElements.Password.value;
+		const registerPassword = formElements?.Password?.value;
 		const userType = formElements.userType.value;
 
 		let fieldsAreValid = true;
@@ -37,7 +37,7 @@ export default function Register() {
 			fieldsAreValid = false;
 		}
 
-		if (!passwordStrength.test(registerPassword)) {
+		if (credential?.password && !passwordStrength.test(registerPassword)) {
 			toast.error('Please enter a password with at least 8 characters, one number, one lowercase, one upper case and one special character');
 			fieldsAreValid = false;
 		}
@@ -49,7 +49,7 @@ export default function Register() {
 
 		if (fieldsAreValid) {
 			try {
-				const success = await register(credential.email, displayName, registerPassword, userType);
+				const success = await register(displayName, registerPassword, userType);
 
 				if (!success) {
 					toast.error('The email is already in use');
@@ -90,7 +90,7 @@ export default function Register() {
 				</button>
 			</div>
 
-			<form onSubmit={(event) => handleEmailRegistration(event)}>
+			<form onSubmit={(event) => handleRegistrationFormSubmit(event)}>
 				{/* <input
 				value={registerEmail}
 				id='emailInput'
