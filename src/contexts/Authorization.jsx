@@ -117,15 +117,19 @@ export default function AuthControl(props) {
 			console.log(isNewUser);
 			const currentUser = userCredential.user;
 			console.log(currentUser);
-			const { displayName, email, uid} = currentUser;
+			const displayName = currentUser.displayName;
+			const screenName = currentUser.reloadUserInfo.screenName;
 
-
-			 if(isNewUser){
-				console.log(isNewUser);
-				const selectedUserType = await promptUserType();
-				await createUserInDatabase(displayName, email, currentUser?.uid, selectedUserType);
-			 }
-
+			if(isNewUser){
+				setCredential({
+					providerId: "X",
+					email: screenName,
+					providerCredential: TwitterAuthProvider.credentialFromResult(userCredential),
+					displayName,
+			 	});
+				await deleteUser(currentUser);
+				// setUser(null);
+			}
 
 			console.log('Logged in with twitter');
 		  } catch (error) {
@@ -185,15 +189,16 @@ export default function AuthControl(props) {
 		try {
 			let userCredential = null;
 
-			if (credential?.providerId === "Google") {
-				console.log("Signing in with Google...");
+			if (credential?.providerCredential) {
+				console.assert(credential?.providerId);
+				console.log(`Signing in with ${credential?.providerId}...`);
 				console.log(credential);
 				userCredential = await signInWithCredential(auth, credential.providerCredential);
 				console.log("Got userCredential...");
 				const { isNewUser } = getAdditionalUserInfo(userCredential)
 
 				console.log(isNewUser);
-				console.log('Registered with Google');
+				console.log(`Registered with ${credential?.providerId}`);
 			} else {
 				const signInMethods = await fetchSignInMethodsForEmail(auth, credential.email);
 
