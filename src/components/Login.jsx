@@ -96,7 +96,11 @@ export default function Login() {
 	  }, [user, loginStep, registerStep]);
 
 	return (
-		<div className='appLogin'>
+		<>
+			<p>
+				Log in or register
+			</p>
+
 			<form onSubmit={(event) => handleEmailLogin(event)}>
 				<input
 					name='Email'
@@ -112,12 +116,20 @@ export default function Login() {
 					autoComplete='off'
 				/><br />
 
-				<input type='submit' value='Login or Register' />{' '}
+				<input type='submit' value='Login or Register' /><br />
 				<input type='button' value='Forgot password' onClick={resetPassword}/>
 			</form>
 
-			<XLoginButton onClick={loginWithTwitter}/>
-			<GoogleLoginButton onClick={loginWithGoogle}/>
-		</div>
+			<p>
+				or
+			</p>
+
+			<XLoginButton align="center" onClick={loginWithTwitter}>
+				<span>Log in/Register with X</span>
+			</XLoginButton>
+			<GoogleLoginButton align="center" onClick={loginWithGoogle}>
+				<span>Log in/Register with Google</span>
+			</GoogleLoginButton>
+		</>
 	);
 }

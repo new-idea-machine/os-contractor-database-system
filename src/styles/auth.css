@@ -1,3 +1,60 @@
+div#Auth {
+	/*
+	<main> and its children are laid out in the following 1-row, 1-column grid:
+
+	+---------------------+
+	|<header>             |
+	|                     |
+	+---------------------+
+	|                     |
+	|      <section>      |
+	|                     |
+	+----------+----------+
+	*/
+
+	main {
+		position: fixed;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		z-index: 1;
+		display: grid;
+		grid-template-rows: min-content 1fr;
+		grid-template-columns: 1fr;
+		gap: 2px 2px;
+		justify-items: stretch;
+		align-items: stretch;
+	}
+
+	main header {
+		align-self: start;
+		justify-self: start;
+		padding: 56px 50px;
+	}
+
+	main header h2 {
+		font-weight: normal;
+		font-size: 30px;
+	}
+
+	main section {
+		align-self: center;
+		justify-self: center;
+		text-align: center;
+		font-weight: 600;
+		font-size: 30px;
+		line-height: 70px;
+		padding: 0px 50px;
+	}
+
+	main section div {
+		background-color: var(--content-colour-background);
+		color: var(--content-colour);
+		border-radius: 10px;
+	}
+}
+
 .appLogin {
 	background-color: var(--navigation-colour-background);
 	color: var(--navigation-colour);
