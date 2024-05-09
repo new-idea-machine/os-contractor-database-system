@@ -80,7 +80,7 @@ export default function Register() {
 				Log in with different credentials
 			</button>
 
-			<p>
+			<p className="splitBar">
 				or
 			</p>
 

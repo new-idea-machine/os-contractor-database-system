@@ -119,7 +119,7 @@ export default function Login() {
 				<input type='button' value='Forgot password' onClick={resetPassword}/>
 			</form>
 
-			<p>
+			<p className="splitBar">
 				or
 			</p>
 
