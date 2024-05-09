@@ -48,11 +48,15 @@ div#Auth {
 		color: var(--content-colour);
 		border-radius: 10px;
 		border-width: 0px;
-		padding: 50px;
-		width: fit-content;
+		padding: 16px 50px;
+		width: 500px;
 		text-align: center;
 
-		button, input[type='button'], input[type='text'], input[type='email'], input[type='password'], input[type='reset'], input[type='submit'] {
+		p {
+			text-align: left;
+		}
+
+		button, input[type='button'], input[type='text'], input[type='email'], input[type='password'], input[type='reset'], input[type='submit'], p {
 			margin: 34px 0px;
 		}
 	}

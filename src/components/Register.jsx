@@ -66,9 +66,9 @@ export default function Register() {
 			<p>
 				{credential?.email ?
 					<>
-						"{credential.email}"{" "}
-						{credential?.providerId && `[${credential.providerId}] `}
-						isn&apos;t a registered user.
+						{credential?.providerId ? <><b>{credential.providerId}</b> user</> : "User"}{' '}
+						<b>"{credential.email}"</b>{' '}
+						isn&apos;t registered.
 					</> :
 					<>
 						These credentials aren't for a registered user.
@@ -76,14 +76,17 @@ export default function Register() {
 				}
 			</p>
 
+			<button onClick={() => setCredential(null)}>
+				Log in with different credentials
+			</button>
 
-			<div>
-				<p>Already have an account ?</p>
+			<p>
+				or
+			</p>
 
-				<button onClick={() => setCredential(null)}>
-					Login with Different Credentials
-				</button>
-			</div>
+			<p>
+				Provide the following information to complete your registration:
+			</p>
 
 			<form onSubmit={(event) => handleRegistrationFormSubmit(event)}>
 				{/* <input
@@ -101,10 +104,10 @@ export default function Register() {
 				<input
 					defaultValue={credential?.displayName || ""}
 					name='DisplayName'
-					placeholder='DisplayName...'
+					placeholder='Display name'
 					type='text'
 					autoComplete='off'
-				/><br />
+				/>
 
 				{credential?.password &&
 					<>
@@ -117,7 +120,7 @@ export default function Register() {
 							onChange={(event) => {
 							setRegisterPassword(event.target.value);
 						}}
-						/><br />
+						/>
 
 						<div className='passwordCheck'>
 							<PasswordChecklist
@@ -136,10 +139,8 @@ export default function Register() {
 					</button> */}
 
 				<p>
-					You are a:
-				</p>
+					You are a:{' '}
 
-			        <div>
 					<input
 						type='radio'
 						name='userType'
@@ -147,7 +148,7 @@ export default function Register() {
 						value='recruiter'
 						// autoComplete='off'
 					/>
-					<label>Recruiter</label>
+					<label>Recruiter</label>{' '}
 
 					<input
 						type='radio'
@@ -157,9 +158,9 @@ export default function Register() {
 						// autoComplete='off'
 					/>
 					<label>Contractor</label>
-				</div>
+				</p>
 
-			        <input type='submit' value='Register New User' />
+			        <input type='submit' value='Register new user' />
       			</form>
 		</>
 	);
