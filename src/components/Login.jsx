@@ -1,9 +1,8 @@
-import React, { useContext, useState, useRef, useEffect} from 'react';
+import React, { useContext, useState, useRef, useEffect } from 'react';
 import { authContext } from '../contexts/Authorization';
 import { useNavigate } from 'react-router-dom';
-import '../styles/auth.css';
 import { toast } from 'react-toastify';
-import { GoogleLoginButton, XLoginButton } from "react-social-login-buttons";
+import { GoogleLoginButton, XLoginButton } from 'react-social-login-buttons';
 import { getAuth, isSignInWithEmailLink, sendPasswordResetEmail } from 'firebase/auth';
 
 export default function Login() {
@@ -97,7 +96,7 @@ export default function Login() {
 
 	return (
 		<>
-			<p>
+			<p style={{textAlign: 'left'}}>
 				Log in or register
 			</p>
 
@@ -105,18 +104,18 @@ export default function Login() {
 				<input
 					name='Email'
 					type='email'
-					placeholder='Email...'
+					placeholder='E-mail'
 					autoComplete='off'
-				/><br />
+				/>
 
 				<input
 					name='Password'
 					type='password'
-					placeholder='Password...'
+					placeholder='Password'
 					autoComplete='off'
-				/><br />
+				/>
 
-				<input type='submit' value='Login or Register' /><br />
+				<input type='submit' value='Log in/Register' />
 				<input type='button' value='Forgot password' onClick={resetPassword}/>
 			</form>
 
@@ -124,11 +123,12 @@ export default function Login() {
 				or
 			</p>
 
-			<XLoginButton align="center" onClick={loginWithTwitter}>
-				<span>Log in/Register with X</span>
+			<XLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '34px 0px'}} onClick={loginWithTwitter}>
+				Log in/Register with X
 			</XLoginButton>
-			<GoogleLoginButton align="center" onClick={loginWithGoogle}>
-				<span>Log in/Register with Google</span>
+
+			<GoogleLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '34px 0px'}} onClick={loginWithGoogle}>
+				Log in/Register with Google
 			</GoogleLoginButton>
 		</>
 	);

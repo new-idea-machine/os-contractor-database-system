@@ -3,7 +3,7 @@ import { authContext } from '../contexts/Authorization';
 import Login from '../components/Login';
 import Register from '../components/Register';
 
-import '../styles/auth.css';
+import './Auth.css';
 
 export default function Auth() {
 	const { credential } = useContext(authContext);

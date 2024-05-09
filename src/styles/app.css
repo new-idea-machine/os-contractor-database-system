@@ -7,16 +7,16 @@ body {
 	color: var(--colour);
 }
 
-button, input[type="button"], input[type="reset"], input[type="submit"] {
-  display: inline-block;
-  border: none;
+button, input[type='button'], input[type='reset'], input[type='submit'] {
+	display: block;
+	border: none;
 	border-radius: 10px;
-  width: 250px;
-  height: 50px;
-  /* text-align: center; */
-  font-family: var(--font);
-  font-weight: 600;
-  font-size: 20px;
+	width: 400px;
+	height: 40px;
+	/* text-align: center; */
+	font-family: var(--font);
+	font-weight: 600;
+	font-size: 20px;
 	background-color: var(--button-colour-background);
 	color: var(--button-colour);
 }
@@ -26,9 +26,20 @@ input {
 	color:  var(--input-text-colour);
 }
 
-input[type="radio"],
-input[type="checkbox"] {
-  accent-color: var(--input-checkbox-colour);
+input[type='text'], input[type='email'], input[type='password'] {
+	display: block;
+	background-color: inherit;
+	width: 400px;
+	height: 40px;
+	border-width: 2px;
+	border-radius: 10px;
+	border-style: solid;
+	border-color: var(--input-text-colour-border);
+	padding: 0px 8px;
+}
+
+input[type='radio'], input[type='checkbox'] {
+	accent-color: var(--input-checkbox-colour);
 }
 
 main {
@@ -42,13 +53,13 @@ nav {
 }
 
 nav *.ContractorName {
-  color: var(--navigation-colour-contractor-name);
+	color: var(--navigation-colour-contractor-name);
 }
 
 nav a, nav a:link, nav a:visited {
 	color: var(--navigation-link-colour);
 	text-decoration: none;
-  font-weight: bold;
+	font-weight: bold;
 }
 
 nav a.active {
@@ -56,21 +67,21 @@ nav a.active {
 }
 
 nav + main {
-  color: inherit;
+	color: inherit;
 	background-color: inherit;
 }
 
 .badge {
 	display: inline-block;
-  margin: 10px;
-  border: none;
-  border-radius: 5px;
+	margin: 10px;
+	border: none;
+	border-radius: 5px;
 	padding: 5px;
-  width: fit-content;
-  background-color: var(--badge-colour-background);
+	width: fit-content;
+	background-color: var(--badge-colour-background);
 	color: var(--badge-colour);
-  font-weight: bold;
-	text-transform: "capitalize"
+	font-weight: bold;
+	text-transform: 'capitalize'
 }
 
 /* Layout */
@@ -90,111 +101,8 @@ nav + main {
 
 /* Other Styles */
 
-.homePage {
-	height: 73.4vh;
-	padding: 2rem 6rem;
-	display: flex;
-	flex-direction: column;
-	align-items: center;
-
-	gap: 50px;
-}
-
-.updateProfilePage {
-	/* height: 80vh; */
-	background-color: rgb(0, 0, 0);
-	/* border: 2px solid white; */
-}
-
 .flexCenter {
 	display: flex;
 	justify-content: center;
 	align-items: center;
-}
-
-.customButton4 {
-	display: inline-block;
-	outline: 0;
-	border: 0;
-	cursor: pointer;
-	background: #ffffff;
-	color: #000000;
-	border-radius: 8px;
-	padding: 14px 24px 16px;
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 1;
-	transition: transform 200ms, background 200ms;
-}
-.customButton4:hover {
-	transform: translateY(-2px);
-	line-height: 1;
-	background: transparent;
-	color: #ffffff;
-	box-shadow: 0 0 0 3px #ffffff inset;
-}
-
-.customButton2 {
-	display: block;
-	/* width: 200px;
-	height: 40px; */
-	line-height: 40px;
-	font-size: 18px;
-	font-family: sans-serif;
-	text-decoration: none;
-	color: #000000;
-	border-radius: 0px 0px 20px 0px;
-	/* border: 2px solid #333; */
-	letter-spacing: 2px;
-	text-align: center;
-	position: relative;
-	transition: all 0.35s;
-	cursor: pointer;
-}
-
-.customButton2 span {
-	position: relative;
-	z-index: 2;
-}
-
-.customButton2:after {
-	position: absolute;
-	content: '';
-	top: 0;
-	left: 0;
-	width: 0;
-	height: 100%;
-	background: rgba(128, 128, 128, 0.384);
-	transition: all 0.35s;
-}
-
-/* .customButton2:hover {
-	color: #ffffff;
-} */
-
-.customButton2:hover:after {
-	border-radius: 0px 0px 20px 0px;
-	width: 100%;
-}
-
-.customButton {
-	display: inline-block;
-	outline: 0;
-	border: 0;
-	cursor: pointer;
-	background: #000000;
-	color: #ffffff;
-	border-radius: 8px;
-	padding: 14px 24px 16px;
-	font-size: 18px;
-	font-weight: 700;
-	line-height: 1;
-	transition: transform 200ms, background 200ms;
-}
-.customButton:hover {
-	transform: translateY(-2px);
-	line-height: 1;
-	background: transparent;
-	color: #000000;
-	box-shadow: 0 0 0 3px #000000 inset;
 }

@@ -57,19 +57,19 @@ div#Home {
       -1px 1px 2px var(--navigation-colour-background);
   }
 
-  main header {
+  main > header {
     grid-column: 1 / span 2;
     align-self: start;
     justify-self: start;
     padding: 56px 50px;
   }
 
-  main header h2 {
+  main > header h2 {
     font-weight: normal;
     font-size: 30px;
   }
 
-  main section {
+  main > section {
     grid-column: 1 / span 2;
     align-self: center;
     justify-self: center;
@@ -78,15 +78,21 @@ div#Home {
     font-size: 30px;
     line-height: 70px;
     padding: 0px 50px;
+
+    button {
+	display: inline-block;
+	width: 250px;
+	height: 50px;
+    }
   }
 
-  main footer {
+  main > footer {
     align-self: end;
     justify-self: start;
     padding: 20px 50px;
   }
 
-  main footer h3 {
+  main > footer h3 {
     font-weight: 600;
     font-size: 20px;
   }

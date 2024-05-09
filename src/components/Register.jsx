@@ -1,12 +1,7 @@
 import React, { useContext, useState } from 'react';
 import { authContext } from '../contexts/Authorization';
 import { useNavigate } from 'react-router-dom';
-import '../styles/auth.css';
-import images from '../constants/images';
-import { useEffect } from 'react';
-import Login from './Login';
 import { toast } from 'react-toastify';
-import { Password } from '@mui/icons-material';
 import PasswordChecklist from "react-password-checklist";
 
 export default function Register() {
