@@ -18,7 +18,6 @@ div#Auth {
 		right: 0px;
 		bottom: 0px;
 		left: 0px;
-		z-index: 1;
 		display: grid;
 		grid-template-rows: min-content 1fr;
 		grid-template-columns: 1fr;
@@ -39,8 +38,9 @@ div#Auth {
 	}
 
 	main > section {
-		align-self: center;
+		align-self: stretch;
 		justify-self: center;
+		overflow: hidden auto;
 	}
 
 	main > section > div {
