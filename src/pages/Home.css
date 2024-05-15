@@ -1,109 +1,107 @@
 div#Home {
-  /*
-  <video> and <main> take up the entire viewport but <video> appears behind
-  <main>.
-  */
+	/*
+	<video> and <main> take up the entire viewport but <video> appears behind
+	<main>.
+	*/
 
-  video {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    background-color: var(--navigation-colour-background);
-    filter:  brightness(30%);
-  }
+	video {
+		position: fixed;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		filter:  brightness(30%);
+	}
 
-  /*
-  <main> and its children are laid out in the following 3-row, 2-column grid:
+	/*
+	<main> and its children are laid out in the following 3-row, 2-column grid:
 
-  +---------------------+
-  |<header>             |
-  |                     |
-  |                     |
-  +---------------------+
-  |                     |
-  |      <section>      |
-  |                     |
-  +----------+----------+
-  |          |          |
-  |          |          |
-  |<footer>  |  <footer>|
-  +----------+----------+
-  */
+	+---------------------+
+	|<header>             |
+	|                     |
+	|                     |
+	+---------------------+
+	|                     |
+	|      <section>      |
+	|                     |
+	+----------+----------+
+	|          |          |
+	|          |          |
+	|<footer>  |  <footer>|
+	+----------+----------+
+	*/
 
-  main {
-    position: fixed;
-    top: 0px;
-    right: 0px;
-    bottom: 0px;
-    left: 0px;
-    z-index: 1;
-    display: grid;
-    grid-template-rows: 1fr 1fr 1fr;
-    grid-template-columns: 1fr 1fr;
-    gap: 2px 2px;
-    justify-items: stretch;
-    align-items: stretch;
-    background-color: transparent;
-    color: var(--home-colour);
-    text-shadow:
-      1px 1px 2px var(--navigation-colour-background),
-      1px -1px 2px var(--navigation-colour-background),
-      -1px -1px 2px var(--navigation-colour-background),
-      -1px 1px 2px var(--navigation-colour-background);
-  }
+	main {
+		position: fixed;
+		top: 0px;
+		right: 0px;
+		bottom: 0px;
+		left: 0px;
+		z-index: 1;
+		display: grid;
+		grid-template-rows: 1fr 1fr 1fr;
+		grid-template-columns: 1fr 1fr;
+		gap: 2px 2px;
+		justify-items: stretch;
+		align-items: stretch;
+		background-color: transparent;
+		text-shadow:
+			1px 1px 2px var(--colour-background),
+			1px -1px 2px var(--colour-background),
+			-1px -1px 2px var(--colour-background),
+			-1px 1px 2px var(--colour-background);
+	}
 
-  main > header {
-    grid-column: 1 / span 2;
-    align-self: start;
-    justify-self: start;
-    padding: 56px 50px;
-  }
+	main > header {
+		grid-column: 1 / span 2;
+		align-self: start;
+		justify-self: start;
+		padding: 56px 50px;
+	}
 
-  main > header h2 {
-    font-weight: normal;
-    font-size: 30px;
-  }
+	main > header h2 {
+		font-weight: normal;
+		font-size: 30px;
+	}
 
-  main > section {
-    grid-column: 1 / span 2;
-    align-self: center;
-    justify-self: center;
-    text-align: center;
-    font-weight: 600;
-    font-size: 30px;
-    line-height: 70px;
-    padding: 0px 50px;
+	main > section {
+		grid-column: 1 / span 2;
+		align-self: center;
+		justify-self: center;
+		text-align: center;
+		font-weight: 600;
+		font-size: 30px;
+		line-height: 70px;
+		padding: 0px 50px;
 
-    button {
-	display: inline-block;
-	width: 250px;
-	height: 50px;
-    }
-  }
+		button {
+			display: inline-block;
+			width: 250px;
+			height: 50px;
+		}
+	}
 
-  main > footer {
-    align-self: end;
-    justify-self: start;
-    padding: 20px 50px;
-  }
+	main > footer {
+		align-self: end;
+		justify-self: start;
+		padding: 20px 50px;
+	}
 
-  main > footer h3 {
-    font-weight: 600;
-    font-size: 20px;
-  }
+	main > footer h3 {
+		font-weight: 600;
+		font-size: 20px;
+	}
 
-  main footer + footer {
-    justify-self: end;
-  }
+	main footer + footer {
+		justify-self: end;
+	}
 
-  main h1 {
-    font-family: var(--font);
-    font-weight: 600;
-    font-size: 40px;
-  }
+	main h1 {
+		font-family: var(--font);
+		font-weight: 600;
+		font-size: 40px;
+	}
 }

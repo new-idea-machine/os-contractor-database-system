@@ -41,14 +41,7 @@ input[type='text'], input[type='email'], input[type='password'] {
 input[type='radio'], input[type='checkbox'] {
 	accent-color: var(--input-checkbox-colour);
 }
-
-main {
-	background-color: var(--navigation-colour-background);
-	color: var(--navigation-colour);
-}
-
 nav {
-	background-color: var(--navigation-colour-background);
 	color: var(--navigation-colour);
 }
 
@@ -67,8 +60,8 @@ nav a.active {
 }
 
 nav + main {
-	color: inherit;
-	background-color: inherit;
+	color: var(--content-colour);
+	background-color: var(--content-colour-background);
 }
 
 .badge {

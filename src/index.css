@@ -1,13 +1,13 @@
 :root {
 	/* Colour Palette */
 
-	--colour-background-primary: #f9faff;
-	--colour-background-secondary-1: #2e3955;
+	--colour-background-primary: #2e3955;
+	--colour-background-secondary-1: #f9faff;
 	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
 	--colour-background-secondary-3: #ffffff;
 	--colour-background-secondary-4: #e3474b;
 
-	--colour-primary: #2e3955;
+	--colour-primary: #ffffff;
 	--colour-secondary-1: #d9e7e8;
 	/* --colour-secondary-2: #e6eff0; */
 	--colour-secondary-2: #416E97;
@@ -15,23 +15,20 @@
 	--colour-secondary-4: #444444;
 	--colour-secondary-5: #d9d9d9;
 	--colour-secondary-6: #919191;
-	--colour-secondary-7: #ffffff;
+	--colour-secondary-7: #2e3955;
 
 	/* Colour Assignments */
 
 	--colour-background: var(--colour-background-primary);
 	--colour: var(--colour-primary);
 
-	--home-colour:  var(--colour-secondary-7);
-
-	--content-colour-background: var(--colour-background-primary);
-	--content-colour: var(--colour-primary);
+	--content-colour-background: var(--colour-background-secondary-1);
+	--content-colour: var(--colour-secondary-7);
 	--content-colour-distinct: var(--colour-secondary-3);
 
-	--navigation-colour-background: var(--colour-background-secondary-1);
 	--navigation-colour: var(--colour-secondary-1);
-	--navigation-colour-contractor-name:  var(--colour-secondary-7);
-	--navigation-link-colour: var(--colour-secondary-7);
+	--navigation-colour-contractor-name:  var(--colour-primary);
+	--navigation-link-colour: var(--colour-primary);
 	--navigation-link-colour-active: var(--colour-secondary-3);
 
 	--card-colour-background: var(--colour-background-secondary-3);
@@ -43,7 +40,7 @@
 	--badge-colour: var(--colour-secondary-7);
 
 	--button-colour-background: var(--colour-background-secondary-4);
-	--button-colour: var(--colour-secondary-7);
+	--button-colour: var(--colour-primary);
 
 	--input-checkbox-colour: var(--colour-background-secondary-2);
 	--input-text-colour-border: var(--colour-secondary-5);
@@ -65,6 +62,8 @@ body {
 	font-size: 16px;
 	line-height: 24px;
 	/* height: 100%; */
+	background-color: var(--colour-background);
+	color: var(--colour);
 }
 
 h1, h2, h3, h4, h5, h6 {
