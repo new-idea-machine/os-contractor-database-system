@@ -5,6 +5,8 @@ import Register from '../components/Register';
 
 import './Auth.css';
 
+import { ReactComponent as BackArrow } from '../assets/icons/backArrow.svg';
+
 export default function Auth() {
 	const { credential } = useContext(authContext);
 
@@ -20,7 +22,7 @@ export default function Auth() {
 						{credential === null ? <Login /> : <Register />}
 
 						<p>
-							<a href=".."> &larr; Back to Home Page</a>
+							<a href=".."> <BackArrow />{' '}Back to Home page</a>
 						</p>
 					</div>
 				</section>

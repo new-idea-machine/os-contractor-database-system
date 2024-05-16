@@ -123,11 +123,11 @@ export default function Login() {
 				or
 			</p>
 
-			<XLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '34px 0px'}} onClick={loginWithTwitter}>
+			<XLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '22px 0px'}} onClick={loginWithTwitter}>
 				Log in/Register with X
 			</XLoginButton>
 
-			<GoogleLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '34px 0px'}} onClick={loginWithGoogle}>
+			<GoogleLoginButton align='center' style={{width: '400px', borderRadius:  '10px', margin: '22px 0px'}} onClick={loginWithGoogle}>
 				Log in/Register with Google
 			</GoogleLoginButton>
 		</>

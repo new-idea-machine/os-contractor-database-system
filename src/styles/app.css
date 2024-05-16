@@ -11,10 +11,12 @@ main {
 	}
 
 	button, input[type='button'], input[type='reset'], input[type='submit'] {
+		display: block;
 		width: 400px;
 		height: 40px;
 		border: none;
 		border-radius: 10px;
+		padding: 0px 10px;
 		font-family: var(--font);
 		font-weight: 600;
 		font-size: 20px;
