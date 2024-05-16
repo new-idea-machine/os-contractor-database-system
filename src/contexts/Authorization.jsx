@@ -5,13 +5,11 @@ import {
 	onAuthStateChanged,
 	signOut,
 	updateProfile,
-	signInWithEmailLink,
 	GoogleAuthProvider,
 	TwitterAuthProvider,
 	signInWithPopup,
 	getAdditionalUserInfo,
 	sendSignInLinkToEmail,
-	isSignInWithEmailLink,
 	fetchSignInMethodsForEmail,
 	deleteUser,
 	signInWithCredential
@@ -30,7 +28,6 @@ import {
 	//   where,
 	//   orderBy,
 } from 'firebase/firestore';
-// import { Toast } from 'react-toastify/dist/components';
 
 export const authContext = React.createContext();
 
@@ -46,7 +43,7 @@ export default function AuthControl(props) {
 		} else {
 			// setCredential(null);
 			setUser(null);
-			// setUserProfile(null);
+			setUserProfile(null);
 		}
 	  };
 	// This is the firebase method that checks
@@ -68,14 +65,8 @@ export default function AuthControl(props) {
 		const userDocRef = doc(db, userType, id);
 		const docSnapshot = await getDoc(userDocRef);
 
-		if (docSnapshot.exists()) {
-		  console.log('Document already exists');
-		} else {
-		  const data = {
-			id: id,
-		  };
-		  await setDoc(userDocRef, data);
-		  console.log('Document created with ID:', id);
+		if (!docSnapshot.exists()) {
+		  await setDoc(userDocRef, { id });
 		}
 	};
 
@@ -83,13 +74,9 @@ export default function AuthControl(props) {
 		try {
 			const provider = new GoogleAuthProvider();
 		 	const userCredential = await signInWithPopup(auth, provider);
-			console.log(userCredential);
 			const { isNewUser } = getAdditionalUserInfo(userCredential)
 			const currentUser = userCredential.user;
 			const { displayName, email} = currentUser;
-
-			console.log(`Is ${isNewUser ? "" : "not "}a new user`);
-
 
 			if(isNewUser){
 				setCredential({
@@ -99,11 +86,7 @@ export default function AuthControl(props) {
 					displayName,
 			 	});
 				await deleteUser(currentUser);
-				// setUser(null);
 			}
-
-
-			console.log('Logged in with Google');
 		  } catch (error) {
 			console.log(error.message);
 		}
@@ -114,9 +97,7 @@ export default function AuthControl(props) {
 			const provider = new TwitterAuthProvider();
 			const userCredential = await signInWithPopup(auth, provider);
 			const { isNewUser } = getAdditionalUserInfo(userCredential);
-			console.log(isNewUser);
 			const currentUser = userCredential.user;
-			console.log(currentUser);
 			const displayName = currentUser.displayName;
 			const screenName = currentUser.reloadUserInfo.screenName;
 
@@ -128,32 +109,11 @@ export default function AuthControl(props) {
 					displayName,
 			 	});
 				await deleteUser(currentUser);
-				// setUser(null);
 			}
-
-			console.log('Logged in with twitter');
 		  } catch (error) {
 			console.log(error.message);
 		}
 	};
-
-
-	const promptUserType = async() => {
-		// Prompt the user to choose a user type
-
-		const userTypeInput = prompt('Please choose a user type: 1 for Contractor, 2 for Recruiter');
-
-		// Validate and return the selected user type
-		if (userTypeInput === '1') {
-			return 'techs';
-		} else if (userTypeInput === '2') {
-			return 'recruiter';
-		} else {
-			// Invalid user type selected, prompt again or handle accordingly
-			return promptUserType();
-		}
-	};
-
 
 	// This function is declared to be called in the below
 	// Register function to create out "tech" object with our
@@ -184,26 +144,17 @@ export default function AuthControl(props) {
 		registerPassword,
 		userType
 	) => {
-		console.log("User clicked on \"Register\" button");
-
 		try {
 			let userCredential = null;
 
 			if (credential?.providerCredential) {
 				console.assert(credential?.providerId);
-				console.log(`Signing in with ${credential?.providerId}...`);
-				console.log(credential);
 				userCredential = await signInWithCredential(auth, credential.providerCredential);
-				console.log("Got userCredential...");
 				const { isNewUser } = getAdditionalUserInfo(userCredential)
-
-				console.log(isNewUser);
-				console.log(`Registered with ${credential?.providerId}`);
 			} else {
 				const signInMethods = await fetchSignInMethodsForEmail(auth, credential.email);
 
 				if (signInMethods.length > 0) {
-					console.log('Email address is already registered');
 					return false;
 				}
 				userCredential = await createUserWithEmailAndPassword(
@@ -211,7 +162,6 @@ export default function AuthControl(props) {
 					credential.email,
 					registerPassword
 				);
-				console.log('user created');
 
 				// Send the sign-in link to the user's email
 				const actionCodeSettings = {
@@ -254,7 +204,6 @@ export default function AuthControl(props) {
 			// Check if the email address exists
 			const signInMethods = await fetchSignInMethodsForEmail(auth, loginEmail);
 			if (signInMethods.length === 0) {
-				console.log('Email address does not exist');
 				return 'auth/user-not-found';
 			}
 
@@ -262,9 +211,6 @@ export default function AuthControl(props) {
 			return 'signed-in';
 		} catch (error) {
 			console.log(error?.message);
-			// if (error.code === 'auth/wrong-password' || error.code === 'auth/user-not-found' || error.code ==='auth/invalid-email') {
-			// 	throw new Error('Invalid login credentials');
-			// }
 			return error?.code;
 		}
 	};
@@ -273,30 +219,6 @@ export default function AuthControl(props) {
 	const logout = async () => {
 		await signOut(auth);
 	};
-
-	// Currently not in use passwordless sign In
-	const signInWithEmail = async () => {
-		const email = window.localStorage.getItem('email');
-		if (isSignInWithEmailLink(auth, window.location.href)) {
-			try {
-
-				const result = await signInWithEmailLink(auth, email, window.location.href);
-				// Clear email from storage.
-				//window.localStorage.removeItem('emailForSignIn');
-				// console.log("got here signinwith");
-				// Clear email from storage.
-				window.localStorage.setItem('email', email);
-				//window.localStorage.removeItem('emailForSignIn');
-				// You can access the new user via result.user
-				// Additional user info profile not available via:
-				// result.additionalUserInfo.profile == null
-				// You can check if the user is new or existing:
-				console.log('Email link sign-in successful:', result.user);
-			} catch (error) {
-			  console.log('Email link sign-in error:', error.message);
-			}
-		  }
-		};
 
 	const authFunctions = {
 		credential,
@@ -309,8 +231,6 @@ export default function AuthControl(props) {
 		isAuthenticated,
 		loginWithGoogle,
 		loginWithTwitter,
-		signInWithEmail,
-		// emailLogin,
 	};
 
 	return (

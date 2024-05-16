@@ -5,13 +5,8 @@ import { toast } from 'react-toastify';
 import PasswordChecklist from "react-password-checklist";
 
 export default function Register() {
-	const { credential, setCredential, register, user, logout, signInWithEmail } = useContext(authContext);
-	const [registerEmail, setRegisterEmail] = useState('');
+	const { credential, setCredential, register } = useContext(authContext);
 	const [registerPassword, setRegisterPassword] = useState(credential.password || "");
-	const [displayName, setDisplayName] = useState('');
-	const [userType, setUserType] = useState('');
-	// const [registrationRunning, setRegistrationRunning] = useState(false);
-	const [errorMessage, setErroMessage] = useState();
 
 	const navigate = useNavigate();
 
@@ -47,12 +42,12 @@ export default function Register() {
 				const success = await register(displayName, registerPassword, userType);
 
 				if (!success) {
-					toast.error('The email is already in use');
+					toast.error('This email is already in use');
 					setCredential(null);
 				}
 				else {
-					toast.info(`You have successfully registered with "${credential.email}"!`);
-					navigate('/contractorList');
+					toast.info(`You have successfully registered as "${credential.email}"!`);
+					navigate('/UpdateProfile');
 				}
 			} catch (error) {
 				console.error(`Error occurred during registration:  ${error.message}`);
@@ -89,20 +84,8 @@ export default function Register() {
 			</p>
 
 			<form onSubmit={(event) => handleRegistrationFormSubmit(event)}>
-				{/* <input
-				value={registerEmail}
-				id='emailInput'
-				type='email'
-				name='email'
-				placeholder='Email...'
-				autoComplete='off'
-				onChange={(event) => {
-					setRegisterEmail(event.target.value);
-				}}
-				/> */}
-
 				<input
-					defaultValue={credential?.displayName || ""}
+					defaultValue={credential?.displayName || ''}
 					name='DisplayName'
 					placeholder='Display name'
 					type='text'
@@ -124,19 +107,13 @@ export default function Register() {
 
 						<div className='passwordCheck'>
 							<PasswordChecklist
-							rules={["minLength","specialChar","number","capital"]}
-							minLength={8}
-							value={registerPassword}
-							onChange={(isValid) => {}}
+								rules={['minLength','specialChar','number','capital']}
+								minLength={8}
+								value={registerPassword}
 							/>
 						</div>
 					</>
 				}
-
-				        {/* <button id='regButton' onClick={() => nameEmailValidation()}>
-						{' '}
-						Create User
-					</button> */}
 
 				<p>
 					You are a:{' '}
@@ -144,19 +121,15 @@ export default function Register() {
 					<input
 						type='radio'
 						name='userType'
-						// placeholder='Yes'
 						value='recruiter'
-						// autoComplete='off'
-					/>
+					/>{' '}
 					<label>Recruiter</label>{' '}
 
 					<input
 						type='radio'
 						name='userType'
-						// placeholder='Yes'
 						value='techs'
-						// autoComplete='off'
-					/>
+					/>{' '}
 					<label>Contractor</label>
 				</p>
 
