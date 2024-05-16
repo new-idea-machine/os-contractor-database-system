@@ -6,6 +6,7 @@
 	--colour-background-secondary-2: rgba(65, 110, 151, 0.2);
 	--colour-background-secondary-3: #ffffff;
 	--colour-background-secondary-4: #e3474b;
+	--colour-background-secondary-5: #ec7477;
 
 	--colour-primary: #ffffff;
 	--colour-secondary-1: #d9e7e8;
@@ -40,6 +41,7 @@
 	--badge-colour: var(--colour-secondary-7);
 
 	--button-colour-background: var(--colour-background-secondary-4);
+	--button-colour-background-gradient-endpoints: var(--colour-background-secondary-5);
 	--button-colour: var(--colour-primary);
 
 	--input-checkbox-colour: var(--colour-background-secondary-2);

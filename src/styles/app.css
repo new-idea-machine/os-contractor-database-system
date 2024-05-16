@@ -25,6 +25,7 @@ main {
 		filter: drop-shadow(0px 4px 4px #808080);
 
 		&:active {
+			background: linear-gradient(var(--button-colour-background-gradient-endpoints), var(--button-colour-background), var(--button-colour-background-gradient-endpoints));
 			filter: none;
 		}
 	}
