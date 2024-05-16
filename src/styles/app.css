@@ -1,46 +1,49 @@
-a {
-	color:  var(--link-colour);
-}
+/* Appearance */
 
 body {
 	background-color: var(--colour-background);
 	color: var(--colour);
 }
 
-button, input[type='button'], input[type='reset'], input[type='submit'] {
-	display: block;
-	border: none;
-	border-radius: 10px;
-	width: 400px;
-	height: 40px;
-	/* text-align: center; */
-	font-family: var(--font);
-	font-weight: 600;
-	font-size: 20px;
-	background-color: var(--button-colour-background);
-	color: var(--button-colour);
+main {
+	a {
+		color:  var(--link-colour);
+	}
+
+	button, input[type='button'], input[type='reset'], input[type='submit'] {
+		width: 400px;
+		height: 40px;
+		border: none;
+		border-radius: 10px;
+		font-family: var(--font);
+		font-weight: 600;
+		font-size: 20px;
+		background-color: var(--button-colour-background);
+		color: var(--button-colour);
+	}
+
+	input {
+		border-color: var(--input-text-colour-border);
+		color:  var(--input-text-colour);
+	}
+
+	input[type='text'], input[type='email'], input[type='password'] {
+		display: block;
+		width: 400px;
+		height: 40px;
+		background-color: inherit;
+		border-width: 2px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: var(--input-text-colour-border);
+		padding: 0px 8px;
+	}
+
+	input[type='radio'], input[type='checkbox'] {
+		accent-color: var(--input-checkbox-colour);
+	}
 }
 
-input {
-	border-color: var(--input-text-colour-border);
-	color:  var(--input-text-colour);
-}
-
-input[type='text'], input[type='email'], input[type='password'] {
-	display: block;
-	background-color: inherit;
-	width: 400px;
-	height: 40px;
-	border-width: 2px;
-	border-radius: 10px;
-	border-style: solid;
-	border-color: var(--input-text-colour-border);
-	padding: 0px 8px;
-}
-
-input[type='radio'], input[type='checkbox'] {
-	accent-color: var(--input-checkbox-colour);
-}
 nav {
 	color: var(--navigation-colour);
 }
