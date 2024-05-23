@@ -36,6 +36,7 @@ div#Auth {
 		justify-items: center;
 		align-items: center;
 		overflow: hidden auto;
+		background-color: var(--colour-background-secondary-1);
 	}
 
 	main > section > div {
