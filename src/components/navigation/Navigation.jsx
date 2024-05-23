@@ -37,9 +37,9 @@ const Navigation = () => {
         <ProfilePicture profileImage={currentUserProfile?.profileImg} size="130px" />
       </NavLink>
 
-      <p className="ContractorName">
+      <div className="ContractorName">
         {user?.displayName ? user.displayName : "&nbsp;"}
-      </p>
+      </div>
 
       <ul>
         <li>
