@@ -156,52 +156,23 @@ const ContractorProfile = (props) => {
 
 
   return (
-    <div>
+    <>
       {contractorList.map((contractor) =>
         id === contractor?.id || props?.data?.id === contractor?.id ? (
-          <div className="contractor_profile" key={contractor.id}>
-            {contractor?.profileImg ? (
-              <div className="image_wrapper">
-                <img src={contractor?.profileImg} alt="Contractor headshot" />
-              </div>
-            ) : (
-              <div className="avatar_wrapper">
-                <img src={Avatar} alt="Avatar" />
-              </div>
-            )}
-            <div className="contractor_info">
-              <div className="contractor_name">
-                {contractor?.firstName}&nbsp;{contractor?.lastName}
-              </div>
-              <div className="contractor_qualification">
-                {contractor?.qualification}
-              </div>
-
-              {contractor?.countryCode ? (
-                <div>
-                  {allCountries.map((code) => {
-                    if (code.isoCode === contractor?.countryCode)
-                      return (
-                        <div
-                          key={code.isoCode}
-                          style={{
-                            display: "flex",
-                            alignContent: "center",
-                            paddingBottom: "10px",
-                          }}
-                        >
-                          <PlaceIcon />
-                          <div>{code.name},</div>
-                          <div>&nbsp;{contractor?.stateCode},</div>
-                          <div>&nbsp;{contractor?.city}</div>
-                        </div>
-                      );
-                  })}
+          <div id="ContractorProfile" key={contractor.id}>
+            <aside>
+              {contractor?.profileImg ? (
+                <div className="image_wrapper">
+                  <img src={contractor?.profileImg} alt="Contractor headshot" />
                 </div>
-              ) : null}
+              ) : (
+                <div className="avatar_wrapper">
+                  <img src={Avatar} alt="Avatar" />
+                </div>
+              )}
 
-              <div className="contractor_links">
-                {contractor?.otherInfo?.githubUrl && (
+              {contractor?.otherInfo?.githubUrl && (
+                <p>
                   <a
                     href={contractor?.otherInfo?.githubUrl}
                     target="_blank"
@@ -209,8 +180,11 @@ const ContractorProfile = (props) => {
                   >
                     <GitHubIcon />
                   </a>
-                )}
-                {contractor?.resume && (
+                </p>
+              )}
+
+              {contractor?.resume && (
+                <p>
                   <a
                     style={{
                       cursor: "pointer",
@@ -225,105 +199,100 @@ const ContractorProfile = (props) => {
                   >
                     Download Resume
                   </a>
-                )}
-              </div>
-              <div className="contractor_summary">{contractor?.summary}</div>
-              {contractor?.interests && (
-                <div className="contractor_interests">
-                  <div
-                    style={{
-                      fontSize: "20px",
-                      backgroundColor: "#D5D1D0",
-                      width: "100%",
-                      borderRadius: "5px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <b style={{ paddingLeft: "5px" }}>Interests</b>
-                  </div>
-                  <div style={{ paddingLeft: "5px" }}>
-                    {contractor?.interests}
-                  </div>
-                </div>
+                </p>
               )}
+
+              {!isOwnProfile && (
+                <Link to={`/chat/${contractor.firebaseUID}`}>
+                  <div className='chatButton'>
+                    <span>Chat with {contractor?.firstName}</span>
+                  </div>
+                </Link>
+               )}
+            </aside>
+
+            <div>
+              <header>
+                <h1>{contractor?.firstName}&nbsp;{contractor?.lastName}</h1>
+                <h4>{contractor?.qualification}</h4>
+
+                <section>
+                  {contractor?.countryCode ? allCountries.map((code) => {
+                      if (code.isoCode === contractor?.countryCode)
+                        return (
+                          <div
+                            key={code.isoCode}
+                            style={{
+                              display: "flex",
+                              alignContent: "center",
+                              paddingBottom: "10px",
+                            }}
+                          >
+                            <PlaceIcon />
+                            <div>{code.name},</div>
+                            <div>&nbsp;{contractor?.stateCode},</div>
+                            <div>&nbsp;{contractor?.city}</div>
+                          </div>
+                        );
+                    }) : 
+                    <>&nbsp;</>
+                  }
+
+                  <div>
+                    {contractor?.workSite}
+                  </div>
+
+                  <div>
+                    {contractor?.availability === 'Other' ? contractor?.availabilityDetails : contractor?.availability}
+                  </div>
+                </section>
+              </header>
+
+              <section>
+                <h2>About</h2>
+
+                <p>
+                  {contractor?.summary}
+                </p>
+              </section>
+
               {contractor?.projects && (
-                <div>
-                  <div
-                    style={{
-                      fontSize: "20px",
-                      backgroundColor: "#D5D1D0",
-                      width: "100%",
-                      borderRadius: "5px",
-                      marginTop: "10px",
-                    }}
-                  >
-                    <b style={{ paddingLeft: "5px" }}>Projects</b>
-                  </div>
+                <section>
+                  <h2>Projects</h2>
+
                   {contractor?.projects.map((project) => (
-                    <div
-                      key={project?.projectName}
-                      style={{
-                        marginTop: "5px",
-                        marginBottom: "15px",
-                        borderRadius: "5px",
-                        borderColor: "#D5D1D0",
-                        borderStyle: "solid",
-                        borderWidth: "0.5px",
-                        padding: "5px",
-                      }}
-                    >
-                      <div>
-                        <b>Project Name:</b>
-                        <br /> {project?.projectName}
-                      </div>
-                      <div>
-                        <b>Project Description:</b>
-                        <br /> {project?.description}
-                      </div>
-                    </div>
+                    <article key={project?.projectName}>
+                      <h3>{project?.projectName}</h3>
+                      <p>{project?.description}</p>
+                    </article>
                   ))}
-                </div>
+                </section>
               )}
+
               {contractorSkills.length > 0  && (
-                <div>
-                  {contractorSkills?.map((skill, index) => {
-                    return (
+                <section>
+                  <h2>Skills</h2>
+
+                  <p>
+                    {contractorSkills?.map((skill, index) => 
                       <span key={index} className="badge">
                         {skill.skill}
                       </span>
-                    );
-                  })}
-                </div>
-
+                    )}
+                  </p>
+                </section>
               )}
-               <div className="contractor_qualification">
-                Availability: {contractor?.availability === 'Other' ? contractor?.availabilityDetails : contractor?.availability}
-              </div>
-                <div className="contractor_qualification">
-                Work site preference: {contractor?.workSite}
 
-                </div>
-                {userType === 'recruiter' && (
+              {userType === 'recruiter' && (
                 <FavoriteBorderOutlinedIcon onClick={addToFavorites} style={{ cursor: 'pointer', color: isFavorite ? 'red' : 'black' }} >
                   Add this profile to favorites
                 </FavoriteBorderOutlinedIcon>
               )}
-               {!isOwnProfile && (
-                     <Link to={`/chat/${contractor.firebaseUID}`}>
-                     <div className='chatButton'>
-                       <span>Chat with {contractor?.firstName}</span>
-                     </div>
-                   </Link>
-               )}
             </div>
-
-
           </div>
         ) : null
       )}
-
-    </div>
-
+    </>
   );
 };
 
