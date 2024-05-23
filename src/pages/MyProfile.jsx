@@ -23,7 +23,7 @@ export default function MyProfile() {
 
 	return (
 		<>
-      <Navigation />
+      <Navigation menu="Profile" />
       <main>
         {userUid && contractorList.length > 0 && (
           <>

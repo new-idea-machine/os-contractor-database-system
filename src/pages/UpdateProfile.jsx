@@ -61,7 +61,7 @@ export default function UpdateProfile() {
 
 	return (
 		<>
-			<Navigation />
+			<Navigation menu="Profile" />
 			<main>
 				{userPath}
 			</main>

@@ -157,7 +157,6 @@ const ContractorProfile = (props) => {
 
   return (
     <div>
-      <Navigation />
       {contractorList.map((contractor) =>
         id === contractor?.id || props?.data?.id === contractor?.id ? (
           <div className="contractor_profile" key={contractor.id}>

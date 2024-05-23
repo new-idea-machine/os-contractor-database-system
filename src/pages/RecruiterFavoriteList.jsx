@@ -48,7 +48,7 @@ export default function RecruiterFavoriteList() {
 	}, [favoriteList]);
 	return (
 		<>
-			<Navigation />
+			<Navigation menu="Profile" />
 			<main className='contractorListPage'>
 				<h1 style={{ textAlign: 'center', color: 'white'}}>
 					My Favorites List

@@ -18,7 +18,6 @@ const RecruiterProfile = (props) => {
 
   return (
     <div>
-      <Navigation />
       {recruiterList.map((recruiter) =>
         id === recruiter?.id || props?.data?.id === recruiter?.id ? (
           <div className="recruiter_profile" key={recruiter.id}>
