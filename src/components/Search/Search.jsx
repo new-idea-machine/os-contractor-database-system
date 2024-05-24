@@ -1,4 +1,3 @@
-import Avatar from "../../assets/avatar.png";
 import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
@@ -9,6 +8,8 @@ import React, { useContext, useEffect, useState, useMemo } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
 import { useLocation, useNavigate } from "react-router-dom";
 import "./Search.css";
+
+const avatarURL = "/assets/avatar.png";
 
 export default function Search() {
   const navigate = useNavigate();
@@ -266,7 +267,7 @@ export default function Search() {
                     </div>
                   ) : (
                     <div className="result_no_image">
-                      <img src={Avatar} alt="Avatar" />
+                      <img src={avatarURL} alt="Avatar" />
                     </div>
                   )}
                 </div>

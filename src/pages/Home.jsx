@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 
 import { authContext } from '../contexts/Authorization';
 
-import video from '../assets/work-space.mp4';
-
 import './Home.css';
+
+const videoURL = '/assets/work-space.mp4';
 
 export default function Home() {
 	const { user, logout } = useContext(authContext);
@@ -14,7 +14,7 @@ export default function Home() {
 	return (
 		<div id="Home">
 			<video
-				src={video}
+				src={videoURL}
 				type='video/mp4'
 				loop
 				controls={false}

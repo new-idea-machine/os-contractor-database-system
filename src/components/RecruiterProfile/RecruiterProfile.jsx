@@ -4,11 +4,11 @@ import { useParams } from "react-router-dom";
 import { Navigation } from "../index";
 import { recruiterContext } from "../../contexts/RecruiterContext";
 import { Button } from "@mui/material";
-import Avatar from "../../assets/avatar.png";
 import PlaceIcon from "@mui/icons-material/Place";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import { Country } from "country-state-city";
 
+const avatarURL = "/assets/avatar.png";
 
 const RecruiterProfile = (props) => {
   const { id } = useParams();
@@ -27,7 +27,7 @@ const RecruiterProfile = (props) => {
               </div>
             ) : (
               <div className="avatar_wrapper">
-                <img src={Avatar} alt="Avatar" />
+                <img src={avatarURL} alt="Avatar" />
               </div>
             )}
             <div className="recruiter_info">

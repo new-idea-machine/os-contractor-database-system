@@ -6,7 +6,6 @@ import { contractorContext } from "../../contexts/ContractorContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
-import Avatar from "../../assets/avatar.png";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
 import { authContext } from '../../contexts/Authorization';
