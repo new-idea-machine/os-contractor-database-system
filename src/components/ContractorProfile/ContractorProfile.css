@@ -11,4 +11,18 @@ div#ContractorProfile {
 	display: grid;
 	grid-template-columns: 200px 1fr;
 	place-items: start;
+
+	section#Projects > article {
+		margin: 30px 0px;
+		border: 2px solid var(--colour-secondary-5);
+		border-radius: 10px;
+		padding: 0px 10px;
+
+		h3 {
+			color: var(--content-colour-distinct);
+			font-family: var(--font);
+			font-weight: 600; /* SemiBold */
+			text-transform: uppercase;
+		}
+	}
 }

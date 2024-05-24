@@ -14,6 +14,7 @@ import { useNavigate } from 'react-router-dom';
 import { Link } from "react-router-dom";
 import { db} from '../../firebaseconfig';
 import { FieldValue } from 'firebase/firestore';
+import ProfilePicture from "../ProfilePicture";
 
 import {
 	collection,
@@ -31,6 +32,8 @@ import {
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 import { recruiterContext, getFavoriteList } from '../../contexts/RecruiterContext';
+
+import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -161,16 +164,8 @@ const ContractorProfile = (props) => {
         id === contractor?.id || props?.data?.id === contractor?.id ? (
           <div id="ContractorProfile" key={contractor.id}>
             <aside>
-              {contractor?.profileImg ? (
-                <div className="image_wrapper">
-                  <img src={contractor?.profileImg} alt="Contractor headshot" />
-                </div>
-              ) : (
-                <div className="avatar_wrapper">
-                  <img src={Avatar} alt="Avatar" />
-                </div>
-              )}
-
+              <ProfilePicture profileImage={contractor?.profileImg} size="150px" />
+  
               {contractor?.otherInfo?.githubUrl && (
                 <p>
                   <a
@@ -178,37 +173,16 @@ const ContractorProfile = (props) => {
                     target="_blank"
                     rel="noopener noreferrer"
                   >
-                    <GitHubIcon />
-                  </a>
-                </p>
-              )}
-
-              {contractor?.resume && (
-                <p>
-                  <a
-                    style={{
-                      cursor: "pointer",
-                      margin: "0",
-                      border: "0",
-                      padding: "0",
-                      width: "200px",
-                    }}
-                    href={contractor?.resume}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                  >
-                    Download Resume
+                    <GitHubIcon /> GitHub
                   </a>
                 </p>
               )}
 
               {!isOwnProfile && (
                 <Link to={`/chat/${contractor.firebaseUID}`}>
-                  <div className='chatButton'>
-                    <span>Chat with {contractor?.firstName}</span>
-                  </div>
+                  <IconChat /> Chat
                 </Link>
-               )}
+              )}
             </aside>
 
             <div>
@@ -257,12 +231,12 @@ const ContractorProfile = (props) => {
               </section>
 
               {contractor?.projects && (
-                <section>
+                <section id="Projects">
                   <h2>Projects</h2>
 
                   {contractor?.projects.map((project) => (
                     <article key={project?.projectName}>
-                      <h3>{project?.projectName}</h3>
+                      <h3>{project?.projectName ? project?.projectName : <>&lt;Untitled Project&gt;</>}</h3>
                       <p>{project?.description}</p>
                     </article>
                   ))}
