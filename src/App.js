@@ -15,6 +15,7 @@ import {
 
 } from "./pages";
 
+import ContractorsContext from "./contexts/ContractorsContext";
 import ContractorContext from "./contexts/ContractorContext";
 import ContractorProfile from "./components/ContractorProfile/ContractorProfile";
 import ChatBox from "./components/Chat/ChatBox";
@@ -34,6 +35,7 @@ function App() {
   return (
     <>
       <AuthControl>
+	      <ContractorsContext>
         <ContractorContext>
           <RecruiterContext>
           <SkillsContext>
@@ -63,6 +65,7 @@ function App() {
           </SkillsContext>
           </RecruiterContext>
         </ContractorContext>
+	      </ContractorsContext>
       </AuthControl>
       <ToastContainer />
     </>

@@ -1,13 +1,13 @@
 import React, { useContext } from 'react';
 import { authContext } from "../contexts/Authorization";
-import { contractorContext } from '../contexts/ContractorContext';
+import { contractorsContext } from '../contexts/ContractorsContext';
 import { Navigation } from '../components';
 import ResponsiveGrid from '../components/ResponsiveGrid';
 import ContractorCard from '../components/contractorCard/ContractorCard';
 
 export default function ContractorList() {
 	const { user } = useContext(authContext);
-	const { contractorList } = useContext(contractorContext);
+	const contractorList = useContext(contractorsContext);
 
 	return (
 		<>

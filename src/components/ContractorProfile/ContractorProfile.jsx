@@ -2,7 +2,7 @@ import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
 import { useParams } from "react-router-dom";
 import { Navigation } from "../index";
-import { contractorContext } from "../../contexts/ContractorContext";
+import { contractorsContext } from "../../contexts/ContractorsContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import { Button } from "@mui/material";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -36,7 +36,7 @@ import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
-  const { contractorList } = useContext(contractorContext);
+  const contractorList = useContext(contractorsContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const allCountries = Country.getAllCountries();

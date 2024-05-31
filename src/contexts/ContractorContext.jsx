@@ -15,13 +15,14 @@ import {
 	//   orderBy,
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
+import { contractorsContext } from './ContractorsContext'
 import { toast } from 'react-toastify';
 
 export const contractorContext = createContext();
 
 const ContractorContext = ({ children }) => {
 	const { user } = useContext(authContext);
-	const [contractorList, setContractorList] = useState([]);
+	const contractorList = useContext(contractorsContext);
 	const [contractor, setContractor] = useState(null);
 	const [currentUserProfile, setCurrentUserProfile] = useState(null);
 
@@ -47,7 +48,7 @@ const ContractorContext = ({ children }) => {
 		console.log('userDocRef->', userDocRef);
 		const userDocSnapshot = await getDoc(userDocRef);
 		if (userDocSnapshot.exists()) {
-  // Update the document
+  			// Update the document
   			await updateDoc(userDocRef, data);
   			console.log('User successfully updated!');
 			  toast.info(`The changes successfully saved`);
@@ -57,22 +58,7 @@ const ContractorContext = ({ children }) => {
 		}
 	};
 
-	useEffect(() => {
-		const unsubscribe = onSnapshot(collection(db, 'techs'), (snapshot) => {
-			const documents = snapshot.docs.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			}));
-			setContractorList(documents);
-		});
-		return () => {
-			unsubscribe();
-		};
-	}, []);
-
 	const appStates = {
-		contractorList,
-		setContractorList,
 		setContractor,
 		contractor,
 		updateTechObject,

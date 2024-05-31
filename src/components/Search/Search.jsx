@@ -1,7 +1,7 @@
 import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
-import { contractorContext } from "../../contexts/ContractorContext";
+import { contractorsContext } from "../../contexts/ContractorsContext";
 import { Navigation } from "../index";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext, useEffect, useState, useMemo } from "react";
@@ -14,7 +14,7 @@ const avatarURL = "/assets/avatar.png";
 export default function Search() {
   const navigate = useNavigate();
   const [availabilityFilter, setAvailabilityFilter] = useState("all"); // Default to "all"
-  const { contractorList } = useContext(contractorContext);
+  const contractorList = useContext(contractorsContext);
   const [city, setCity] = React.useState("");
   const [contractors, setContractors] = useState([]);
   const [country, setCountry] = React.useState("");

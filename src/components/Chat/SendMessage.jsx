@@ -2,14 +2,14 @@ import React, { useState, useContext,  useEffect } from "react";
 import { auth, db } from "../../firebaseconfig";
 import { addDoc, collection, serverTimestamp, query, where, getDoc, doc } from "firebase/firestore";
 import { authContext } from '../../contexts/Authorization';
-import { contractorContext } from '../../contexts/ContractorContext';
+import { contractorsContext } from "../../contexts/ContractorsContext";
 import { recruiterContext } from "../../contexts/RecruiterContext";
 
 const SendMessage = ({ scroll, profileUid }) => {
   const [message, setMessage] = useState("");
   const { user } = useContext(authContext);
   const userUid = user?.uid;
-  const { contractorList } = useContext(contractorContext);
+  const contractorList = useContext(contractorsContext);
   const { recruiterList } = useContext(recruiterContext);
   const [userData, setUserData] = useState(null);
   const receiverUid = profileUid;
