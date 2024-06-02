@@ -4,6 +4,7 @@ import { useParams } from "react-router-dom";
 import { contractorsContext } from "../../contexts/ContractorsContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
+import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
 import { authContext } from '../../contexts/Authorization';
@@ -114,6 +115,18 @@ const ContractorProfile = (props) => {
               rel="noopener noreferrer"
             >
               <GitHubIcon /> GitHub
+            </a>
+          </p>
+        )}
+
+        {contractor?.otherInfo?.linkedinUrl && (
+          <p>
+            <a
+              href={contractor?.otherInfo?.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkedinIcon /> LinkedIn
             </a>
           </p>
         )}

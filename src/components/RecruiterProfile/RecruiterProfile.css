@@ -1,84 +1,14 @@
-.recruiter_profile {
-    height: 100vh;
-    padding: 20px;
-    display: flex;
-    margin-right: 20%;
-    margin-left: 20%;
-    margin-top: 20px;
-  }
+div#RecruiterProfile {
+	/*
+	This element and its children are laid out in the following 1-row, 2-column grid:
 
-  .recruiter_info {
-    display: flex;
-    flex-direction: column;
-    margin-top: 55px;
-  }
+	+--------+-------------+
+	|<aside> |    <div>    |
+	|        |             |
+	+--------+-------------+
+	*/
 
-  .recruiter_name {
-    height: fit-content;
-    font-size: 30px;
-    padding-bottom: 10px;
-    font-weight: bold;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
-  }
-
-  .recruiter_qualification {
-    padding: 5px;
-    margin-bottom: 10px;
-    font-weight: bold;
-    background-color: #d5d1d0;
-    width: fit-content;
-    border: none;
-    border-radius: 5px;
-  }
-
-  .recruiter_links {
-    display: flex;
-    align-items: flex-start;
-  }
-  .recruiter_links a {
-    margin-right: 20px;
-  }
-
-  .recruiter_summary {
-    min-width: 565px;
-    margin-bottom: 10px;
-  }
-
-  .image_wrapper {
-    width: 275px;
-    height: 275px;
-    min-width: 275px;
-    border-radius: 5%;
-    display: block;
-    margin-right: 20px;
-    margin-top: 55px;
-  }
-
-  .image_wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    border-radius: inherit;
-  }
-
-  .avatar_wrapper {
-    width: 275px;
-    height: 275px;
-    min-width: 275px;
-    display: block;
-    margin-right: 20px;
-    margin-top: 55px;
-    display: flex;
-    justify-content: flex-end;
-  }
-
-  .avatar_wrapper img {
-    width: 50%;
-    height: 50%;
-    object-fit: cover;
-    border-style: solid;
-    border-color: gray;
-    border-radius: 10px;
-  }
+	display: grid;
+	grid-template-columns: 200px 1fr;
+	place-items: start;
+}

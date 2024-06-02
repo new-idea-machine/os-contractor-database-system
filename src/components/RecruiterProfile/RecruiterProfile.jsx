@@ -1,75 +1,104 @@
-import React, { useContext, useEffect, useState } from "react";
-import "./RecruiterProfile.css";
-import { useParams } from "react-router-dom";
-import { Navigation } from "../index";
-import { recruiterContext } from "../../contexts/RecruiterContext";
-import { Button } from "@mui/material";
-import PlaceIcon from "@mui/icons-material/Place";
+import React, { useContext } from "react";
+import { Link } from "react-router-dom";
+import { authContext } from '../../contexts/Authorization';
+import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
+import PlaceIcon from "@mui/icons-material/Place";
 import { Country } from "country-state-city";
+import ProfilePicture from "../ProfilePicture";
 
-const avatarURL = "/assets/avatar.png";
+import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
+
+import "./RecruiterProfile.css";
 
 const RecruiterProfile = (props) => {
   const recruiter = props.data;
+  const { user } = useContext(authContext);
+  const userUid = user?.uid;
+  const isOwnProfile = (recruiter?.firebaseUID === userUid);
+  const allCountries = Country.getAllCountries();
 
   return (
-    <div>
-      <div className="recruiter_profile">
-        {recruiter?.profileImg ? (
-          <div className="image_wrapper">
-            <img src={recruiter?.profileImg} alt="recruiter headshot" />
-          </div>
-        ) : (
-          <div className="avatar_wrapper">
-            <img src={avatarURL} alt="Avatar" />
-          </div>
+    <div id="RecruiterProfile">
+      <aside>
+        <ProfilePicture profileImage={recruiter?.profileImg} size="150px" />
+
+        {recruiter?.githubUrl && (
+          <p>
+            <a
+              href={recruiter?.githubUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <GitHubIcon /> GitHub
+            </a>
+          </p>
         )}
-        <div className="recruiter_info">
-          <div className="recruiter_name">
-            {recruiter?.firstName}&nbsp;{recruiter?.lastName}
-          </div>
-          <div className="recruiter_qualification">
-            {recruiter?.qualification}
-          </div>
 
+        {recruiter?.linkedinUrl && (
+          <p>
+            <a
+              href={recruiter?.linkedinUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              <LinkedinIcon /> LinkedIn
+            </a>
+          </p>
+        )}
 
+        {!isOwnProfile && (
+          <Link to={`/chat/${recruiter?.firebaseUID}`}>
+            <IconChat /> Chat
+          </Link>
+        )}
+      </aside>
 
-          <div className="recruiter_links">
-            {recruiter?.linkedinUrl && (
-              <a
-                href={recruiter?.linkedinUrl}
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-            <LinkedinIcon style={{fontSize:"40px"}}/>
-              </a>
-            )}
+      <div>
+        <header>
+          <h1>{recruiter?.firstName}&nbsp;{recruiter?.lastName}</h1>
+          <h3>{recruiter?.companyName}</h3>
+          <h4>{recruiter?.qualification}</h4>
 
-          </div>
-          <div className="recruiter_summary"><b style={{ paddingLeft: "5px", fontSize:"20px" }}>Company:</b> {recruiter?.companyName}</div>
-          {recruiter?.companyName && (
-            <div className="recruiter_interests">
-              <div
-                style={{
-                  fontSize: "20px",
-                  backgroundColor: "#D5D1D0",
-                  width: "100%",
-                  borderRadius: "5px",
-                  marginTop: "10px",
-                }}
-              >
-                <b style={{ paddingLeft: "5px" }}>Company Info:</b>
-              </div>
-              <div style={{ paddingLeft: "5px" }}>
-                {recruiter?.companyInfo}
-              </div>
+          <section>
+            {recruiter?.countryCode ? allCountries.map((code) => {
+                if (code.isoCode === recruiter?.countryCode)
+                  return (
+                    <div
+                      key={code.isoCode}
+                      style={{
+                        display: "flex",
+                        alignContent: "center",
+                        paddingBottom: "10px",
+                      }}
+                    >
+                      <PlaceIcon />
+                      <div>{code.name},</div>
+                      <div>&nbsp;{recruiter?.stateCode},</div>
+                      <div>&nbsp;{recruiter?.city}</div>
+                    </div>
+                  );
+              }) : 
+              <>&nbsp;</>
+            }
+
+            <div>
+              {recruiter?.workSite}
             </div>
-          )}
 
+            <div>
+              {recruiter?.availability === 'Other' ? recruiter?.availabilityDetails : recruiter?.availability}
+            </div>
+          </section>
+        </header>
 
+        <section>
+          <h2>About</h2>
 
-        </div>
+          <p>
+            {recruiter?.companyInfo}
+          </p>
+        </section>
       </div>
     </div>
   );
