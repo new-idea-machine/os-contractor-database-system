@@ -21,6 +21,7 @@ import ContractorProfile from "./components/ContractorProfile/ContractorProfile"
 import ChatBox from "./components/Chat/ChatBox";
 import RecruiterContext from "./contexts/RecruiterContext";
 import AuthControl from "./contexts/Authorization";
+import UserProfile from "./contexts/UserProfileContext";
 import SkillsContext from "./contexts/SkillsContext";
 import ScrollToTop from "./ScrollToTop";
 import Search from "./components/Search/Search";
@@ -35,7 +36,8 @@ function App() {
   return (
     <>
       <AuthControl>
-	      <ContractorsContext>
+        <UserProfile>
+        <ContractorsContext>
         <ContractorContext>
           <RecruiterContext>
           <SkillsContext>
@@ -65,7 +67,8 @@ function App() {
           </SkillsContext>
           </RecruiterContext>
         </ContractorContext>
-	      </ContractorsContext>
+      	</ContractorsContext>
+        </UserProfile>
       </AuthControl>
       <ToastContainer />
     </>

@@ -35,7 +35,6 @@ export default function AuthControl(props) {
 	const children = props.children;
 	const [credential, setCredential] = useState(null);
 	const [user, setUser] = useState(null);
-	const [userProfile, setUserProfile] = useState(null);
 
 	const onAuthStateChangedCallback = (newUser) => {
 		if (newUser) {
@@ -43,7 +42,6 @@ export default function AuthControl(props) {
 		} else {
 			// setCredential(null);
 			setUser(null);
-			setUserProfile(null);
 		}
 	  };
 	// This is the firebase method that checks
@@ -150,7 +148,6 @@ export default function AuthControl(props) {
 			if (credential?.providerCredential) {
 				console.assert(credential?.providerId);
 				userCredential = await signInWithCredential(auth, credential.providerCredential);
-				const { isNewUser } = getAdditionalUserInfo(userCredential)
 			} else {
 				const signInMethods = await fetchSignInMethodsForEmail(auth, credential.email);
 
@@ -224,7 +221,6 @@ export default function AuthControl(props) {
 		credential,
 		setCredential,
 		user,
-		userProfile,
 		register,
 		login,
 		logout,
