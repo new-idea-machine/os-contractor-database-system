@@ -1,8 +1,7 @@
-import React, { useContext, useEffect } from "react";
+import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/Authorization";
-import { contractorContext } from "../../contexts/ContractorContext";
-import { recruiterContext } from "../../contexts/RecruiterContext";
+import { userProfileContext } from "../../contexts/UserProfileContext";
 import { messagesContext } from "../../contexts/MessagesContext";
 import ProfilePicture from "../ProfilePicture";
 
@@ -19,22 +18,15 @@ import { ReactComponent as IconSearch } from "../../assets/icons/search.svg";
 
 function Navigation({ menu }) {
   const { logout, user } = useContext(authContext);
-  const { currentUserProfile, matchProfileToCurrentUser, contractorMap } = useContext(contractorContext);
-  const { recruiterMap } = useContext(recruiterContext);
+  const { userProfile } = useContext(userProfileContext);
   const {unreadMessages} = useContext(messagesContext);
-
-  useEffect(() => {
-    if (!currentUserProfile) {
-      matchProfileToCurrentUser();
-    }
-  }, [user, contractorMap, currentUserProfile]);
 
   return (
     <nav>
       <h2>CONTRACTOR <b>DB</b></h2>
 
       <NavLink to={menu === "Profile" ? "/contractorList": "/myProfile"}>
-        <ProfilePicture profileImage={currentUserProfile?.profileImg} size="130px" />
+        <ProfilePicture profileImage={userProfile?.profileImg} size="130px" />
       </NavLink>
 
       <div className="ContractorName">
