@@ -33,58 +33,60 @@ function Navigation({ menu }) {
         {user?.displayName ? user.displayName : "&nbsp;"}
       </div>
 
-      {menu === "Profile" ?
-        <ul>
-          <li>
-            <NavLink to="/myProfile">
-              <IconProfile />{" "}My Profile
-            </NavLink>
-          </li>
+      <ul>
+        <li>
+          <NavLink to="/contractorList">
+            <IconHome />{" "}Home
+          </NavLink>
+        </li>
 
-          <li>
-            <NavLink to="/UpdateProfile">
-              <IconEdit />{" "}Update Profile
-            </NavLink>
-          </li>
+    	  {menu === "Profile" ?
+          <>
+            <li>
+              <NavLink to="/myProfile">
+                <IconProfile />{" "}My Profile
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink to="/favorites">
-              <IconFavourites />{" "}Favourites
-            </NavLink>
-          </li>
+            <li>
+              <NavLink to="/UpdateProfile">
+                <IconEdit />{" "}Update Profile
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink to="/" onClick={() => logout()}>
-              <IconLogout />{" "}Log Out
-            </NavLink>
-          </li>
-        </ul> :
-        <ul>
-          <li>
-            <NavLink to="/contractorList">
-              <IconHome />{" "}Home
-            </NavLink>
-          </li>
+            <li>
+              <NavLink to="/favorites">
+                <IconFavourites />{" "}Favourites
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink to="/search" onClick={() => sessionStorage.removeItem("searchState")}>
-              <IconSearch />{" "}Search
-            </NavLink>
-          </li>
+            <li>
+              <NavLink to="/" onClick={() => logout()}>
+                <IconLogout />{" "}Log Out
+              </NavLink>
+            </li>
+          </>:
+          <>
+            <li>
+              <NavLink to="/search" onClick={() => sessionStorage.removeItem("searchState")}>
+                <IconSearch />{" "}Search
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink to="/About">
-              <IconAbout />{" "}About
-            </NavLink>
-          </li>
+            <li>
+              <NavLink to="/About">
+                <IconAbout />{" "}About
+              </NavLink>
+            </li>
 
-          <li>
-            <NavLink to="/" onClick={() => logout()}>
-              <IconLogout />{" "}Log Out
-            </NavLink>
-          </li>
-        </ul>
-      }
+            <li>
+              <NavLink to="/" onClick={() => logout()}>
+                <IconLogout />{" "}Log Out
+              </NavLink>
+            </li>
+          </>
+        }
+      </ul>
 
       <div>
         <NavLink to="/inbox">
