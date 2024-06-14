@@ -2,11 +2,15 @@ import React, { useContext, useEffect, useState, createContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
 	collection,
+	doc,
+	getDoc,
 	getDocs,
 	limit,
 	query,
+	updateDoc,
 	where,
 } from 'firebase/firestore';
+import { toast } from 'react-toastify';
 import { authContext } from './Authorization';
 
 export const userProfileContext = createContext(null);
@@ -14,6 +18,22 @@ export const userProfileContext = createContext(null);
 function UserProfileContext({ children }) {
 	const { user } = useContext(authContext);
 	const [userProfile, setUserProfile] = useState([]);
+
+	async function updateUserProfile(data) {
+		console.log('TRYING TO UPDATE', data);
+		const userDocRef = doc(db, userProfile?.userType, userProfile?.id);
+		console.log('userDocRef->', userDocRef);
+		const userDocSnapshot = await getDoc(userDocRef);
+		if (userDocSnapshot.exists()) {
+  			// Update the document
+  			await updateDoc(userDocRef, data);
+  			console.log('User successfully updated!');
+			toast.info(`The changes successfully saved`);
+			setUserProfile(data);
+		} else {
+  			console.log('Document not found');
+		}
+	};
 
 	useEffect(() => {
 		async function fetchUserProfiles(collectionName) {
@@ -38,7 +58,7 @@ function UserProfileContext({ children }) {
 	}, [user]);
 
 	return (
-		<userProfileContext.Provider value={ { userProfile } }>
+		<userProfileContext.Provider value={ { userProfile, updateUserProfile } }>
 			{children}
 		</userProfileContext.Provider>
 	);
