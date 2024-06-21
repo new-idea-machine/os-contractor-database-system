@@ -1,7 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
 import './profile.css';
 import { authContext } from '../../contexts/Authorization';
-import { contractorContext } from '../../contexts/ContractorContext';
+import { userProfileContext } from '../../contexts/UserProfileContext';
 import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
@@ -12,13 +12,9 @@ export default function ProfileForm(props) {
 	const navigate = useNavigate();
 
 	const { user } = useContext(authContext);
-	const {
-		updateTechObject,
-		currentUserProfile,
+	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
-	} = useContext(contractorContext);
-
-	const [imgUrl, setImgUrl] = useState(null);
+	const [imgUrl, setImgUrl] = useState(userProfile?.profileImg);
 	//const [availability, setAvailability] = useState('');
 	//const [workSite, setWorkSite] = useState('');
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
@@ -48,34 +44,34 @@ export default function ProfileForm(props) {
 
 
 	useEffect(() => {
-		if (currentUserProfile) {
-			console.log(currentUserProfile.availabilityDetails);
+		if (userProfile) {
+			console.log(userProfile.availabilityDetails);
 		  setInitialFormData((prevState) => ({
 			...prevState,
-			email: currentUserProfile.email || '',
-			firstName: currentUserProfile.firstName || '',
-			id: currentUserProfile.id,
-			lastName: currentUserProfile.lastName || '',
-			qualification: currentUserProfile.qualification || '',
-			githubUrl: currentUserProfile.otherInfo?.githubUrl || '',
-			linkedinUrl: currentUserProfile.otherInfo?.linkedinUrl || '',
-			profileImg: currentUserProfile.profileImg || '',
-			projects: currentUserProfile.projects || [],
-			skills: currentUserProfile.skills || [],
-			summary: currentUserProfile.summary || '',
-			availability: currentUserProfile.availability || '',
-			availabilityDetails: currentUserProfile.availabilityDetails || '',
-			workSite: currentUserProfile.workSite || '',
+			email: userProfile.email || '',
+			firstName: userProfile.firstName || '',
+			id: userProfile.id,
+			lastName: userProfile.lastName || '',
+			qualification: userProfile.qualification || '',
+			githubUrl: userProfile.otherInfo?.githubUrl || '',
+			linkedinUrl: userProfile.otherInfo?.linkedinUrl || '',
+			profileImg: userProfile.profileImg || '',
+			projects: userProfile.projects || [],
+			skills: userProfile.skills || [],
+			summary: userProfile.summary || '',
+			availability: userProfile.availability || '',
+			availabilityDetails: userProfile.availabilityDetails || '',
+			workSite: userProfile.workSite || '',
 
 		  }));
-		  setSkills(currentUserProfile.skills || [{ skill: '' }]);
-		  setProjects(currentUserProfile.projects || [{  description: '' }]);
+		  setSkills(userProfile.skills || [{ skill: '' }]);
+		  setProjects(userProfile.projects || [{  description: '' }]);
 		  //setAvailability(currentUserProfile.availability || '');
 		  //setWorkSite(currentUserProfile.workSite || '');
-		  console.log(currentUserProfile.availabilityDetails);
+		  console.log(userProfile.availabilityDetails);
 
 		}
-	  }, [currentUserProfile]);
+	  }, [userProfile]);
 
 
 
@@ -105,16 +101,16 @@ export default function ProfileForm(props) {
 		const data = {
 			email:  initialFormData?.email || '',
 			firstName: initialFormData.firstName ||'',
-			id: currentUserProfile?.id,
+			id: userProfile?.id,
 			lastName: initialFormData.lastName || '',
 			qualification: initialFormData?.qualification ||  '',
 			otherInfo: {
-				githubUrl: currentUserProfile?.githubUrl || initialFormData.githubUrl,
-				linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
+				githubUrl: userProfile?.githubUrl || initialFormData.githubUrl,
+				linkedinUrl: userProfile?.linkedinUrl || initialFormData.linkedinUrl,
 
 				//resume: currentUserProfile?.resume || initialFormData?.resume,
 			},
-			profileImg: currentUserProfile?.profileImg || imgUrl,
+			profileImg: userProfile?.profileImg || imgUrl,
 			projects: projects,
 			skills: skills,
 			summary: initialFormData?.summary || '',
@@ -125,115 +121,111 @@ export default function ProfileForm(props) {
 		};
 
 		console.log(data);
-		updateTechObject(data, () => {
+		updateUserProfile(data, () => {
 
 			navigate('/myProfile');
 		  });
 	};
 
-
 	return (
 		<>
-			{currentUserProfile && (
-				<div className='updateForm flexCenter'>
-					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
-						<div className='formContainer'>
-
-							{formInputs?.map((section) => (
-								<div key={section?.sectionTitle} className='formSection '>
-									<h3>{section?.sectionTitle}</h3>
-									{section?.fields?.map((field) => (
-										<InputSection
-											key={field?.name}
-											value={initialFormData[field?.name] || ''}
-											field={field}
-											onChange={onChange}
-
-										/>
-									))}
-
+			{userProfile && (
+				<div id='UpdateProfile'>
+					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
+						<section id='PersonalInfo'>
+							<div style={ { gridRowStart: "first-line", gridRowEnd: "last-line" } }>
+								<div className='profileImgUpload'>
+									<Upload
+										setImgUrl={setImgUrl}
+										imgUrl={imgUrl}
+										profileImageUrl={imgUrl}
+									/>
 								</div>
 
-							))}
-
-							{/* </div>
-						<div className='flexCenter formContainer'> */}
-							<div className='formSection '>
-								<h3>Projects</h3>
-								{projects.map((project, index) => (
-									<div
-										key={`project-${index}`}
-										// className='formSection '
-										style={{ flexDirection: 'column', display: 'flex' }}
-									>
-
-										<InputSection
-											value={project.description}
-											field={{
-												name: `description`,
-												label: `Project ${index + 1} Description`,
-												type: 'textArea',
-												placeholder: `Project ${index + 1} Description`,
-											}}
-											onChange={(e) => {
-												const value = e.target.value;
-												setProjects((prevProjects) =>
-													prevProjects.map((p, i) =>
-														i === index ? { ...p, description: value } : p
-													)
-												);
-											}}
-											onDelete={() => deleteProject(index)}
-										/>
-									</div>
-								))}
-								<button type='button' onClick={addProject}>
-									Add Project
-								</button>
+								<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={userProfile?.firstName} />
+								<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={userProfile?.lastName} />
+								<InputSection field={ { type:  'text', name:  'location',  label:  'Location' } } value={userProfile?.location} />
+								<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={userProfile?.email} />
 							</div>
 
-							<div className='formSection'>
-								<h3>Skills</h3>
-								{skills.map((skill, index) => (
-									<InputSection
-										key={`skill-${index}`}
-										value={skill.skill}
-										field={{
-											name: `skill`,
-											label: `Skill ${index + 1}`,
-											type: 'text',
+							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
+								<InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} />
+								<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} />
+								<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} />
+								<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} />
+							</div>
 
-											placeholder: `Skill ${index + 1}`,
+							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
+								<label>Work location</label>
+								<input type='radio' id='workSite1' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/><label for='workSite1'>On Site</label>
+								<input type='radio' id='workSite2' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/><label for='workSite2'>Hybrid</label>
+								<input type='radio' id='workSite3' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/><label for='workSite3'>Remote</label>
+							</div>
+
+							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
+								<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />
+							</div>
+						</section>
+
+						<section id="Projects">
+							<h3>Projects</h3>
+							{projects.map((project, index) => (
+								<div key={index}>
+									<InputSection
+										value={project.description}
+										field={{
+											name: `description`,
+											label: `Project ${index + 1} Description`,
+											type: 'textArea',
+											placeholder: `Project ${index + 1} Description`,
 										}}
 										onChange={(e) => {
 											const value = e.target.value;
-											setSkills((prevSkills) =>
-												prevSkills.map((s, i) =>
-													i === index ? { ...s, skill: value } : s
+											setProjects((prevProjects) =>
+												prevProjects.map((p, i) =>
+													i === index ? { ...p, description: value } : p
 												)
 											);
 										}}
-										onDelete={() => deleteSkill(index)}
+										onDelete={() => deleteProject(index)}
 									/>
-								))}
+								</div>
+							))}
+							<button type='button' onClick={addProject}>Add Project</button>
+						</section>
 
-   									 <button type="button" onClick={addSkill}>
-      									Add Skill
-    								</button>
+						<section id='Skills'>
+							<h3>Skills</h3>
+							{skills.map((skill, index) => (
+								<InputSection
+									key={index}
+									value={skill.skill}
+									field={{
+										name: `skill`,
+										label: `Skill ${index + 1}`,
+										type: 'text',
 
-			     			</div>
-						</div>
+										placeholder: `Skill ${index + 1}`,
+									}}
+									onChange={(e) => {
+										const value = e.target.value;
+										setSkills((prevSkills) =>
+											prevSkills.map((s, i) =>
+												i === index ? { ...s, skill: value } : s
+											)
+										);
+									}}
+									onDelete={() => deleteSkill(index)}
+								/>
+							))}
+
+							<button type="button" onClick={addSkill}>Add Skill</button>
+
+			     			</section>
 						<button type='submit'>
 							<span>Save</span>
 						</button>
 					</form>
-					<div className='profileImgUpload'>
-						<Upload
-							setImgUrl={setImgUrl}
-							imgUrl={imgUrl}
-							profileImageUrl={imgUrl}
-						/>
-					</div>
 				</div>
 			)}
 		</>

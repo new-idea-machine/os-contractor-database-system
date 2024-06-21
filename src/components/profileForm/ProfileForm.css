@@ -1,31 +1,3 @@
-/*
-<main> and its children are laid out in the following 3-row, 3-column grid:
-
-+--------+------+------+
-|        |      |      |
-|        |      |      |
-|        +------+------+
-|        |             |
-|        |             |
-+--------+-------------+
-|                      |
-|                      |
-|                      |
-+----------------------+
-|                      |
-|                      |
-|                      |
-+----------------------+
-*/
-
-
-section#PersonalInfo {
-	display: grid;
-	grid-template-rows: [first-line] auto [last-line];
-	grid-template-columns: 500px 1fr 1fr;
-	grid-auto-flow: column;
-}
-
 .updateForm {
 	height: 100%;
 	min-height: 73.4vh;
