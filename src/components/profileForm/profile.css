@@ -1,29 +1,34 @@
 /*
-<main> and its children are laid out in the following 3-row, 3-column grid:
+The "PersonalInfo" section and its children are laid out in the following 3-row, 2-column
+grid (the top-right cell is its own 2-column grid):
 
 +--------+------+------+
 |        |      |      |
 |        |      |      |
 |        +------+------+
 |        |             |
+|        +-------------+
+|        |             |
 |        |             |
 +--------+-------------+
-|                      |
-|                      |
-|                      |
-+----------------------+
-|                      |
-|                      |
-|                      |
-+----------------------+
-*/
 
+*/
 
 section#PersonalInfo {
 	display: grid;
-	grid-template-rows: [first-line] auto [last-line];
-	grid-template-columns: 500px 1fr 1fr;
-	grid-auto-flow: column;
+	grid-template-rows: [first-line] min-content min-content 1fr [last-line];
+	grid-template-columns: 500px 1fr;
+}
+
+section#PersonalInfo > *:first-child {
+	grid-row-start: first-line;
+	grid-row-end: last-line;
+}
+
+section#PersonalInfo > *:nth-child(2) {
+	display: grid;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr 1fr;
 }
 
 .updateForm {

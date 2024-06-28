@@ -133,7 +133,7 @@ export default function ProfileForm(props) {
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section id='PersonalInfo'>
-							<div style={ { gridRowStart: "first-line", gridRowEnd: "last-line" } }>
+							<div>
 								<div className='profileImgUpload'>
 									<Upload
 										setImgUrl={setImgUrl}
@@ -148,21 +148,21 @@ export default function ProfileForm(props) {
 								<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={userProfile?.email} />
 							</div>
 
-							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
-								<InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} />
-								<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} />
-								<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} />
-								<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} />
+							<div>
+								<span><InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} /></span>
+								<span><InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} /></span>
+								<span><InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} /></span>
+								<span><InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} /></span>
 							</div>
 
-							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
+							<div>
 								<label>Work location</label>
 								<input type='radio' id='workSite1' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/><label for='workSite1'>On Site</label>
 								<input type='radio' id='workSite2' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/><label for='workSite2'>Hybrid</label>
 								<input type='radio' id='workSite3' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/><label for='workSite3'>Remote</label>
 							</div>
 
-							<div style={ { gridColumnStart: "2", gridColumnEnd: "4" } }>
+							<div>
 								<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />
 							</div>
 						</section>
