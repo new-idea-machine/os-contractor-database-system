@@ -31,6 +31,12 @@ section#PersonalInfo > *:nth-child(2) {
 	grid-template-columns: 1fr 1fr;
 }
 
+section#PersonalInfo > *:nth-child(3) {
+	display: grid;
+	grid-template-rows: min-content;
+	grid-template-columns: repeat(4, 1fr);
+}
+
 .updateForm {
 	height: 100%;
 	min-height: 73.4vh;

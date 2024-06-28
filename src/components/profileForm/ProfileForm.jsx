@@ -157,9 +157,9 @@ export default function ProfileForm(props) {
 
 							<div>
 								<label>Work location</label>
-								<input type='radio' id='workSite1' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/><label for='workSite1'>On Site</label>
-								<input type='radio' id='workSite2' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/><label for='workSite2'>Hybrid</label>
-								<input type='radio' id='workSite3' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/><label for='workSite3'>Remote</label>
+								<label><input type='radio' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/> On Site</label>
+								<label><input type='radio' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/> Hybrid</label>
+								<label><input type='radio' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/> Remote</label>
 							</div>
 
 							<div>
