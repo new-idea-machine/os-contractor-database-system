@@ -38,7 +38,7 @@ main {
 		color:  var(--input-text-colour);
 	}
 
-	input[type='text'], input[type='email'], input[type='password'] {
+	input[type='text'], input[type='email'], input[type='password'], input[type='url'], select {
 		display: block;
 		width: 400px;
 		height: 40px;
@@ -53,6 +53,18 @@ main {
 	input[type='radio'], input[type='checkbox'] {
 		accent-color: var(--input-checkbox-colour);
 	}
+
+	textarea {
+		display: block;
+		width: 400px;
+		background-color: inherit;
+		border-width: 2px;
+		border-radius: 10px;
+		border-style: solid;
+		border-color: var(--input-text-colour-border);
+		padding: 0px 8px;
+	}
+
 }
 
 nav {
