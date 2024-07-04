@@ -6,7 +6,7 @@ import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-
+import ResponsiveGrid from '../ResponsiveGrid';
 
 export default function ProfileForm(props) {
 	const navigate = useNavigate();
@@ -133,94 +133,88 @@ export default function ProfileForm(props) {
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section id='PersonalInfo'>
-							<div>
-								<div className='profileImgUpload'>
-									<Upload
-										setImgUrl={setImgUrl}
-										imgUrl={imgUrl}
-										profileImageUrl={imgUrl}
-									/>
-								</div>
-
-								<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={userProfile?.firstName} />
-								<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={userProfile?.lastName} />
-								<InputSection field={ { type:  'text', name:  'location',  label:  'Location' } } value={userProfile?.location} />
-								<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={userProfile?.email} />
+							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
+								<Upload
+									setImgUrl={setImgUrl}
+									imgUrl={imgUrl}
+									profileImageUrl={imgUrl}
+								/>
 							</div>
 
-							<div>
-								<span><InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} /></span>
-								<span><InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} /></span>
-								<span><InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} /></span>
-								<span><InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} /></span>
-							</div>
+							<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={userProfile?.firstName} />
+							<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={userProfile?.lastName} />
+							<InputSection field={ { type:  'text', name:  'location',  label:  'Location' } } value={userProfile?.location} />
+							<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={userProfile?.email} />
+							<InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} />
+							<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} />
+							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} />
+							<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} />
 
-							<div>
-								<label>Work location</label>
+							<label style={{gridArea: "workSite"}}>
+								<span>Work location</span>
 								<label><input type='radio' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/> On Site</label>
 								<label><input type='radio' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/> Hybrid</label>
 								<label><input type='radio' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/> Remote</label>
-							</div>
+							</label>
 
-							<div>
-								<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />
-							</div>
+							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />
 						</section>
 
 						<section id="Projects">
+							<button type='button' style={{float: 'right'}} onClick={addProject}>Add Project</button>
 							<h3>Projects</h3>
-							{projects.map((project, index) => (
-								<div key={index}>
-									<InputSection
-										value={project.description}
-										field={{
-											name: `description`,
-											label: `Project ${index + 1} Description`,
-											type: 'textArea',
-											placeholder: `Project ${index + 1} Description`,
-										}}
-										onChange={(e) => {
-											const value = e.target.value;
-											setProjects((prevProjects) =>
-												prevProjects.map((p, i) =>
-													i === index ? { ...p, description: value } : p
-												)
-											);
-										}}
-										onDelete={() => deleteProject(index)}
-									/>
-								</div>
-							))}
-							<button type='button' onClick={addProject}>Add Project</button>
+							<ResponsiveGrid minColumnWidth='400px' rowGap='10px'>
+								{projects.map((project, index) => (
+									<div className='Cell' key={index}>
+										<InputSection
+											value={project.description}
+											field={{
+												name: `description`,
+												label: `Project ${index + 1} Description`,
+												type: 'textArea',
+												placeholder: `Project ${index + 1} Description`,
+											}}
+											onChange={(e) => {
+												const value = e.target.value;
+												setProjects((prevProjects) =>
+													prevProjects.map((p, i) =>
+														i === index ? { ...p, description: value } : p
+													)
+												);
+											}}
+											onDelete={() => deleteProject(index)}
+										/>
+									</div>
+								))}
+							</ResponsiveGrid>
 						</section>
 
 						<section id='Skills'>
 							<h3>Skills</h3>
+							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
-								<InputSection
-									key={index}
-									value={skill.skill}
-									field={{
-										name: `skill`,
-										label: `Skill ${index + 1}`,
-										type: 'text',
-
-										placeholder: `Skill ${index + 1}`,
-									}}
-									onChange={(e) => {
-										const value = e.target.value;
-										setSkills((prevSkills) =>
-											prevSkills.map((s, i) =>
-												i === index ? { ...s, skill: value } : s
-											)
-										);
-									}}
-									onDelete={() => deleteSkill(index)}
-								/>
+								<span key={index} className='badge'>{skill.skill}</span>
+// 								<InputSection
+// 									key={index}
+// 									value={skill.skill}
+// 									field={{
+// 										name: `skill`,
+// 										label: `Skill ${index + 1}`,
+// 										type: 'text',
+// 
+// 										placeholder: `Skill ${index + 1}`,
+// 									}}
+// 									onChange={(e) => {
+// 										const value = e.target.value;
+// 										setSkills((prevSkills) =>
+// 											prevSkills.map((s, i) =>
+// 												i === index ? { ...s, skill: value } : s
+// 											)
+// 										);
+// 									}}
+// 									onDelete={() => deleteSkill(index)}
+// 								/>
 							))}
-
-							<button type="button" onClick={addSkill}>Add Skill</button>
-
 			     			</section>
 						<button type='submit'>
 							<span>Save</span>

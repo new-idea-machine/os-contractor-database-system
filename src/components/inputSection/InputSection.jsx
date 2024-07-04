@@ -4,7 +4,7 @@ export default function InputSection({ field, onChange, value, onDelete })
 {
 	if (field?.type === 'select') {
 		return (
-			<label>
+			<label style={{gridArea: field.name}}>
 				{ field.label && <>{field.label}<br /></> }
 				<select name={ field?.name } value={ value } onChange={ onChange }>
 					{ field?.options?.map((option) => (
@@ -17,13 +17,14 @@ export default function InputSection({ field, onChange, value, onDelete })
 		);
 	} else if (field?.type === 'textArea') {
 		return (
-			<label>
-				{ field.label && <>{field.label}<br /></> }
+			<label style={{gridArea: field.name, display: 'grid', gridTemplateRows: 'min-content 1fr min-content', gridTemplateColumns: '1fr', width: '100%', height: '100%'}}>
+				{ field.label && <>{field.label}</> }
 				<textarea
 					name={field?.name}
 					value={value}
 					placeholder={field?.placeholder}
 					onChange={onChange}
+					style={{display: 'block', width: '100%', height: '100%', resize: 'none'}}
 				/>
 				{ onDelete && (
 					<button type="button" onClick={onDelete}>
@@ -34,7 +35,7 @@ export default function InputSection({ field, onChange, value, onDelete })
 		);
 	} else {
 		return (
-			<label>
+			<label style={{gridArea: field.name}}>
 				{ field.label && <>{field.label}<br /></> }
 				<input
 					name={field?.name}

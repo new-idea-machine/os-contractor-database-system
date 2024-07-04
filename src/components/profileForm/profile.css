@@ -1,40 +1,34 @@
 /*
-The "PersonalInfo" section and its children are laid out in the following 3-row, 2-column
-grid (the top-right cell is its own 2-column grid):
+The "PersonalInfo" section is laid out in grid, and each entry in the form has its own area in
+the grid.
 
-+--------+------+------+
-|        |      |      |
-|        |      |      |
-|        +------+------+
-|        |             |
-|        +-------------+
-|        |             |
-|        |             |
-+--------+-------------+
-
+The element that comprises the "workSite" area is made a flexbox so that the radio buttons
+contained in it will be spread out evenly across it.
 */
 
 section#PersonalInfo {
 	display: grid;
-	grid-template-rows: [first-line] min-content min-content 1fr [last-line];
-	grid-template-columns: 500px 1fr;
+	/* grid-template-rows: [first-line] min-content min-content 1fr [last-line]; */
+	grid-template-columns: 500px 1fr 1fr;
+	grid-template-areas: 
+		"profileImg githubUrl linkedinUrl"
+		"profileImg qualification availability"
+		"firstName workSite workSite"
+		"lastName summary summary"
+		"location summary summary"
+		"email summary summary";
+
+	*[style*="grid-area: workSite;"] {
+		align-self: center;
+		display: flex;
+		justify-content: space-between;
+	}
 }
 
-section#PersonalInfo > *:first-child {
-	grid-row-start: first-line;
-	grid-row-end: last-line;
-}
-
-section#PersonalInfo > *:nth-child(2) {
-	display: grid;
-	grid-template-rows: auto;
-	grid-template-columns: 1fr 1fr;
-}
-
-section#PersonalInfo > *:nth-child(3) {
-	display: grid;
-	grid-template-rows: min-content;
-	grid-template-columns: repeat(4, 1fr);
+section#Projects div.Cell {
+	display: inline-block;
+	width: 400px;
+	height: 400px;
 }
 
 .updateForm {
