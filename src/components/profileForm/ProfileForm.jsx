@@ -137,7 +137,6 @@ export default function ProfileForm(props) {
 								<Upload
 									setImgUrl={setImgUrl}
 									imgUrl={imgUrl}
-									profileImageUrl={imgUrl}
 								/>
 							</div>
 
@@ -152,9 +151,9 @@ export default function ProfileForm(props) {
 
 							<label style={{gridArea: "workSite"}}>
 								<span>Work location</span>
-								<label><input type='radio' name='workSite' value='On Site' checked={userProfile?.workSite === 'On Site'}/> On Site</label>
-								<label><input type='radio' name='workSite' value='Hybrid' checked={userProfile?.workSite === 'Hybrid'}/> Hybrid</label>
-								<label><input type='radio' name='workSite' value='Remote' checked={userProfile?.workSite === 'Remote'}/> Remote</label>
+								<label><input type='radio' name='workSite' value='On Site' defaultChecked={userProfile?.workSite === 'On Site'}/> On Site</label>
+								<label><input type='radio' name='workSite' value='Hybrid' defaultChecked={userProfile?.workSite === 'Hybrid'}/> Hybrid</label>
+								<label><input type='radio' name='workSite' value='Remote' defaultChecked={userProfile?.workSite === 'Remote'}/> Remote</label>
 							</label>
 
 							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />

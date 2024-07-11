@@ -6,7 +6,7 @@ export default function InputSection({ field, onChange, value, onDelete })
 		return (
 			<label style={{gridArea: field.name}}>
 				{ field.label && <>{field.label}<br /></> }
-				<select name={ field?.name } value={ value } onChange={ onChange }>
+				<select name={ field?.name } defaultValue={ value } onChange={ onChange }>
 					{ field?.options?.map((option) => (
 						<option key={option} value={option}>
 							{ option }
@@ -21,7 +21,7 @@ export default function InputSection({ field, onChange, value, onDelete })
 				{ field.label && <>{field.label}</> }
 				<textarea
 					name={field?.name}
-					value={value}
+					defaultValue={value}
 					placeholder={field?.placeholder}
 					onChange={onChange}
 					style={{display: 'block', width: '100%', height: '100%', resize: 'none'}}
@@ -39,7 +39,7 @@ export default function InputSection({ field, onChange, value, onDelete })
 				{ field.label && <>{field.label}<br /></> }
 				<input
 					name={field?.name}
-					value={value}
+					defaultValue={value}
 					placeholder={field?.placeholder}
 					type={field?.type}
 					onChange={onChange}
