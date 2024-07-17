@@ -15,6 +15,7 @@ export default function ProfileForm(props) {
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [imgUrl, setImgUrl] = useState(userProfile?.profileImg);
+	const [newImage, setNewImage] = useState(null);
 	//const [availability, setAvailability] = useState('');
 	//const [workSite, setWorkSite] = useState('');
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
@@ -135,8 +136,8 @@ export default function ProfileForm(props) {
 						<section id='PersonalInfo'>
 							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
 								<Upload
-									setImgUrl={setImgUrl}
-									imgUrl={imgUrl}
+									newImage={newImage}
+									setNewImage={setNewImage}
 								/>
 							</div>
 
