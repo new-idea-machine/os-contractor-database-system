@@ -4,6 +4,7 @@ const techDataSchema = {
 	email: '',
 	qualification: '',
 	summary: '',
+	location: '',
 	profileImg: '',
 	otherInfo: {
 		linkedinUrl: '',
@@ -15,7 +16,8 @@ const techDataSchema = {
 	skills: [{ skill: '' }],
 	projects: [
 		{
-			
+			title: '',
+			url: '',
 			description: '',
 		},
 	],
