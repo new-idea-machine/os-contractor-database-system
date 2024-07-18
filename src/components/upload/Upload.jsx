@@ -1,8 +1,5 @@
 import React, { useState, useContext } from 'react';
 import './upload.css';
-import { store } from '../../firebaseconfig';
-import { ref, getDownloadURL, uploadBytesResumable } from 'firebase/storage';
-import { v4 as uuidv4 } from 'uuid';
 import { contractorContext } from '../../contexts/ContractorContext';
 import ProfilePicture from '../ProfilePicture';
 

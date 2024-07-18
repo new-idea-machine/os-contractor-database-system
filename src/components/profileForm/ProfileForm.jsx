@@ -1,4 +1,7 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
+import { store } from '../../firebaseconfig';
+import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
 import './profile.css';
 import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
@@ -97,35 +100,86 @@ export default function ProfileForm(props) {
 
 	  };
 
-	const onSubmit = (e) => {
-		e.preventDefault();
-		const data = {
-			email:  initialFormData?.email || '',
-			firstName: initialFormData.firstName ||'',
-			id: userProfile?.id,
-			lastName: initialFormData.lastName || '',
-			qualification: initialFormData?.qualification ||  '',
-			otherInfo: {
-				githubUrl: userProfile?.githubUrl || initialFormData.githubUrl,
-				linkedinUrl: userProfile?.linkedinUrl || initialFormData.linkedinUrl,
+	const onSubmit = async (event) => {
+		event.preventDefault();
 
-				//resume: currentUserProfile?.resume || initialFormData?.resume,
-			},
-			profileImg: userProfile?.profileImg || imgUrl,
-			projects: projects,
-			skills: skills,
-			summary: initialFormData?.summary || '',
-			availability: initialFormData?.availability,
-			availabilityDetails: initialFormData?.availabilityDetails || '',
-			workSite: initialFormData?.workSite,
+		try {
+			// Upload new image
 
-		};
+			let newImageUrl;
 
-		console.log(data);
-		updateUserProfile(data, () => {
+			if (newImage) {
+				let storageRef = ref(store, `files/${uuidv4() + newImage.name}`);
+
+				// const uploadTask = uploadBytesResumable(storageRef, file);
+				//
+				// uploadTask.on(
+				// 	'state_changed',
+				// 	(snapshot) => {
+				// 		const progress = Math.round(
+				// 			(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				// 		);
+				// 		setProgresspercent(progress);
+				// 	},
+				// 	(error) => {
+				// 		alert(error);
+				// 	},
+				// 	() => {
+				// 		getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+				// 			setImgUrl(downloadURL);
+				// 			setPreviewUrl(null);
+				// 			onSubmit(downloadURL);
+				// 			setProgresspercent(0);
+				// 		});
+				// 	}
+				// );
+		
+				await uploadBytes(storageRef, newImage);
+	
+				newImageUrl = await getDownloadURL(storageRef);
+			}
+
+			// Upload new data
+
+			const formElements = event.target.elements;
+
+			const newUserProfile = {
+				id: userProfile?.id,
+				firstName: formElements.firstName.value,
+				lastName: formElements.lastName.value,
+				email:  formElements.email.value,
+				qualification: formElements.qualification.value,
+				summary: formElements.summary.value,
+				location: formElements.location.value,
+				profileImg: (newImage ? newImageUrl : imgUrl),
+				otherInfo: {
+					githubUrl: formElements.githubUrl.value,
+					linkedinUrl: formElements.linkedinUrl.value,
+					//resume: undefined,
+				},
+				availability: formElements.availability.value,
+				//availabilityDetails: undefined,
+				workSite: formElements.workSite.value,
+				skills,
+				projects,
+			};
+
+			console.log(newUserProfile);
+	
+			await updateUserProfile(newUserProfile);
+
+			// Delete old image (if any)
+
+			if (newImageUrl && (imgUrl !== newImageUrl)) {
+				const storageRef = ref(store, imgUrl);
+
+				await deleteObject(storageRef);
+			}
 
 			navigate('/myProfile');
-		  });
+		} catch(error) {
+			// Toast an error
+		}
 	};
 
 	return (
