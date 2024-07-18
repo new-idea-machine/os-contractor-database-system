@@ -1,4 +1,5 @@
 const techDataSchema = {
+	userType: 'techs',
 	firstName: '',
 	lastName: '',
 	email: '',
@@ -25,6 +26,7 @@ const techDataSchema = {
 };
 
 const RecDataSchema ={
+	userType: 'recruiter',
 	firstName: '',
 	lastName: '',
 	email: '',
