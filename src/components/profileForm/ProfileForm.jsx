@@ -143,29 +143,26 @@ export default function ProfileForm(props) {
 
 			const formElements = event.target.elements;
 
-			const newUserProfile = {
-				id: userProfile?.id,
-				firstName: formElements.firstName.value,
-				lastName: formElements.lastName.value,
-				email:  formElements.email.value,
-				qualification: formElements.qualification.value,
-				summary: formElements.summary.value,
-				location: formElements.location.value,
-				profileImg: (newImage ? newImageUrl : imgUrl),
-				otherInfo: {
-					githubUrl: formElements.githubUrl.value,
-					linkedinUrl: formElements.linkedinUrl.value,
-					//resume: undefined,
-				},
-				availability: formElements.availability.value,
-				//availabilityDetails: undefined,
-				workSite: formElements.workSite.value,
-				skills,
-				projects,
-			};
+			const newUserProfile = structuredClone(userProfile ? userProfile : techDataSchema);
+			
+			newUserProfile.firstName = formElements.firstName.value;
+			newUserProfile.lastName = formElements.lastName.value;
+			newUserProfile.email =  formElements.email.value;
+			newUserProfile.qualification = formElements.qualification.value;
+			newUserProfile.summary = formElements.summary.value;
+			newUserProfile.location = formElements.location.value;
 
-			console.log(newUserProfile);
-	
+			if (newImageUrl) newUserProfile.profileImg = newImageUrl;
+
+			newUserProfile.otherInfo = {
+				githubUrl: formElements.githubUrl.value,
+				linkedinUrl: formElements.linkedinUrl.value,
+			};
+			newUserProfile.availability = formElements.availability.value;
+			newUserProfile.workSite = formElements.workSite.value;
+			newUserProfile.skills = skills;
+			newUserProfile.projects = projects;
+
 			await updateUserProfile(newUserProfile);
 
 			// Delete old image (if any)
