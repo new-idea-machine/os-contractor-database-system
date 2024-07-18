@@ -13,6 +13,7 @@ const techDataSchema = {
 	},
 	availability:'',
 	availabilityDetails: '',
+	workSite: '',
 	skills: [{ skill: '' }],
 	projects: [
 		{
