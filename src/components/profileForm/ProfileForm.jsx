@@ -22,13 +22,9 @@ export default function ProfileForm(props) {
 	//const [availability, setAvailability] = useState('');
 	//const [workSite, setWorkSite] = useState('');
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
-	const [initialFormData, setInitialFormData] = useState(techDataSchema);
-	const [skills, setSkills] = useState([{ skill: '' }]);
-	const [projects, setProjects] = useState([
-		{ projectName: '', description: '' },
-	]);
-
-
+	const initialFormData = structuredClone(userProfile ? userProfile : techDataSchema);
+	const [skills, setSkills] = useState(initialFormData.skills ? initialFormData.skills : []);
+	const [projects, setProjects] = useState(initialFormData.projects ? initialFormData.projects : []);
 
 	const deleteSkill = (index) => {
 		setSkills((prevSkills) => {
@@ -46,39 +42,6 @@ export default function ProfileForm(props) {
 		});
 	  };
 
-
-	useEffect(() => {
-		if (userProfile) {
-			console.log(userProfile.availabilityDetails);
-		  setInitialFormData((prevState) => ({
-			...prevState,
-			email: userProfile.email || '',
-			firstName: userProfile.firstName || '',
-			id: userProfile.id,
-			lastName: userProfile.lastName || '',
-			qualification: userProfile.qualification || '',
-			githubUrl: userProfile.otherInfo?.githubUrl || '',
-			linkedinUrl: userProfile.otherInfo?.linkedinUrl || '',
-			profileImg: userProfile.profileImg || '',
-			projects: userProfile.projects || [],
-			skills: userProfile.skills || [],
-			summary: userProfile.summary || '',
-			availability: userProfile.availability || '',
-			availabilityDetails: userProfile.availabilityDetails || '',
-			workSite: userProfile.workSite || '',
-
-		  }));
-		  setSkills(userProfile.skills || [{ skill: '' }]);
-		  setProjects(userProfile.projects || [{  description: '' }]);
-		  //setAvailability(currentUserProfile.availability || '');
-		  //setWorkSite(currentUserProfile.workSite || '');
-		  console.log(userProfile.availabilityDetails);
-
-		}
-	  }, [userProfile]);
-
-
-
 	const addSkill = () => {
 		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
 	};
@@ -91,14 +54,6 @@ export default function ProfileForm(props) {
 	};
 
 	const form = useRef();
-
-	const onChange = (e) => {
-		const { name, value } = e.target;
-
-
-		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
-
-	  };
 
 	const onSubmit = async (event) => {
 		event.preventDefault();
@@ -143,7 +98,7 @@ export default function ProfileForm(props) {
 
 			const formElements = event.target.elements;
 
-			const newUserProfile = structuredClone(userProfile ? userProfile : techDataSchema);
+			const newUserProfile = structuredClone(initialFormData);
 			
 			newUserProfile.firstName = formElements.firstName.value;
 			newUserProfile.lastName = formElements.lastName.value;
@@ -163,11 +118,13 @@ export default function ProfileForm(props) {
 			newUserProfile.skills = skills;
 			newUserProfile.projects = projects;
 
+			console.log(newUserProfile);
+	
 			await updateUserProfile(newUserProfile);
 
 			// Delete old image (if any)
 
-			if (newImageUrl && (imgUrl !== newImageUrl)) {
+			if (imgUrl && newImageUrl && (imgUrl !== newImageUrl)) {
 				const storageRef = ref(store, imgUrl);
 
 				await deleteObject(storageRef);
@@ -192,23 +149,23 @@ export default function ProfileForm(props) {
 								/>
 							</div>
 
-							<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={userProfile?.firstName} />
-							<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={userProfile?.lastName} />
-							<InputSection field={ { type:  'text', name:  'location',  label:  'Location' } } value={userProfile?.location} />
-							<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={userProfile?.email} />
-							<InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={userProfile?.otherInfo?.githubUrl} />
-							<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={userProfile?.otherInfo?.linkedinUrl} />
-							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={userProfile?.qualification} />
-							<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={userProfile?.qualification} />
+							<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={initialFormData?.firstName} />
+							<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={initialFormData?.lastName} />
+							<InputSection field={ { type:  'text', name:  'location',  label:  'Location' } } value={initialFormData?.location} />
+							<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={initialFormData?.email} />
+							<InputSection field={ { type:  'url', name:  'githubUrl',  label:  'GitHub' } } value={initialFormData?.otherInfo?.githubUrl} />
+							<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={initialFormData?.otherInfo?.linkedinUrl} />
+							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={initialFormData?.qualification} />
+							<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={initialFormData?.qualification} />
 
 							<label style={{gridArea: "workSite"}}>
 								<span>Work location</span>
-								<label><input type='radio' name='workSite' value='On Site' defaultChecked={userProfile?.workSite === 'On Site'}/> On Site</label>
-								<label><input type='radio' name='workSite' value='Hybrid' defaultChecked={userProfile?.workSite === 'Hybrid'}/> Hybrid</label>
-								<label><input type='radio' name='workSite' value='Remote' defaultChecked={userProfile?.workSite === 'Remote'}/> Remote</label>
+								<label><input type='radio' name='workSite' value='On Site' defaultChecked={initialFormData?.workSite === 'On Site'}/> On Site</label>
+								<label><input type='radio' name='workSite' value='Hybrid' defaultChecked={initialFormData?.workSite === 'Hybrid'}/> Hybrid</label>
+								<label><input type='radio' name='workSite' value='Remote' defaultChecked={initialFormData?.workSite === 'Remote'}/> Remote</label>
 							</label>
 
-							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={userProfile?.summary} />
+							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={initialFormData?.summary} />
 						</section>
 
 						<section id="Projects">
