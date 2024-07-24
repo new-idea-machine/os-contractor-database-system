@@ -19,6 +19,7 @@ export default function ProfileForm(props) {
 
 	const [imgUrl, setImgUrl] = useState(userProfile?.profileImg);
 	const [newImage, setNewImage] = useState(null);
+	const [newImageFile, setNewImageFile] = useState(null);
 	//const [availability, setAvailability] = useState('');
 	//const [workSite, setWorkSite] = useState('');
 	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
@@ -63,8 +64,8 @@ export default function ProfileForm(props) {
 
 			let newImageUrl;
 
-			if (newImage) {
-				let storageRef = ref(store, `files/${uuidv4() + newImage.name}`);
+			if (newImageFile) {
+				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
 
 				// const uploadTask = uploadBytesResumable(storageRef, file);
 				//
@@ -89,7 +90,7 @@ export default function ProfileForm(props) {
 				// 	}
 				// );
 		
-				await uploadBytes(storageRef, newImage);
+				await uploadBytes(storageRef, newImageFile);
 	
 				newImageUrl = await getDownloadURL(storageRef);
 			}
@@ -118,8 +119,6 @@ export default function ProfileForm(props) {
 			newUserProfile.skills = skills;
 			newUserProfile.projects = projects;
 
-			console.log(newUserProfile);
-	
 			await updateUserProfile(newUserProfile);
 
 			// Delete old image (if any)
@@ -146,6 +145,7 @@ export default function ProfileForm(props) {
 								<Upload
 									newImage={newImage}
 									setNewImage={setNewImage}
+									setNewImageFile={setNewImageFile}
 								/>
 							</div>
 

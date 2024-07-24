@@ -7,18 +7,17 @@ import { ReactComponent as IconCamera } from "../../assets/icons/cameraWhite.svg
 
 const avatarURL = "/assets/avatar.svg";
 
-export default function Upload({ newImage, setNewImage }) {
+export default function Upload({ newImage, setNewImage, setNewImageFile }) {
 	const { updateTechObject, currentUserProfile } =
 		useContext(contractorContext);
 	const [progresspercent, setProgresspercent] = useState(0);
-	const [file, setFile] = useState(null);
 	const [previewUrl, setPreviewUrl] = useState(null);
 
 	const handleFileInputChange = (event) => {
 		const newFile = event.target.files[0];
 
 		if (newFile) {
-			setFile(newFile);
+			setNewImageFile(newFile);
 			setNewImage(URL.createObjectURL(newFile));
 		}
 	};
