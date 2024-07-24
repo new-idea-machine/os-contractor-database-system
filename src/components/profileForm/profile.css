@@ -26,7 +26,12 @@ section#PersonalInfo {
 }
 
 section#Projects div.Cell {
-	display: inline-block;
+	display: grid;
+	grid-template-rows: max-content max-content 1fr;
+	grid-template-areas: 
+		"title"
+		"url"
+		"description";
 	width: 400px;
 	height: 400px;
 }
