@@ -48,7 +48,7 @@ export default function ProfileForm(props) {
 	const addProject = () => {
 		setProjects((prevProjects) => [
 			...prevProjects,
-			{ description: '' },
+			structuredClone(techDataSchema.projects[0])
 		]);
 	};
 
@@ -111,7 +111,7 @@ export default function ProfileForm(props) {
 				githubUrl: formElements.githubUrl.value,
 				linkedinUrl: formElements.linkedinUrl.value,
 			};
-			
+
 			newUserProfile.availability = formElements.availability.value;
 			newUserProfile.workSite = formElements.workSite.value;
 			newUserProfile.skills = skills;
@@ -171,12 +171,46 @@ export default function ProfileForm(props) {
 								{projects.map((project, index) => (
 									<div className='Cell' key={index}>
 										<InputSection
+											value={project.title}
+											field={{
+												name: 'title',
+												label: `Project ${index + 1} Title`,
+												type: 'text',
+												placeholder: 'Title',
+											}}
+											onChange={(e) => {
+												const value = e.target.value;
+												setProjects((prevProjects) =>
+													prevProjects.map((p, i) =>
+														i === index ? { ...p, title: value } : p
+													)
+												);
+											}}
+										/>
+										<InputSection
+											value={project.url}
+											field={{
+												name: 'url',
+												label: 'URL',
+												type: 'text',
+												placeholder: 'URL',
+											}}
+											onChange={(e) => {
+												const value = e.target.value;
+												setProjects((prevProjects) =>
+													prevProjects.map((p, i) =>
+														i === index ? { ...p, url: value } : p
+													)
+												);
+											}}
+										/>
+										<InputSection
 											value={project.description}
 											field={{
-												name: `description`,
-												label: `Project ${index + 1} Description`,
+												name: 'description',
+												label: 'Description',
 												type: 'textArea',
-												placeholder: `Project ${index + 1} Description`,
+												placeholder: 'Description',
 											}}
 											onChange={(e) => {
 												const value = e.target.value;
