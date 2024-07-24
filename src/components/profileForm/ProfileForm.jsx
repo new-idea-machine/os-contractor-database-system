@@ -17,8 +17,6 @@ export default function ProfileForm(props) {
 	const { user } = useContext(authContext);
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
-	const [imgUrl, setImgUrl] = useState(userProfile?.profileImg);
-	const [newImage, setNewImage] = useState(null);
 	const [newImageFile, setNewImageFile] = useState(null);
 	//const [availability, setAvailability] = useState('');
 	//const [workSite, setWorkSite] = useState('');
@@ -98,7 +96,6 @@ export default function ProfileForm(props) {
 			// Upload new data
 
 			const formElements = event.target.elements;
-
 			const newUserProfile = structuredClone(initialFormData);
 			
 			newUserProfile.firstName = formElements.firstName.value;
@@ -114,6 +111,7 @@ export default function ProfileForm(props) {
 				githubUrl: formElements.githubUrl.value,
 				linkedinUrl: formElements.linkedinUrl.value,
 			};
+			
 			newUserProfile.availability = formElements.availability.value;
 			newUserProfile.workSite = formElements.workSite.value;
 			newUserProfile.skills = skills;
@@ -123,8 +121,10 @@ export default function ProfileForm(props) {
 
 			// Delete old image (if any)
 
-			if (imgUrl && newImageUrl && (imgUrl !== newImageUrl)) {
-				const storageRef = ref(store, imgUrl);
+			const imageUrl = userProfile?.profileImg;
+
+			if (imageUrl && newImageUrl && (imageUrl !== newImageUrl)) {
+				const storageRef = ref(store, imageUrl);
 
 				await deleteObject(storageRef);
 			}
@@ -142,11 +142,7 @@ export default function ProfileForm(props) {
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section id='PersonalInfo'>
 							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
-								<Upload
-									newImage={newImage}
-									setNewImage={setNewImage}
-									setNewImageFile={setNewImageFile}
-								/>
+								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
 							<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={initialFormData?.firstName} />

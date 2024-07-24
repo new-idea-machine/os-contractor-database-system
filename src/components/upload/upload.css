@@ -1,0 +1,6 @@
+#IconCamera {
+	color:  var(--card-colour);
+	position:  relative;
+	top:  100px;
+	left:  -50px;
+}
