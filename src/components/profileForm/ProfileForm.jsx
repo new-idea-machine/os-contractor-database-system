@@ -36,16 +36,17 @@ export default function ProfileForm(props) {
 
 	  const deleteProject = (index) => {
 		setProjects((prevProjects) => {
-		  const newProjects = [...prevProjects];
-		  newProjects.splice(index, 1);
-		  return newProjects;
+			const newProjects = [...prevProjects];
+			newProjects.splice(index, 1);
+
+			return newProjects;
 		});
 	  };
 
 	const addSkill = () => {
 		const newSkill = window.prompt('Enter a skill:');
 
-		if (newSkill) {
+		if (newSkill && !skills.find((skill) => skill.skill === newSkill)) {
 			setSkills((prevSkills) => [...prevSkills, { skill: newSkill }]);
 		}
 	};
@@ -174,7 +175,7 @@ export default function ProfileForm(props) {
 							<h3>Projects</h3>
 							<ResponsiveGrid minColumnWidth='400px' rowGap='10px'>
 								{projects.map((project, index) => (
-									<div className='Cell' key={index}>
+									<div className='Cell' key={project.title ? project.title : index}>
 										<InputSection
 											value={project.title}
 											field={{
@@ -236,7 +237,7 @@ export default function ProfileForm(props) {
 							<h3>Skills</h3>
 							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
-								<Badge key={index} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
+								<Badge key={skill.skill} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
 // 								<InputSection
 // 									key={index}
 // 									value={skill.skill}
