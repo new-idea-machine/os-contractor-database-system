@@ -189,7 +189,8 @@ const ContractorProfile = (props) => {
 
             {contractor?.projects.map((project, index) => (
               <article key={index}>
-                <h3>{project?.projectName ? project?.projectName : <>&lt;Untitled Project&gt;</>}</h3>
+                <h3>{project?.title ? project?.title : <>&lt;Untitled Project&gt;</>}</h3>
+		<a href={project.url}>{project?.url}</a>
                 <p>{project?.description}</p>
               </article>
             ))}
