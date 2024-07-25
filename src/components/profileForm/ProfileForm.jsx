@@ -10,6 +10,7 @@ import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
+import Badge from '../Badge';
 
 export default function ProfileForm(props) {
 	const navigate = useNavigate();
@@ -42,7 +43,11 @@ export default function ProfileForm(props) {
 	  };
 
 	const addSkill = () => {
-		setSkills((prevSkills) => [...prevSkills, { skill: '' }]);
+		const newSkill = window.prompt('Enter a skill:');
+
+		if (newSkill) {
+			setSkills((prevSkills) => [...prevSkills, { skill: newSkill }]);
+		}
 	};
 
 	const addProject = () => {
@@ -231,7 +236,7 @@ export default function ProfileForm(props) {
 							<h3>Skills</h3>
 							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
-								<span key={index} className='badge'>{skill.skill}</span>
+								<Badge key={index} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
 // 								<InputSection
 // 									key={index}
 // 									value={skill.skill}
