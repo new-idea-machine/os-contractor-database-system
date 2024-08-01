@@ -9,7 +9,8 @@ contained in it will be spread out evenly across it.
 section#PersonalInfo {
 	display: grid;
 	/* grid-template-rows: [first-line] min-content min-content 1fr [last-line]; */
-	grid-template-columns: 500px 1fr 1fr;
+	grid-template-columns: 250px 1fr 1fr;
+	grid-column-gap: 70px;
 	grid-template-areas: 
 		"profileImg githubUrl linkedinUrl"
 		"profileImg qualification availability"
@@ -32,8 +33,8 @@ section#Projects div.Cell {
 		"title"
 		"url"
 		"description";
-	width: 400px;
-	height: 400px;
+	width: 100%;
+	height: 250px;
 }
 
 .updateForm {

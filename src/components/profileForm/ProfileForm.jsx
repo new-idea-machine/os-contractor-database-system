@@ -171,9 +171,9 @@ export default function ProfileForm(props) {
 						</section>
 
 						<section id="Projects">
-							<button type='button' style={{float: 'right'}} onClick={addProject}>Add Project</button>
+							<button type='button' style={{float: 'right', width: '200px'}} onClick={addProject}>Add Project</button>
 							<h3>Projects</h3>
-							<ResponsiveGrid minColumnWidth='400px' rowGap='10px'>
+							<ResponsiveGrid minColumnWidth='250px' rowGap='20px' columnGap='20px'>
 								{projects.map((project, index) => (
 									<div className='Cell' key={project.title ? project.title : index}>
 										<InputSection
@@ -260,7 +260,7 @@ export default function ProfileForm(props) {
 // 								/>
 							))}
 			     			</section>
-						<button type='submit'>
+						<button type='submit' style={{width: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
 							<span>Save</span>
 						</button>
 					</form>
