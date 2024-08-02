@@ -8,6 +8,7 @@ import { userProfileContext } from '../../contexts/UserProfileContext';
 import { techDataSchema, formInputs } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
+import ChangePassword from '../ChangePassword';
 import { Routes, Route, useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
@@ -264,6 +265,7 @@ export default function ProfileForm(props) {
 							<span>Save</span>
 						</button>
 					</form>
+					<ChangePassword />
 				</div>
 			)}
 		</>
