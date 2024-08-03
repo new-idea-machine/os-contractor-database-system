@@ -4,7 +4,7 @@ import { EmailAuthProvider, reauthenticateWithCredential, updatePassword } from 
 import { authContext } from '../contexts/Authorization';
 import InputSection from './inputSection/InputSection';
 
-import './ChangePassword.css';
+import styles from './ChangePassword.module.css';
 
 export default function ChangePassword() {
 	const { user } = useContext(authContext);
@@ -56,7 +56,7 @@ export default function ChangePassword() {
 
 		if (fieldsAreValid) {
 			try {
-				updatePassword(user, newPassword)
+				await updatePassword(user, newPassword)
 				toast.info('Password successfully changed!');
 			} catch {
 				toast.error('Failed to change password');
@@ -68,8 +68,8 @@ export default function ChangePassword() {
 		<>
 			<h1>Change Password</h1>
 
-			<form id='ChangePassword' onSubmit={onSubmit}>
-				<section id="Passwords">
+			<form onSubmit={onSubmit}>
+				<section className={styles.ChangePassword} >
 					<InputSection field={ { type:  'password', name:  'currentPassword',  label:  'Current password' } } value='' />
 					<InputSection field={ { type:  'password', name:  'newPassword',  label:  'New password' } } value='' />
 					<InputSection field={ { type:  'password', name:  'confirmPassword', label:  'Confirm password' } } value='' />
