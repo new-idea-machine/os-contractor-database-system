@@ -1,10 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { authContext } from '../../contexts/Authorization';
-import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
-import PlaceIcon from "@mui/icons-material/Place";
-import { Country } from "country-state-city";
 import ProfilePicture from "../ProfilePicture";
 
 import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
@@ -16,24 +13,11 @@ const RecruiterProfile = (props) => {
   const { user } = useContext(authContext);
   const userUid = user?.uid;
   const isOwnProfile = (recruiter?.firebaseUID === userUid);
-  const allCountries = Country.getAllCountries();
 
   return (
     <div id="RecruiterProfile">
       <aside>
         <ProfilePicture profileImage={recruiter?.profileImg} size="150px" />
-
-        {recruiter?.githubUrl && (
-          <p>
-            <a
-              href={recruiter?.githubUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              <GitHubIcon /> GitHub
-            </a>
-          </p>
-        )}
 
         {recruiter?.linkedinUrl && (
           <p>
@@ -61,33 +45,12 @@ const RecruiterProfile = (props) => {
           <h4>{recruiter?.qualification}</h4>
 
           <section>
-            {recruiter?.countryCode ? allCountries.map((code) => {
-                if (code.isoCode === recruiter?.countryCode)
-                  return (
-                    <div
-                      key={code.isoCode}
-                      style={{
-                        display: "flex",
-                        alignContent: "center",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <PlaceIcon />
-                      <div>{code.name},</div>
-                      <div>&nbsp;{recruiter?.stateCode},</div>
-                      <div>&nbsp;{recruiter?.city}</div>
-                    </div>
-                  );
-              }) : 
-              <>&nbsp;</>
-            }
-
             <div>
-              {recruiter?.workSite}
+              {recruiter?.phone}
             </div>
 
             <div>
-              {recruiter?.availability === 'Other' ? recruiter?.availabilityDetails : recruiter?.availability}
+              {recruiter?.email}
             </div>
           </section>
         </header>

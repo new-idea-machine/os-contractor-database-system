@@ -12,3 +12,14 @@ div#RecruiterProfile {
 	grid-template-columns: 200px 1fr;
 	place-items: start;
 }
+
+div#RecruiterProfile > div {
+	width:  100%;
+}
+
+div#RecruiterProfile > div > header > section {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	place-items: start;
+	row-gap: 1em;
+}
