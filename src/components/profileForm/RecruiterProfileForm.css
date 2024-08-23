@@ -1,0 +1,22 @@
+/*
+The "PersonalInfo" section is laid out in grid, and each entry in the form has its own area in
+the grid.
+
+The element that comprises the "workSite" area is made a flexbox so that the radio buttons
+contained in it will be spread out evenly across it.
+*/
+
+section#PersonalInfo {
+	display: grid;
+	/* grid-template-rows: [first-line] min-content min-content 1fr [last-line]; */
+	grid-template-columns: 250px 1fr 1fr;
+	grid-column-gap: 70px;
+	grid-template-areas: 
+		"profileImg qualification linkedinUrl"
+		"profileImg companyName companyName"
+		"profileImg companyInfo companyInfo"
+		"firstName companyInfo companyInfo"
+		"lastName companyInfo companyInfo"
+		"phone companyInfo companyInfo"
+		"email companyInfo companyInfo";
+}

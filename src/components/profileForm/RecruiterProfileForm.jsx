@@ -1,121 +1,125 @@
 import React, { useEffect, useState, useContext, useRef } from 'react';
-import './profile.css';
+import { store } from '../../firebaseconfig';
+import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
+import { v4 as uuidv4 } from 'uuid';
+import './RecruiterProfileForm.css';
 import { authContext } from '../../contexts/Authorization';
-import { recruiterContext } from '../../contexts/RecruiterContext';
+import { userProfileContext } from '../../contexts/UserProfileContext';
 import { RecDataSchema, recFormInputs } from '../../constants/data';
+import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
+import ChangePassword from '../ChangePassword';
 import { Routes, Route, useNavigate } from 'react-router-dom';
-
-
 
 export default function RecruiterProfileForm(props) {
 	const navigate = useNavigate();
 
 	const { user } = useContext(authContext);
+	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
-    const {
-		updateRecObject,
-		currentUserProfile,
-		matchProfileToCurrentUser,
-		recruiterMap,
-		getFirestore
-	} = useContext(recruiterContext);
-
-	const [initialFormData, setInitialFormData] = useState(RecDataSchema);
-
-
-
-	useEffect(() => {
-        matchProfileToCurrentUser();
-		if (currentUserProfile) {
-		  setInitialFormData((prevState) => ({
-			...prevState,
-			email: currentUserProfile.email || '',
-			firstName: currentUserProfile.firstName || '',
-			id: currentUserProfile.id,
-			lastName: currentUserProfile.lastName || '',
-			qualification: currentUserProfile.qualification || '',
-			linkedinUrl: currentUserProfile.linkedinUrl || '',
-            companyName: currentUserProfile.companyName || '',
-			companyInfo: currentUserProfile.companyInfo || '',
-			phone: currentUserProfile.phone || '',
-
-		  }));
-
-
-
-		}
-	  }, [currentUserProfile]);
-
+	const [newImageFile, setNewImageFile] = useState(null);
+	const initialFormData = structuredClone(userProfile ? userProfile : RecDataSchema);
 
 	const form = useRef();
 
-	const onChange = (e) => {
-		const { name, value } = e.target;
-		setInitialFormData((prevState) => ({ ...prevState, [name]: value }));
+	const onSubmit = async (event) => {
+		event.preventDefault();
 
-	  };
+		try {
+			// Upload new image
 
-	const onSubmit = (e) => {
-		e.preventDefault();
-		const data = {
-			email:  initialFormData?.email || '',
-			firstName: initialFormData?.firstName ||'',
-			id: currentUserProfile?.id,
-			lastName: initialFormData?.lastName || '',
-			qualification: initialFormData?.qualification ||  '',
-			linkedinUrl: currentUserProfile?.linkedinUrl || initialFormData.linkedinUrl,
+			let newImageUrl;
 
-				//resume: currentUserProfile?.resume || initialFormData?.resume,
+			if (newImageFile) {
+				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
 
-            companyName: initialFormData?.companyName || '',
-			companyInfo: initialFormData?.companyInfo || '',
-			phone: initialFormData?.phone || '',
+				// const uploadTask = uploadBytesResumable(storageRef, file);
+				//
+				// uploadTask.on(
+				// 	'state_changed',
+				// 	(snapshot) => {
+				// 		const progress = Math.round(
+				// 			(snapshot.bytesTransferred / snapshot.totalBytes) * 100
+				// 		);
+				// 		setProgresspercent(progress);
+				// 	},
+				// 	(error) => {
+				// 		alert(error);
+				// 	},
+				// 	() => {
+				// 		getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+				// 			setImgUrl(downloadURL);
+				// 			setPreviewUrl(null);
+				// 			onSubmit(downloadURL);
+				// 			setProgresspercent(0);
+				// 		});
+				// 	}
+				// );
+		
+				await uploadBytes(storageRef, newImageFile);
+	
+				newImageUrl = await getDownloadURL(storageRef);
+			}
 
+			// Upload new data
 
+			const formElements = event.target.elements;
+			const newUserProfile = structuredClone(initialFormData);
+			
+			newUserProfile.firstName = formElements.firstName.value;
+			newUserProfile.lastName = formElements.lastName.value;
+			newUserProfile.email =  formElements.email.value;
+			newUserProfile.qualification = formElements.qualification.value;
+			newUserProfile.linkedinUrl = formElements.linkedinUrl.value;
+			newUserProfile.companyName = formElements.companyName.value;
+			newUserProfile.companyInfo = formElements.companyInfo.value;
+			newUserProfile.phone = formElements.phone.value;
 
+			if (newImageUrl) newUserProfile.profileImg = newImageUrl;
 
-		};
-		console.log(data);
-		updateRecObject(data, () => {
+			await updateUserProfile(newUserProfile);
+
+			// Delete old image (if any)
+
+			const imageUrl = userProfile?.profileImg;
+
+			if (imageUrl && newImageUrl && (imageUrl !== newImageUrl)) {
+				const storageRef = ref(store, imageUrl);
+
+				await deleteObject(storageRef);
+			}
 
 			navigate('/myProfile');
-		  });
+		} catch(error) {
+			// Toast an error
+		}
 	};
-
 
 	return (
 		<>
-			{currentUserProfile && (
+			{userProfile && (
+				<div id='UpdateProfile'>
+					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
+						<section id='PersonalInfo'>
+							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
+								<Upload setNewImageFile={setNewImageFile} />
+							</div>
 
-				<div className='updateForm flexCenter'>
-                    <h1>recruiter</h1>
-					<form className='flexCenter' ref={form} onSubmit={onSubmit}>
-						<div className='formContainer'>
-							{recFormInputs?.map((section) => (
-								<div key={section?.sectionTitle} className='formSection '>
-									<h3>{section?.sectionTitle}</h3>
-									{section?.fields?.map((field) => (
-										<InputSection
-											key={field?.name}
-											value={initialFormData[field?.name] || ''}
-											field={field}
-											onChange={onChange}
-										/>
-									))}
-								</div>
-							))}
-							{/* </div>
-						<div className='flexCenter formContainer'> */}
+							<InputSection field={ { type:  'text', name:  'firstName', label:  'First Name' } } value={initialFormData?.firstName} />
+							<InputSection field={ { type:  'text', name:  'lastName',  label:  'Last Name' } } value={initialFormData?.lastName} />
+							<InputSection field={ { type:  'text', name:  'phone',  label:  'Phone No.' } } value={initialFormData?.phone} />
+							<InputSection field={ { type:  'email', name:  'email',  label:  'Email' } } value={initialFormData?.email} />
+							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={initialFormData?.qualification} />
+							<InputSection field={ { type:  'url', name:  'linkedinUrl',  label:  'LinkedIn' } } value={initialFormData?.linkedinUrl} />
+							<InputSection field={ { type:  'text', name:  'companyName',  label:  'Company Name' } } value={initialFormData?.companyName} />
+							<InputSection field={ { type:  'textArea', name:  'companyInfo',  label:  'About Us' } } value={initialFormData?.companyInfo} />
+						</section>
 
-
-
-						</div>
-						<button type='submit'>
+						<button type='submit' style={{width: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
 							<span>Save</span>
 						</button>
 					</form>
-
+					<ChangePassword />
 				</div>
 			)}
 		</>
