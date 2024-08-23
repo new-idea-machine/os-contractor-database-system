@@ -5,8 +5,6 @@ import { contractorsContext } from "../../contexts/ContractorsContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
-import PlaceIcon from "@mui/icons-material/Place";
-import { Country } from "country-state-city";
 import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
 import { Link } from "react-router-dom";
@@ -14,9 +12,9 @@ import { db} from '../../firebaseconfig';
 import ProfilePicture from "../ProfilePicture";
 
 import {
-	collection,
+  collection,
   query,
-	getDocs,
+  getDocs,
   where,
   getDoc,
   addDoc,
@@ -35,9 +33,8 @@ const ContractorProfile = (props) => {
   const contractorList = useContext(contractorsContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
-  const allCountries = Country.getAllCountries();
   const { user } = useContext(authContext);
-	const { userProfile } = useContext(userProfileContext);
+  const { userProfile } = useContext(userProfileContext);
   const userUid = user?.uid;
   const userType = userProfile?.userType;
   //const favoriteList = getFavoriteList();
@@ -144,26 +141,13 @@ const ContractorProfile = (props) => {
           <h4>{contractor?.qualification}</h4>
 
           <section>
-            {contractor?.countryCode ? allCountries.map((code) => {
-                if (code.isoCode === contractor?.countryCode)
-                  return (
-                    <div
-                      key={code.isoCode}
-                      style={{
-                        display: "flex",
-                        alignContent: "center",
-                        paddingBottom: "10px",
-                      }}
-                    >
-                      <PlaceIcon />
-                      <div>{code.name},</div>
-                      <div>&nbsp;{contractor?.stateCode},</div>
-                      <div>&nbsp;{contractor?.city}</div>
-                    </div>
-                  );
-              }) : 
-              <>&nbsp;</>
-            }
+            <div>
+              {contractor?.location}
+	    </div>
+
+            <div>
+              {contractor?.email}
+            </div>
 
             <div>
               {contractor?.workSite}

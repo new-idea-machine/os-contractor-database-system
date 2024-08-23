@@ -26,3 +26,14 @@ div#ContractorProfile {
 		}
 	}
 }
+
+div#ContractorProfile > div {
+	width:  100%;
+}
+
+div#ContractorProfile > div > header > section {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	place-items: start;
+	row-gap: 1em;
+}
