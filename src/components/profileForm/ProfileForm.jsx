@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
-import './profile.css';
+import styles from './ProfileForm.module.css';
 import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
 import { techDataSchema, formInputs } from '../../constants/data';
@@ -94,9 +94,9 @@ export default function ProfileForm(props) {
 				// 		});
 				// 	}
 				// );
-		
+
 				await uploadBytes(storageRef, newImageFile);
-	
+
 				newImageUrl = await getDownloadURL(storageRef);
 			}
 
@@ -104,7 +104,7 @@ export default function ProfileForm(props) {
 
 			const formElements = event.target.elements;
 			const newUserProfile = structuredClone(initialFormData);
-			
+
 			newUserProfile.firstName = formElements.firstName.value;
 			newUserProfile.lastName = formElements.lastName.value;
 			newUserProfile.email =  formElements.email.value;
@@ -147,8 +147,8 @@ export default function ProfileForm(props) {
 			{userProfile && (
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
-						<section id='PersonalInfo'>
-							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
+						<section className={styles.PersonalInfo}>
+							<div className={styles.profileImgUpload} style={{gridArea: "profileImg"}}>
 								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
@@ -171,7 +171,7 @@ export default function ProfileForm(props) {
 							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={initialFormData?.summary} />
 						</section>
 
-						<section id="Projects">
+						<section className={styles.Projects}>
 							<button type='button' style={{float: 'right', width: '200px'}} onClick={addProject}>Add Project</button>
 							<h3>Projects</h3>
 							<ResponsiveGrid minColumnWidth='250px' rowGap='20px' columnGap='20px'>
@@ -246,7 +246,7 @@ export default function ProfileForm(props) {
 // 										name: `skill`,
 // 										label: `Skill ${index + 1}`,
 // 										type: 'text',
-// 
+//
 // 										placeholder: `Skill ${index + 1}`,
 // 									}}
 // 									onChange={(e) => {
