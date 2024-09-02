@@ -2,7 +2,7 @@ import React, { useEffect, useState, useContext, useRef } from 'react';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
-import './RecruiterProfileForm.css';
+import styles from './RecruiterProfileForm.module.css';
 import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
 import { RecDataSchema, recFormInputs } from '../../constants/data';
@@ -55,9 +55,9 @@ export default function RecruiterProfileForm(props) {
 				// 		});
 				// 	}
 				// );
-		
+
 				await uploadBytes(storageRef, newImageFile);
-	
+
 				newImageUrl = await getDownloadURL(storageRef);
 			}
 
@@ -65,7 +65,7 @@ export default function RecruiterProfileForm(props) {
 
 			const formElements = event.target.elements;
 			const newUserProfile = structuredClone(initialFormData);
-			
+
 			newUserProfile.firstName = formElements.firstName.value;
 			newUserProfile.lastName = formElements.lastName.value;
 			newUserProfile.email =  formElements.email.value;
@@ -99,9 +99,9 @@ export default function RecruiterProfileForm(props) {
 		<>
 			{userProfile && (
 				<div id='UpdateProfile'>
-					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
-						<section id='PersonalInfo'>
-							<div className='profileImgUpload' style={{gridArea: "profileImg"}}>
+					<form ref={form} onSubmit={onSubmit}>
+						<section className={styles.PersonalInfo}>
+							<div style={{gridArea: "profileImg"}}>
 								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
