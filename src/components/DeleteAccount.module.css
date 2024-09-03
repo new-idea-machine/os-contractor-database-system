@@ -1,0 +1,6 @@
+.DeleteAccount {
+	display: grid;
+	grid-template-columns: 1fr 1fr 1fr;
+	grid-template-areas: "currentPassword unused1 unused2";
+	grid-column-gap: 60px;
+}

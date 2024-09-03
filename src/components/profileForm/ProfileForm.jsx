@@ -9,6 +9,7 @@ import { techDataSchema } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import ChangePassword from '../ChangePassword';
+import DeleteAccount from '../DeleteAccount';
 import { useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
@@ -220,6 +221,7 @@ export default function ProfileForm(props) {
 						</button>
 					</form>
 					<ChangePassword />
+					<DeleteAccount />
 				</div>
 			)}
 		</>

@@ -9,6 +9,7 @@ import { RecDataSchema } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import ChangePassword from '../ChangePassword';
+import DeleteAccount from '../DeleteAccount';
 import { useNavigate } from 'react-router-dom';
 
 export default function RecruiterProfileForm(props) {
@@ -97,6 +98,7 @@ export default function RecruiterProfileForm(props) {
 						</button>
 					</form>
 					<ChangePassword />
+					<DeleteAccount />
 				</div>
 			)}
 		</>
