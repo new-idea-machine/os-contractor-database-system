@@ -1,28 +1,24 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './ProfileForm.module.css';
-import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
-import { techDataSchema, formInputs } from '../../constants/data';
+import { techDataSchema } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import ChangePassword from '../ChangePassword';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
 
 export default function ProfileForm(props) {
 	const navigate = useNavigate();
 
-	const { user } = useContext(authContext);
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
-	//const [availability, setAvailability] = useState('');
-	//const [workSite, setWorkSite] = useState('');
-	//const [resumeFileUrl, setResumeFileUrl] = useState({ resume: '' });
 	const initialFormData = structuredClone(userProfile ? userProfile : techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills ? initialFormData.skills : []);
 	const [projects, setProjects] = useState(initialFormData.projects ? initialFormData.projects : []);
@@ -72,29 +68,6 @@ export default function ProfileForm(props) {
 			if (newImageFile) {
 				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
 
-				// const uploadTask = uploadBytesResumable(storageRef, file);
-				//
-				// uploadTask.on(
-				// 	'state_changed',
-				// 	(snapshot) => {
-				// 		const progress = Math.round(
-				// 			(snapshot.bytesTransferred / snapshot.totalBytes) * 100
-				// 		);
-				// 		setProgresspercent(progress);
-				// 	},
-				// 	(error) => {
-				// 		alert(error);
-				// 	},
-				// 	() => {
-				// 		getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-				// 			setImgUrl(downloadURL);
-				// 			setPreviewUrl(null);
-				// 			onSubmit(downloadURL);
-				// 			setProgresspercent(0);
-				// 		});
-				// 	}
-				// );
-
 				await uploadBytes(storageRef, newImageFile);
 
 				newImageUrl = await getDownloadURL(storageRef);
@@ -138,7 +111,8 @@ export default function ProfileForm(props) {
 
 			navigate('/myProfile');
 		} catch(error) {
-			// Toast an error
+			console.error(error);
+			toast.error('Profile failed to be completely updated.');
 		}
 	};
 
@@ -148,7 +122,7 @@ export default function ProfileForm(props) {
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section className={styles.PersonalInfo}>
-							<div className={styles.profileImgUpload} style={{gridArea: "profileImg"}}>
+							<div style={{gridArea: "profileImg"}}>
 								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
@@ -234,31 +208,11 @@ export default function ProfileForm(props) {
 							</ResponsiveGrid>
 						</section>
 
-						<section id='Skills'>
+						<section>
 							<h3>Skills</h3>
 							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
 								<Badge key={skill.skill} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
-// 								<InputSection
-// 									key={index}
-// 									value={skill.skill}
-// 									field={{
-// 										name: `skill`,
-// 										label: `Skill ${index + 1}`,
-// 										type: 'text',
-//
-// 										placeholder: `Skill ${index + 1}`,
-// 									}}
-// 									onChange={(e) => {
-// 										const value = e.target.value;
-// 										setSkills((prevSkills) =>
-// 											prevSkills.map((s, i) =>
-// 												i === index ? { ...s, skill: value } : s
-// 											)
-// 										);
-// 									}}
-// 									onDelete={() => deleteSkill(index)}
-// 								/>
 							))}
 			     			</section>
 						<button type='submit' style={{width: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
