@@ -2,6 +2,7 @@ import React, { useContext, useEffect, useState, createContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
 	collection,
+	deleteField,
 	doc,
 	getDoc,
 	getDocs,
@@ -42,14 +43,23 @@ function UserProfileContext({ children }) {
 
 			if (!snapshot.empty) {
 				const doc = snapshot.docs[0];
+				const newProfile = { id: doc.id, ...doc.data() }
 
-				setUserProfile({ id: doc.id, ...doc.data() });
+				if (newProfile.deleteBy) {
+					newProfile.deleteBy = deleteField();
+
+					await updateDoc(doc.ref, newProfile);
+					delete newProfile.deleteBy;
+					toast.info('Account reactivated');
+				}
+
+				setUserProfile(newProfile);
 			}
 		}
-	
+
 		if (user) {
 			// The user profile will be in ONE and ONLY ONE of these collections.
-			
+
 			fetchUserProfiles('recruiter');
 			fetchUserProfiles('techs');
 		} else{
