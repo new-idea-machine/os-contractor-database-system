@@ -1,20 +1,19 @@
-import React, { useEffect, useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef } from 'react';
+import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './RecruiterProfileForm.module.css';
-import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
-import { RecDataSchema, recFormInputs } from '../../constants/data';
+import { RecDataSchema } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import ChangePassword from '../ChangePassword';
-import { Routes, Route, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 
 export default function RecruiterProfileForm(props) {
 	const navigate = useNavigate();
 
-	const { user } = useContext(authContext);
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
@@ -32,29 +31,6 @@ export default function RecruiterProfileForm(props) {
 
 			if (newImageFile) {
 				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
-
-				// const uploadTask = uploadBytesResumable(storageRef, file);
-				//
-				// uploadTask.on(
-				// 	'state_changed',
-				// 	(snapshot) => {
-				// 		const progress = Math.round(
-				// 			(snapshot.bytesTransferred / snapshot.totalBytes) * 100
-				// 		);
-				// 		setProgresspercent(progress);
-				// 	},
-				// 	(error) => {
-				// 		alert(error);
-				// 	},
-				// 	() => {
-				// 		getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-				// 			setImgUrl(downloadURL);
-				// 			setPreviewUrl(null);
-				// 			onSubmit(downloadURL);
-				// 			setProgresspercent(0);
-				// 		});
-				// 	}
-				// );
 
 				await uploadBytes(storageRef, newImageFile);
 
@@ -91,7 +67,8 @@ export default function RecruiterProfileForm(props) {
 
 			navigate('/myProfile');
 		} catch(error) {
-			// Toast an error
+			console.error(error);
+			toast.error('Profile failed to be completely updated.');
 		}
 	};
 
