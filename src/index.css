@@ -51,6 +51,9 @@
 
 	--link-colour: var(--colour-secondary-2);
 
+	--notification-colour-background: var(--colour-background-secondary-4);
+	--notification-colour: var(--colour-secondary-7);
+
 	/* Font List */
 
 	--font: 'Open Sans', sans-serif;

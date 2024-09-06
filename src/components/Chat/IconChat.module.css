@@ -1,0 +1,16 @@
+.IconChat {
+	position:  relative;
+
+	span {
+		position:  absolute;
+		top:  -16px;
+		right:  0px;
+		height:  30px;
+		width:  30px;
+		border-radius: 15px;
+		background-color:  var(--notification-colour-background);
+		color:  var(--notification-colour);
+		text-align:  center;
+		align-content:  center;
+	}
+}

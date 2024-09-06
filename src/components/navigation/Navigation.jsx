@@ -2,13 +2,12 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/Authorization";
 import { userProfileContext } from "../../contexts/UserProfileContext";
-import { messagesContext } from "../../contexts/MessagesContext";
+import IconChat from "../Chat/IconChat";
 import ProfilePicture from "../ProfilePicture";
 
 import "./Navigation.css";
 
 import { ReactComponent as IconAbout } from "../../assets/icons/about.svg";
-import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
 import { ReactComponent as IconEdit } from "../../assets/icons/edit.svg";
 import { ReactComponent as IconFavourites } from "../../assets/icons/favourites.svg";
 import { ReactComponent as IconHome } from "../../assets/icons/home.svg";
@@ -19,7 +18,6 @@ import { ReactComponent as IconSearch } from "../../assets/icons/search.svg";
 function Navigation({ menu }) {
   const { logout, user } = useContext(authContext);
   const { userProfile } = useContext(userProfileContext);
-  const {unreadMessages} = useContext(messagesContext);
 
   return (
     <nav>
