@@ -25,7 +25,7 @@ import {
 
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
-import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
+import { ReactComponent as IconChats } from "../../assets/icons/chats.svg";
 
 const ContractorProfile = (props) => {
   const { id } = useParams();
@@ -130,7 +130,7 @@ const ContractorProfile = (props) => {
 
         {!isOwnProfile && (
           <Link to={`/chat/${contractor?.firebaseUID}`}>
-            <IconChat /> Chat
+            <IconChats /> Chat
           </Link>
         )}
       </aside>
@@ -186,7 +186,7 @@ const ContractorProfile = (props) => {
             <h2>Skills</h2>
 
             <p>
-              {contractorSkills?.map((skill, index) => 
+              {contractorSkills?.map((skill, index) =>
                 <span key={index} className="badge">
                   {skill.skill}
                 </span>

@@ -4,7 +4,7 @@ import { authContext } from '../../contexts/Authorization';
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import ProfilePicture from "../ProfilePicture";
 
-import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
+import { ReactComponent as IconChats } from "../../assets/icons/chats.svg";
 
 import "./RecruiterProfile.css";
 
@@ -33,7 +33,7 @@ const RecruiterProfile = (props) => {
 
         {!isOwnProfile && (
           <Link to={`/chat/${recruiter?.firebaseUID}`}>
-            <IconChat /> Chat
+            <IconChats /> Chat
           </Link>
         )}
       </aside>

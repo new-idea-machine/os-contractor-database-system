@@ -2,7 +2,7 @@ import React, { useContext } from "react";
 import { NavLink } from "react-router-dom";
 import { authContext } from "../../contexts/Authorization";
 import { userProfileContext } from "../../contexts/UserProfileContext";
-import IconChat from "../Chat/IconChat";
+import IconChats from "../Chat/IconChats";
 import ProfilePicture from "../ProfilePicture";
 
 import "./Navigation.css";
@@ -88,7 +88,7 @@ function Navigation({ menu }) {
 
       <div>
         <NavLink to="/inbox">
-          <IconChat />
+          <IconChats />
         </NavLink>
       </div>
     </nav>
