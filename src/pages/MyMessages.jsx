@@ -9,7 +9,7 @@ export default function MyMessages() {
 
 	return (
 		<>
-			<Navigation />
+			<Navigation menu="Chat" />
 			<main>
 				<h1>Messages</h1>
 

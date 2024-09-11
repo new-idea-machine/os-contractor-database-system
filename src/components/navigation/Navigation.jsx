@@ -8,12 +8,15 @@ import ProfilePicture from "../ProfilePicture";
 import "./Navigation.css";
 
 import { ReactComponent as IconAbout } from "../../assets/icons/about.svg";
+import { ReactComponent as IconArchive } from "../../assets/icons/archive.svg";
+import { ReactComponent as IconChat } from "../../assets/icons/chat.svg";
 import { ReactComponent as IconEdit } from "../../assets/icons/edit.svg";
 import { ReactComponent as IconFavourites } from "../../assets/icons/favourites.svg";
 import { ReactComponent as IconHome } from "../../assets/icons/home.svg";
 import { ReactComponent as IconLogout } from "../../assets/icons/logout.svg";
 import { ReactComponent as IconProfile } from "../../assets/icons/profile.svg";
 import { ReactComponent as IconSearch } from "../../assets/icons/search.svg";
+import { ReactComponent as IconStar } from "../../assets/icons/star.svg";
 
 function Navigation({ menu }) {
   const { logout, user } = useContext(authContext);
@@ -38,7 +41,23 @@ function Navigation({ menu }) {
           </NavLink>
         </li>
 
-    	  {menu === "Profile" ?
+        {!menu &&
+          <>
+            <li>
+              <NavLink to="/search" onClick={() => sessionStorage.removeItem("searchState")}>
+                <IconSearch />{" "}Search
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/About">
+                <IconAbout />{" "}About
+              </NavLink>
+            </li>
+          </>
+        }
+
+    	  {menu === "Profile" &&
           <>
             <li>
               <NavLink to="/myProfile">
@@ -57,33 +76,36 @@ function Navigation({ menu }) {
                 <IconFavourites />{" "}Favourites
               </NavLink>
             </li>
+          </>
+        }
 
-            <li>
-              <NavLink to="/" onClick={() => logout()}>
-                <IconLogout />{" "}Log Out
-              </NavLink>
-            </li>
-          </>:
+        {menu === "Chat" &&
           <>
             <li>
-              <NavLink to="/search" onClick={() => sessionStorage.removeItem("searchState")}>
-                <IconSearch />{" "}Search
+              <NavLink to="/inbox">
+                <IconChat />{" "}Chat
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/About">
-                <IconAbout />{" "}About
+              <NavLink to="/inbox">
+                <IconArchive />{" "}Archive
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/" onClick={() => logout()}>
-                <IconLogout />{" "}Log Out
+              <NavLink to="/inbox">
+                <IconStar />{" "}Starred
               </NavLink>
             </li>
           </>
         }
+
+        <li>
+          <NavLink to="/" onClick={() => logout()}>
+            <IconLogout />{" "}Log Out
+          </NavLink>
+        </li>
       </ul>
 
       <div>
