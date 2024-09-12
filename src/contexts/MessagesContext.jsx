@@ -3,113 +3,84 @@ import { store, auth, db, fbFunctions } from '../firebaseconfig';
 import {
 	doc,
 	addDoc,
-	 getDoc,
+	getDoc,
 	onSnapshot,
 	setDoc,
 	serverTimestamp,
 	updateDoc,
 	collection,
-	   query,
+	query,
 	getDocs,
-	   where,
-	   orderBy,
+	where,
+	orderBy,
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
 import { contractorContext } from './ContractorContext';
 import { recruiterContext } from "./RecruiterContext";
 
-
 export const messagesContext = createContext();
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
-	const [chatsList, setChatsList] = useState([]);
-    const [unreadMessages, setUnreadMessages] = useState(0);
+	const [messages, setMessages] = useState([]);
 
-    const removeDuplicates = (array, key) => {
-        const seen = new Set();
-        return array.filter((item) => {
-          const value = item[key];
-          if (seen.has(value)) {
-            return false;
-          }
-          seen.add(value);
-          return true;
-        });
-      };
-
-    const getUserChats = async () => {
-        if (user && user.uid) {
-            const q = query(
-              collection(db, 'messages'),
-              where('receiverUid', '==', user.uid)
-            );
+	const fetchMessages = async (field) => {
+		const messagesQuery = query(
+			collection(db, 'messages'),
+			where(field, '==', user.uid)
+		);
 
 
-            try {
-                const querySnapshot = await getDocs(q);
+		try {
+			const querySnapshot = await getDocs(messagesQuery);
+			const fetchedMessages = querySnapshot.docs.map((doc) => ({
+				id: doc.id,
+				...doc.data(),
+			}));
 
-                const fetchedMessages = querySnapshot.docs.map((doc) => ({
-                  id: doc.id,
-                  ...doc.data(),
-                }));
-                console.log('docs : ', fetchedMessages);
-                const uniqueFetchedMessages = removeDuplicates(fetchedMessages, 'uid');
-                 // Fetch newMessageCount for each unique uid in uniqueFetchedMessages
-                const updatedMessages = await Promise.all(
-                uniqueFetchedMessages.map(async (message) => {
-                const { uid } = message;
+			return fetchedMessages;
+		}
+		catch(error) {
+			console.error('Error fetching messages:', error);
+			return [];
+		}
+	}
 
-                const q = query(
-                collection(db, 'messages'),
-                where('uid', '==', uid),
-                where('hasRead', '==', 'false')
-          );
+	const getMessages = async () => {
+		if (user?.uid) {
+			// uid & receiverUid
 
-          const querySnapshot = await getDocs(q);
-          const newMessageCount = querySnapshot.size;
+			const sentMessages = await fetchMessages('uid');
+			const receivedMessages = await fetchMessages('receiverUid');
+			const allMessages = sentMessages.concat(receivedMessages);
 
-          return {
-            ...message,
-            newMessageCount,
-          };
-        })
-      );
+			allMessages.sort((lhs, rhs) => lhs?.createdAt < rhs?.createdAt ? -1 : 1);
+			console.log(allMessages);
+			setMessages(allMessages);
+		}
 
-      console.log('unique docs with newMessageCount: ', updatedMessages);
+	}
 
-      setChatsList(updatedMessages);
-              } catch (error) {
-                console.error('Error fetching messages:', error);
-                setChatsList([]); // Return an empty array if there's an error
+	const getUnreadMessages = () =>	{
+		if (user?.uid)
+			return messages.filter((message) => (message?.receiverUid === user.uid) && !message?.hasRead);
+		else
+			return [];
+	}
 
-              }
-            }
-
-      };
-
-      const getUnreadMessages = () => {
-        const totalUnreadMessages = chatsList.reduce((acc, message) => {
-          return acc + message.newMessageCount;
-        }, 0);
-        return totalUnreadMessages;
-      };
-
-
-	useEffect(() => {
-		if (user && user.uid) {
-            getUserChats();
-            getUnreadMessages();
-          }
-        }, [user]);
+	useEffect(() =>	{
+		if (user?.uid) {
+			getMessages();
+		}
+	}, [user]);
 
 
 
 	const appStates = {
-		setChatsList,
-        chatsList,
-        getUserChats,
-        unreadMessages: getUnreadMessages()
+		setMessages,
+		messages,
+		getMessages,
+		getUnreadMessages
 	};
 
 	return (

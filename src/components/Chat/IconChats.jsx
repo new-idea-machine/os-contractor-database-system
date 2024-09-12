@@ -6,14 +6,15 @@ import styles from "./IconChats.module.css";
 import { ReactComponent as Icon } from '../../assets/icons/chats.svg';
 
 function IconChat() {
-	const { unreadMessages } = useContext(messagesContext);
+	const { getUnreadMessages } = useContext(messagesContext);
+	const numUnreadMessages = getUnreadMessages().length;
 
 	return (
 		<div className={styles.IconChat}>
 			<Icon />
-			{unreadMessages > 0 &&
+			{numUnreadMessages > 0 &&
 				<span>
-					{unreadMessages > 99 ? "++" : `${unreadMessages}`}
+					{numUnreadMessages > 99 ? "++" : `${numUnreadMessages}`}
 				</span>
 			}
 		</div>

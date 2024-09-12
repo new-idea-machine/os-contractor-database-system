@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import ProfilePicture from '../components/ProfilePicture';
 
 export default function MyMessages() {
-	const { chatsList } = useContext(messagesContext);
+	const { messages } = useContext(messagesContext);
 
 	return (
 		<>
@@ -13,16 +13,21 @@ export default function MyMessages() {
 			<main>
 				<h1>Messages</h1>
 
-				<ul>
-					{chatsList?.map((message, index) => (
-						<li key={index} className="message-container">
-							<Link to={`/chat/${message.uid}`}>
-								<ProfilePicture profileImage={message.avatar} size="40px" />
-							</Link>
-							<span className="message-name">{message.name}({message.newMessageCount})</span>
-						</li>
-					))}
-				</ul>
+				<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+					<ul>
+						{messages?.map((message, index) => (
+							<li key={index} className="message-container">
+								<Link to={`/chat/${message.uid}`}>
+									<ProfilePicture profileImage={message.avatar} size="40px" />
+								</Link>
+								<span className="message-name">{message.name}({message.newMessageCount})</span>
+							</li>
+						))}
+					</ul>
+					<div>
+						You have messages (maybe).
+					</div>
+				</div>
 			</main>
 		</>
 	);
