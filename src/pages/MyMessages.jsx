@@ -5,7 +5,8 @@ import { Link } from 'react-router-dom';
 import ProfilePicture from '../components/ProfilePicture';
 
 export default function MyMessages() {
-	const { messages } = useContext(messagesContext);
+	const { getMessagesByUser } = useContext(messagesContext);
+	const messages = getMessagesByUser();
 
 	return (
 		<>
@@ -16,7 +17,7 @@ export default function MyMessages() {
 				<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
 					<ul>
 						{messages?.map((message, index) => (
-							<li key={index} className="message-container">
+							<li key={message.uid} className="message-container">
 								<Link to={`/chat/${message.uid}`}>
 									<ProfilePicture profileImage={message.avatar} size="40px" />
 								</Link>
