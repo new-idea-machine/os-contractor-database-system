@@ -13,12 +13,38 @@ import {
 	getDocs,
 	where,
 	orderBy,
+	Timestamp
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
 import { contractorContext } from './ContractorContext';
 import { recruiterContext } from "./RecruiterContext";
 
 export const messagesContext = createContext();
+
+const compareDates = (lhs, rhs) => {
+	const convertDate = (date) => {
+		if (typeof date === "string")
+			return new Date(date.replaceAll(" at ", " "));
+		if (typeof date === "number")
+			return new Date(date)
+		else if (typeof date === "object") {
+			if (Date.prototype.isPrototypeOf(date))
+				return date;
+			else {
+				const timestamp = new Timestamp(date.seconds, date.nanoseconds);
+
+				return timestamp.toDate();
+			}
+		}
+		else
+			return new Date(0);
+	}
+
+	const leftDate = convertDate(lhs.createdAt);
+	const rightDate = convertDate(rhs.createdAt);
+
+	return (leftDate < rightDate ? -1 : (leftDate > rightDate ? 1 : 0));
+}
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
@@ -54,11 +80,9 @@ const MessagesContext = ({ children }) => {
 			const receivedMessages = await fetchMessages('receiverUid');
 			const allMessages = sentMessages.concat(receivedMessages);
 
-			allMessages.sort((lhs, rhs) => lhs?.createdAt < rhs?.createdAt ? -1 : 1);
-			console.log(allMessages);
+			allMessages.sort(compareDates);
 			setMessages(allMessages);
 		}
-
 	}
 
 	const getMessagesByUser = () => {
@@ -82,9 +106,6 @@ const MessagesContext = ({ children }) => {
 				if ((message.receiverUid === user.uid) && (message?.hasRead !== "true"))
 					filteredMessages[index].newMessageCount++;
 			}
-
-			console.log(`UserUID is ${user.uid}`);
-			console.log(filteredMessages);
 		}
 
 		return filteredMessages;
