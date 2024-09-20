@@ -6,8 +6,8 @@ import styles from "./IconChats.module.css";
 import { ReactComponent as Icon } from '../../assets/icons/chats.svg';
 
 function IconChat() {
-	const { getUnreadMessages } = useContext(messagesContext);
-	const numUnreadMessages = getUnreadMessages().length;
+	const { getNumUnreadMessages } = useContext(messagesContext);
+	const numUnreadMessages = getNumUnreadMessages();
 
 	return (
 		<div className={styles.IconChat}>

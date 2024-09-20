@@ -48,7 +48,7 @@ const compareDates = (lhs, rhs) => {
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
-	const [messages, setMessages] = useState([]);
+	const [chatsList, setChatsList] = useState([]);
 
 	const fetchMessages = async (field) => {
 		const messagesQuery = query(
@@ -72,7 +72,7 @@ const MessagesContext = ({ children }) => {
 		}
 	}
 
-	const getMessages = async () => {
+	const getMessagesFromDatabase = async () => {
 		if (user?.uid) {
 			// uid & receiverUid
 
@@ -81,56 +81,63 @@ const MessagesContext = ({ children }) => {
 			const allMessages = sentMessages.concat(receivedMessages);
 
 			allMessages.sort(compareDates);
-			setMessages(allMessages);
-		}
-	}
 
-	const getMessagesByUser = () => {
-		const filteredMessages = [];
+			const newChats = [];
 
-		if (user) {
-			for (const message of messages) {
-				let index = filteredMessages.findIndex((element) => (element.uid === message.uid) || (element.uid === message.receiverUid));
+			for (const message of allMessages) {
+				let chat = newChats.find((element) => (element.uid === message.uid));
 
-				if (index < 0) {
-					index = filteredMessages.length;
+				if (chat === undefined) {
+					chat = newChats.find((element) => (element.uid === message.receiverUid));
 
-					filteredMessages.push({uid:  (message.uid === user.uid ? message.receiverUid : message.uid), newMessageCount:  0, messages:  []});
+					if (chat === undefined) {
+						chat = {
+							uid:  (message.uid === user.uid ? message.receiverUid : message.uid),
+							newMessageCount:  0,
+							messages:  []
+						}
+
+						newChats.push(chat);
+					}
 				}
 
-				filteredMessages[index].messages.push(message);
 
-				filteredMessages[index].name = message.name;
-				filteredMessages[index].avatar = message.avatar;
+				chat.messages.push(message);
 
-				if ((message.receiverUid === user.uid) && (message?.hasRead !== "true"))
-					filteredMessages[index].newMessageCount++;
+				/*
+				This ensures that the latest name and avatar for each user is
+				always used.
+				*/
+
+				chat.name = message.name;
+				chat.avatar = message.avatar;
+
+				if ((message.receiverUid === user.uid) && (message.hasRead !== true))
+					chat.newMessageCount++;
 			}
-		}
 
-		return filteredMessages;
+			setChatsList(newChats);
+		} else {
+			setChatsList([]);
+		}
 	}
 
-	const getUnreadMessages = () =>	{
-		if (user?.uid)
-			return messages.filter((message) => (message?.receiverUid === user.uid) && !message?.hasRead);
-		else
-			return [];
+	const getNumUnreadMessages = () => {
+		const totalUnreadMessages = chatsList.reduce((acc, message) => {
+				return acc + message.newMessageCount;
+			}, 0);
+		return totalUnreadMessages;
 	}
 
 	useEffect(() =>	{
 		if (user?.uid) {
-			getMessages();
+			getMessagesFromDatabase();
 		}
 	}, [user]);
 
-
-
 	const appStates = {
-		messages,
-		getMessages,
-		getMessagesByUser,
-		getUnreadMessages
+		chatsList,
+		getNumUnreadMessages
 	};
 
 	return (
