@@ -48,36 +48,52 @@ const compareDates = (lhs, rhs) => {
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
+	const [receivedMessages, setReceivedMessages] = useState([]);
+	const [sentMessages, setSentMessages] = useState([]);
+	const [receivedUnsubscribe, setReceivedUnsubscribe] = useState(null);
+	const [sentUnsubscribe, setSentUnsubscribe] = useState(null);
 	const [chatsList, setChatsList] = useState([]);
 
-	const fetchMessages = async (field) => {
-		const messagesQuery = query(
-			collection(db, 'messages'),
-			where(field, '==', user.uid)
-		);
+	useEffect(() => {
+		const fetchMessages = (field, setMessages, setUnsubscribe) => {
+			const messagesQuery = query(
+				collection(db, 'messages'),
+				where(field, '==', user.uid)
+			);
 
+			setUnsubscribe(() => onSnapshot(messagesQuery,
+				(snapshot) => {
+					setMessages(snapshot.docs.map((doc) => ({
+						id: doc.id,
+						...doc.data(),
+					})));
+				},
+				(error) => {console.error(`Error fetching messages for "${field}":`, error);})
 
-		try {
-			const querySnapshot = await getDocs(messagesQuery);
-			const fetchedMessages = querySnapshot.docs.map((doc) => ({
-				id: doc.id,
-				...doc.data(),
-			}));
-
-			return fetchedMessages;
+			);
 		}
-		catch(error) {
-			console.error('Error fetching messages:', error);
-			return [];
-		}
-	}
 
-	const getMessagesFromDatabase = async () => {
+		if (receivedUnsubscribe) {
+			receivedUnsubscribe();
+		}
+
+		if (sentUnsubscribe) {
+			sentUnsubscribe();
+		}
+
+		if (user) {
+			fetchMessages('receiverUid', setReceivedMessages, setReceivedUnsubscribe);
+			fetchMessages('uid', setSentMessages, setSentUnsubscribe);
+		} else {
+			setReceivedMessages([]);
+			setSentMessages([]);
+			setReceivedUnsubscribe(null);
+			setSentUnsubscribe(null);
+		}
+	}, [user]);
+
+	useEffect(() => {
 		if (user?.uid) {
-			// uid & receiverUid
-
-			const sentMessages = await fetchMessages('uid');
-			const receivedMessages = await fetchMessages('receiverUid');
 			const allMessages = sentMessages.concat(receivedMessages);
 
 			allMessages.sort(compareDates);
@@ -120,7 +136,7 @@ const MessagesContext = ({ children }) => {
 		} else {
 			setChatsList([]);
 		}
-	}
+	}, [receivedMessages, sentMessages]);
 
 	const getNumUnreadMessages = () => {
 		const totalUnreadMessages = chatsList.reduce((acc, message) => {
@@ -128,12 +144,6 @@ const MessagesContext = ({ children }) => {
 			}, 0);
 		return totalUnreadMessages;
 	}
-
-	useEffect(() =>	{
-		if (user?.uid) {
-			getMessagesFromDatabase();
-		}
-	}, [user]);
 
 	const appStates = {
 		chatsList,
