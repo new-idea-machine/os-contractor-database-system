@@ -1,23 +1,13 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
-import { store, auth, db, fbFunctions } from '../firebaseconfig';
+import { db } from '../firebaseconfig';
 import {
-	doc,
-	addDoc,
-	getDoc,
 	onSnapshot,
-	setDoc,
-	serverTimestamp,
-	updateDoc,
 	collection,
 	query,
-	getDocs,
 	where,
-	orderBy,
 	Timestamp
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
-import { contractorContext } from './ContractorContext';
-import { recruiterContext } from "./RecruiterContext";
 
 export const messagesContext = createContext();
 
@@ -69,7 +59,6 @@ const MessagesContext = ({ children }) => {
 					})));
 				},
 				(error) => {console.error(`Error fetching messages for "${field}":`, error);})
-
 			);
 		}
 

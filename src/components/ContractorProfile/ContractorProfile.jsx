@@ -1,7 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
 import { useParams } from "react-router-dom";
-import { contractorsContext } from "../../contexts/ContractorsContext";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
@@ -30,11 +29,10 @@ import { ReactComponent as IconChats } from "../../assets/icons/chats.svg";
 const ContractorProfile = (props) => {
   const { id } = useParams();
   const contractor = props.data;
-  const contractorList = useContext(contractorsContext);
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const { user } = useContext(authContext);
-  const { userProfile } = useContext(userProfileContext);
+  const { userProfile, contractors } = useContext(userProfileContext);
   const userUid = user?.uid;
   const userType = userProfile?.userType;
   //const favoriteList = getFavoriteList();
@@ -87,7 +85,7 @@ const ContractorProfile = (props) => {
 
   useEffect(() => {
     const contractorSkillsList = () => {
-      contractorList?.forEach((contractor) => {
+      contractors?.forEach((contractor) => {
         if (id === contractor?.id || props?.data?.id === contractor?.id) {
           setContractorSkills(contractor?.skills || []);
         }
@@ -95,7 +93,7 @@ const ContractorProfile = (props) => {
       });
     };
     contractorSkillsList();
-  }, [id, props?.data?.id, contractorList, skillsList]);
+  }, [id, props?.data?.id, contractors, skillsList]);
 
   const isOwnProfile = (contractor?.firebaseUID === userUid);
 

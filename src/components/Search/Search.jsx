@@ -1,7 +1,7 @@
 import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
 import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
-import { contractorsContext } from "../../contexts/ContractorsContext";
+import { userProfileContext } from "../../contexts/UserProfileContext";
 import { Navigation } from "../index";
 import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext, useEffect, useState, useMemo } from "react";
@@ -14,9 +14,9 @@ const avatarURL = "/assets/avatar.png";
 export default function Search() {
   const navigate = useNavigate();
   const [availabilityFilter, setAvailabilityFilter] = useState("all"); // Default to "all"
-  const contractorList = useContext(contractorsContext);
+  const { contractors } = useContext(userProfileContext);
   const [city, setCity] = React.useState("");
-  const [contractors, setContractors] = useState([]);
+  const [matchingContractors, setMatchingContractors] = useState([]);
   const [country, setCountry] = React.useState("");
   const location = useLocation();
   const [state, setState] = React.useState("");
@@ -90,10 +90,10 @@ export default function Search() {
     );
     const contractorFilteredList = () => {
       const filteredContractors = filterContractorsByAvailability(
-        contractorList,
+        contractors,
         availabilityFilter
       );
-      for (const contractor of contractorList) {
+      for (const contractor of contractors) {
         let numMatchingSkills = 0;
 
         if (selectedSkills.length > 0) {
@@ -143,14 +143,14 @@ export default function Search() {
         }
         return b.percentMatching - a.percentMatching;
       });
-      setContractors(filteredContractors);
+      setMatchingContractors(filteredContractors);
     };
 
     contractorFilteredList();
   }, [
     availabilityFilter,
     city,
-    contractorList,
+    contractors,
     country,
     state,
     selectedSkills,
@@ -242,10 +242,10 @@ export default function Search() {
           </div>
         </div>
         <ul>
-          {contractors.length === 0 ? (
+          {matchingContractors.length === 0 ? (
             <div className="no-results-message">No results</div>
           ) : (
-            contractors.map((contractor) => (
+            matchingContractors.map((contractor) => (
               <div
                 className="contractor_container"
                 key={contractor?.id}

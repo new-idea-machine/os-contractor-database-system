@@ -2,73 +2,96 @@ import React, { useContext, useEffect, useState, createContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
 	collection,
-	deleteField,
 	doc,
 	getDoc,
-	getDocs,
-	limit,
+	onSnapshot,
 	query,
-	updateDoc,
-	where,
+	updateDoc
 } from 'firebase/firestore';
 import { toast } from 'react-toastify';
 import { authContext } from './Authorization';
 
-export const userProfileContext = createContext(null);
+export const userProfileContext = createContext();
 
 function UserProfileContext({ children }) {
 	const { user } = useContext(authContext);
+	const [contractors, setContractors] = useState([]);
+	const [recruiters, setRecruiters] = useState([]);
+	const [contractorsUnsubscribe, setContractorsUnsubscribe] = useState(null);
+	const [recruitersUnsubscribe, setRecruitersUnsubscribe] = useState(null);
 	const [userProfile, setUserProfile] = useState([]);
 
+	function finder(element) {
+		return element.firebaseUID === user.uid;
+	}
+
 	async function updateUserProfile(data) {
-		console.log('TRYING TO UPDATE', data);
 		const userDocRef = doc(db, userProfile?.userType, userProfile?.id);
-		console.log('userDocRef->', userDocRef);
 		const userDocSnapshot = await getDoc(userDocRef);
 		if (userDocSnapshot.exists()) {
   			// Update the document
   			await updateDoc(userDocRef, data);
-  			console.log('User successfully updated!');
 			toast.info(`The changes successfully saved`);
-			setUserProfile(data);
 		} else {
   			console.log('Document not found');
 		}
 	};
 
 	useEffect(() => {
-		async function fetchUserProfiles(collectionName) {
-			const q = query(collection(db, collectionName), where('firebaseUID', '==', user.uid), limit(1));
-			const snapshot = await getDocs(q);
+		const fetchUsers = (collectionName, setUsers, setUnsubscribe) => {
+			const usersQuery = query(collection(db, collectionName));
 
-			if (!snapshot.empty) {
-				const doc = snapshot.docs[0];
-				const newProfile = { id: doc.id, ...doc.data() }
+			setUnsubscribe(() => onSnapshot(usersQuery,
+				(snapshot) => {
+					setUsers(snapshot.docs.map((doc) => ({
+						id: doc.id,
+						...doc.data(),
+					})));
+				},
+				(error) => {console.error(`Error fetching users from "${collection}":`, error);})
+			);
+		}
 
-				if (newProfile.deleteBy) {
-					newProfile.deleteBy = deleteField();
+		if (contractorsUnsubscribe) {
+			contractorsUnsubscribe();
+		}
 
-					await updateDoc(doc.ref, newProfile);
-					delete newProfile.deleteBy;
-					toast.info('Account reactivated');
-				}
-
-				setUserProfile(newProfile);
-			}
+		if (recruitersUnsubscribe) {
+			recruitersUnsubscribe();
 		}
 
 		if (user) {
-			// The user profile will be in ONE and ONLY ONE of these collections.
-
-			fetchUserProfiles('recruiter');
-			fetchUserProfiles('techs');
-		} else{
-			setUserProfile(null);
+			fetchUsers('techs', setContractors, setContractorsUnsubscribe);
+			fetchUsers('recruiter', setRecruiters, setRecruitersUnsubscribe);
+		} else {
+			setContractors([]);
+			setRecruiters([]);
+			setContractorsUnsubscribe(null);
+			setRecruitersUnsubscribe(null);
 		}
 	}, [user]);
 
+	useEffect(() => {
+		if (user?.uid) {
+			// The current user's profile will be in ONE and ONLY ONE of these collections.
+
+			setUserProfile(contractors.find(finder) || recruiters.find(finder));
+		} else {
+			setUserProfile(null);
+		}
+	}, [contractors, recruiters]);
+
+	function getUserProfile(uid) {
+		if (uid)
+			// The requested user's profile will be in ONE and ONLY ONE of these collections.
+
+			return contractors.find(finder) || recruiters.find(finder);
+		else
+			return userProfile;
+	}
+
 	return (
-		<userProfileContext.Provider value={ { userProfile, updateUserProfile } }>
+		<userProfileContext.Provider value={ { userProfile, contractors, getUserProfile, updateUserProfile } }>
 			{children}
 		</userProfileContext.Provider>
 	);
