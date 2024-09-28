@@ -21,10 +21,6 @@ function UserProfileContext({ children }) {
 	const [recruitersUnsubscribe, setRecruitersUnsubscribe] = useState(null);
 	const [userProfile, setUserProfile] = useState([]);
 
-	function finder(element) {
-		return element.firebaseUID === user.uid;
-	}
-
 	async function updateUserProfile(data) {
 		const userDocRef = doc(db, userProfile?.userType, userProfile?.id);
 		const userDocSnapshot = await getDoc(userDocRef);
@@ -72,6 +68,10 @@ function UserProfileContext({ children }) {
 	}, [user]);
 
 	useEffect(() => {
+		function finder(element) {
+			return element.firebaseUID === user.uid;
+		}
+
 		if (user?.uid) {
 			// The current user's profile will be in ONE and ONLY ONE of these collections.
 
@@ -82,6 +82,10 @@ function UserProfileContext({ children }) {
 	}, [contractors, recruiters]);
 
 	function getUserProfile(uid) {
+		function finder(element) {
+			return element.firebaseUID === uid;
+		}
+
 		if (uid)
 			// The requested user's profile will be in ONE and ONLY ONE of these collections.
 
