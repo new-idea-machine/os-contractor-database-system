@@ -5,7 +5,7 @@ import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage
 import { v4 as uuidv4 } from 'uuid';
 import styles from './RecruiterProfileForm.module.css';
 import { userProfileContext } from '../../contexts/UserProfileContext';
-import { RecDataSchema } from '../../constants/data';
+import { enforceSchema, recDataSchema } from '../../constants/data';
 import Upload from '../upload/Upload';
 import InputSection from '../inputSection/InputSection';
 import ChangePassword from '../ChangePassword';
@@ -18,7 +18,7 @@ export default function RecruiterProfileForm(props) {
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
-	const initialFormData = structuredClone(userProfile ? userProfile : RecDataSchema);
+	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, recDataSchema);
 
 	const form = useRef();
 
