@@ -8,6 +8,7 @@ import {
 	Timestamp
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
+import { userProfileContext } from './UserProfileContext';
 
 export const messagesContext = createContext();
 
@@ -38,6 +39,7 @@ const compareDates = (lhs, rhs) => {
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
+	const { getUserProfile } = useContext(userProfileContext);
 	const [receivedMessages, setReceivedMessages] = useState([]);
 	const [sentMessages, setSentMessages] = useState([]);
 	const [receivedUnsubscribe, setReceivedUnsubscribe] = useState(null);
@@ -114,11 +116,34 @@ const MessagesContext = ({ children }) => {
 				always used.
 				*/
 
-				chat.name = message.name;
+				chat.firstName = message.name;
+				chat.lastName = null;
+				chat.email = message.email;
+				chat.qualification = message.qualification;
 				chat.avatar = message.avatar;
 
 				if ((message.receiverUid === user.uid) && (message.hasRead !== true))
 					chat.newMessageCount++;
+			}
+
+			for (const chat of newChats) {
+				const profile = getUserProfile(chat.uid);
+
+				if (profile) {
+					if (profile.name) {
+						chat.firstName = profile.name;
+						chat.lastName = '';
+					} else {
+						chat.firstName = profile.firstName;
+						chat.lastName = profile.lastName;
+					}
+
+					chat.email = profile.email;
+					chat.qualification = profile.qualification;
+					chat.avatar = profile.avatar;
+					// chat.avatar = "http://i2.cdn.turner.com/cnnnext/dam/assets/140428161531-bozo-the-clown-restricted-horizontal-large-gallery.jpg";
+					chat.avatar = profile.profileImg;
+				}
 			}
 
 			setChatsList(newChats);

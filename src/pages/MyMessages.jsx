@@ -1,11 +1,19 @@
-import React, { useContext } from 'react';
-import { Navigation } from '../components';
+import React, { useContext, useRef, useState } from 'react';
 import {messagesContext} from '../contexts/MessagesContext';
-import { Link } from 'react-router-dom';
+import { Navigation } from '../components';
+import Message from '../components/Chat/Message';
+import SendMessage from '../components/Chat/Message';
 import ProfilePicture from '../components/ProfilePicture';
+
+import '../components/Chat/Chat.css';
 
 export default function MyMessages() {
 	const { chatsList } = useContext(messagesContext);
+	const [currentCorrespondent, setCurrentCorrespondent] = useState(null);
+	const currentChat = chatsList.find((chat) => chat.uid === currentCorrespondent?.uid);
+	const scroll = useRef();
+
+	console.log('currentChat:', currentChat);
 
 	return (
 		<>
@@ -15,18 +23,35 @@ export default function MyMessages() {
 
 				<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
 					<ul>
-						{chatsList?.map((message) => (
-							<li key={message.uid} className="message-container">
-								<Link to={`/chat/${message.uid}`}>
-									<ProfilePicture profileImage={message.avatar} size="40px" />
-									<span className="message-name">{message.name} ({message.newMessageCount})</span>
-								</Link>
+						{chatsList?.map((correspondent) => (
+							<li key={correspondent.uid} className="message-container">
+								<button onClick={() => setCurrentCorrespondent(correspondent)}>
+									<ProfilePicture profileImage={correspondent.avatar} size="40px" />
+									<span className="message-name">
+										{correspondent.firstName}{" "}
+										{correspondent.lastName}
+									</span>
+									<span>({correspondent.newMessageCount})</span><br />
+									<span>{correspondent.qualification}</span>
+								</button>
 							</li>
 						))}
 					</ul>
-					<div>
-						You have messages (maybe).
-					</div>
+					{
+						currentCorrespondent ?
+						<>
+							<div className="messages-wrapper">
+								{currentChat.messages.map((message, index) => {
+									return (<Message key={`${message.uid} - ${index}`} message={message} />);
+								})}
+							</div>
+							<span ref={scroll}></span>
+							<SendMessage scroll={scroll} profileUid={currentCorrespondent.uid} />
+							</>:
+						<div>
+							You have messages (maybe).
+						</div>
+					}
 				</div>
 			</main>
 		</>
