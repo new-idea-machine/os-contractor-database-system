@@ -1,5 +1,5 @@
 import React, { useContext, useRef, useState } from 'react';
-import {messagesContext} from '../contexts/MessagesContext';
+import { messagesContext } from '../contexts/MessagesContext';
 import { Navigation } from '../components';
 import Message from '../components/Chat/Message';
 import SendMessage from '../components/Chat/Message';
@@ -8,12 +8,12 @@ import ProfilePicture from '../components/ProfilePicture';
 import '../components/Chat/Chat.css';
 
 export default function MyMessages() {
-	const { chatsList } = useContext(messagesContext);
-	const [currentCorrespondent, setCurrentCorrespondent] = useState(null);
-	const currentChat = chatsList.find((chat) => chat.uid === currentCorrespondent?.uid);
+	const { chatsList, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+	const [currentChat, setCurrentChat] = useState(null);
+	const numUnreadMessages = getNumUnreadMessages();
 	const scroll = useRef();
 
-	console.log('currentChat:', currentChat);
+	updateHasRead(currentChat);
 
 	return (
 		<>
@@ -23,22 +23,22 @@ export default function MyMessages() {
 
 				<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
 					<ul>
-						{chatsList?.map((correspondent) => (
-							<li key={correspondent.uid} className="message-container">
-								<button onClick={() => setCurrentCorrespondent(correspondent)}>
-									<ProfilePicture profileImage={correspondent.avatar} size="40px" />
+						{chatsList?.map((chat) => (
+							<li key={chat.uid} className="message-container">
+								<button onClick={() => setCurrentChat(chat)}>
+									<ProfilePicture profileImage={chat.avatar} size="40px" />
 									<span className="message-name">
-										{correspondent.firstName}{" "}
-										{correspondent.lastName}
+										{chat.firstName}{" "}
+										{chat.lastName}
 									</span>
-									<span>({correspondent.newMessageCount})</span><br />
-									<span>{correspondent.qualification}</span>
+									<span>({chat.newMessageCount})</span><br />
+									<span>{chat.qualification}</span>
 								</button>
 							</li>
 						))}
 					</ul>
 					{
-						currentCorrespondent ?
+						currentChat ?
 						<>
 							<div className="messages-wrapper">
 								{currentChat.messages.map((message, index) => {
@@ -46,10 +46,10 @@ export default function MyMessages() {
 								})}
 							</div>
 							<span ref={scroll}></span>
-							<SendMessage scroll={scroll} profileUid={currentCorrespondent.uid} />
-							</>:
+							<SendMessage scroll={scroll} profileUid={currentChat.uid} />
+						</>:
 						<div>
-							You have messages (maybe).
+							You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
 						</div>
 					}
 				</div>

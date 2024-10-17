@@ -1,9 +1,11 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
+	doc,
 	onSnapshot,
 	collection,
 	query,
+	updateDoc,
 	where,
 	Timestamp
 } from 'firebase/firestore';
@@ -159,9 +161,21 @@ const MessagesContext = ({ children }) => {
 		return totalUnreadMessages;
 	}
 
+	const updateHasRead = (chat) => {
+		if (chat) {
+			chat.messages.forEach((message) => {
+				if (!message.hasRead) {
+					const messageRef = doc(db, "messages", message.id);
+					updateDoc(messageRef, { hasRead: true });
+				}
+			})
+		}
+	};
+
 	const appStates = {
 		chatsList,
-		getNumUnreadMessages
+		getNumUnreadMessages,
+		updateHasRead
 	};
 
 	return (
