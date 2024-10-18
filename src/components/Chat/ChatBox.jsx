@@ -20,7 +20,7 @@ const ChatBox = ({ chat }) => {
         </div>
         {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
         <span ref={scroll}></span>
-        <SendMessage scroll={scroll} profileUid={chat.uid} />
+        <SendMessage receiverUid={chat.uid} />
       </div>:
       <div>
         You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.

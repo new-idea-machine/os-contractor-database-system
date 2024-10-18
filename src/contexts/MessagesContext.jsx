@@ -1,21 +1,26 @@
 import React, { useState, useEffect, createContext, useContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
+	addDoc,
 	doc,
 	onSnapshot,
 	collection,
 	query,
+	serverTimestamp,
 	updateDoc,
 	where,
 	Timestamp
 } from 'firebase/firestore';
 import { authContext } from './Authorization';
 import { userProfileContext } from './UserProfileContext';
+import { enforceSchema, messageDataSchema } from '../constants/data';
 
 export const messagesContext = createContext();
 
 const compareDates = (lhs, rhs) => {
 	const convertDate = (date) => {
+		if (date === null)
+			return null;
 		if (typeof date === "string")
 			return new Date(date.replaceAll(" at ", " "));
 		if (typeof date === "number")
@@ -172,10 +177,38 @@ const MessagesContext = ({ children }) => {
 		}
 	};
 
+	const sendMessage = (receiverUid, newMessage) => {
+		if (receiverUid && (newMessage.trim() !== "")) {
+			const profile = getUserProfile();
+			let name = (profile?.firstName ? profile?.firstName : "");
+
+			if (profile?.lastName) {
+				if (name !== "")
+					name += " ";
+
+				name += profile.lastName;
+			}
+
+			addDoc(collection(db, "messages"), enforceSchema(
+				{
+					text: newMessage.trim(),
+					name,
+					email: profile?.email,
+					avatar: profile?.profileImg || user?.photoURL,
+					createdAt: serverTimestamp(),
+					uid: user.uid,
+					receiverUid: receiverUid,
+				},
+				messageDataSchema)
+			);
+		}
+	};
+
 	const appStates = {
 		chatsList,
 		getNumUnreadMessages,
-		updateHasRead
+		updateHasRead,
+		sendMessage
 	};
 
 	return (

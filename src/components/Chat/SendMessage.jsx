@@ -1,36 +1,22 @@
-import React, { useState, useContext } from "react";
-import { db } from "../../firebaseconfig";
-import { addDoc, collection, serverTimestamp } from "firebase/firestore";
-import { authContext } from '../../contexts/Authorization';
-import { userProfileContext } from "../../contexts/UserProfileContext";
+import React, { useContext } from "react";
+import { messagesContext } from '../../contexts/MessagesContext';
 
-const SendMessage = ({ scroll, profileUid }) => {
-  const [message, setMessage] = useState("");
-  const { user } = useContext(authContext);
-  const userProfile = useContext(userProfileContext);
+const SendMessage = ({ receiverUid }) => {
+  const { sendMessage } = useContext(messagesContext);
 
-  const sendMessage = async (event) => {
+  const send = (event) => {
+    const messageField = event.target.elements["messageInput"];
+
     event.preventDefault();
-    if (message.trim() === "") {
-      return;
-    }
+    sendMessage(receiverUid, messageField.value);
 
-    await addDoc(collection(db, "messages"), {
-      text: message.trim(),
-      name: userProfile?.firstName,
-      email: userProfile?.email,
-      avatar: userProfile?.profileImg || user?.photoURL,
-      createdAt: serverTimestamp(),
-      uid: userProfile?.firebaseUID,
-      receiverUid: profileUid,
-      hasRead: false,
-    });
-    setMessage("");
-    scroll.current.scrollIntoView({ behavior: "smooth" });
+    messageField.value = "";
+
+    // scroll.current.scrollIntoView({ behavior: "smooth" });
   };
 
   return (
-    <form onSubmit={(event) => sendMessage(event)} className="send-message">
+    <form onSubmit={send} className="send-message">
       <label htmlFor="messageInput" hidden>
         Enter Message
       </label>
@@ -40,8 +26,7 @@ const SendMessage = ({ scroll, profileUid }) => {
         type="text"
         className="form-input__input"
         placeholder="type message..."
-        value={message}
-        onChange={(e) => setMessage(e.target.value)}
+        defaultValue=""
       />
       <button type="submit">Send</button>
     </form>
