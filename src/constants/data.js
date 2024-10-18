@@ -14,7 +14,7 @@ Some types of members in "schema" are special:
   "target" are checked.
 - "null":  the data type is undefined & can be anything; "target" is only checked for the
   presence of this member and its type is ignored.
-- Function:  not allowed (this goes for objects, too).
+- Function:  not allowed (not even as members of objects).
 
 A quick & easy way to create a new object initialized with all default values from "schema" is
 to pass "{}" into "target".
@@ -27,9 +27,23 @@ function enforceSchema(target, schema) {
 	console.assert(typeof target === 'object');
 	console.assert(typeof schema === 'object');
 
+	/*
+	This function returns the type of "thing" as a string.  It's more comprehensive than
+	the "typeof" operator alone in that it will detect arrays and nulls distinctly.
+	*/
+
+	function getType(thing) {
+		if (thing === null)
+			return 'null';
+		else if (Array.isArray(thing))
+			return 'array';
+		else
+			return typeof(thing);
+	}
+
 	Object.keys(schema).forEach((key) => {
-		const targetKeyType = Array.isArray(target[key]) ? 'array' : typeof target[key];
-		const schemaKeyType = Array.isArray(schema[key]) ? 'array' : typeof schema[key];
+		const targetKeyType = getType(target[key]);
+		const schemaKeyType = getType(schema[key]);
 
 		console.assert(schemaKeyType !== 'function');
 
