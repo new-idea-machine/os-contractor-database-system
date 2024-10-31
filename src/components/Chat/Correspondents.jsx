@@ -2,7 +2,7 @@ import React, { useContext } from 'react';
 import { messagesContext } from '../../contexts/MessagesContext';
 import ProfilePicture from '../ProfilePicture';
 
-function Correspondents({ setCurrentChat }) {
+function Correspondents({ setCurrentCorrespondentUid }) {
 	const { chatsList } = useContext(messagesContext);
 
 	return (
@@ -20,7 +20,7 @@ function Correspondents({ setCurrentChat }) {
 							</Link>
 						</div> */}
 
-						<button onClick={() => setCurrentChat(chat)}>
+						<button onClick={() => setCurrentCorrespondentUid(chat.uid)}>
 							<ProfilePicture profileImage={chat.avatar} size="40px" />
 							<span className="message-name">
 								{chat.firstName}{" "}

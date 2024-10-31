@@ -4,12 +4,13 @@ import SendMessage from "./SendMessage";
 import "./Chat.css";
 import { messagesContext } from '../../contexts/MessagesContext';
 
-const ChatBox = ({ chat }) => {
+const ChatBox = ({ correspondentUid }) => {
   const scroll = useRef();
-	const { getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+	const { chatsList, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
 	const numUnreadMessages = getNumUnreadMessages();
+  const chat = chatsList.find((chat) => chat.uid === correspondentUid);
 
-	updateHasRead(chat);
+  updateHasRead(chat);
 
   return (chat ?
       <div>
@@ -20,7 +21,7 @@ const ChatBox = ({ chat }) => {
         </div>
         {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
         <span ref={scroll}></span>
-        <SendMessage receiverUid={chat.uid} />
+        <SendMessage receiverUid={correspondentUid} />
       </div>:
       <div>
         You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
