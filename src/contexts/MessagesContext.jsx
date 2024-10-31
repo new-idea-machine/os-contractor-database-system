@@ -1,4 +1,4 @@
-import React, { useState, useEffect, createContext, useContext } from 'react';
+import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
 	addDoc,
@@ -47,52 +47,54 @@ const compareDates = (lhs, rhs) => {
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
 	const { getUserProfile } = useContext(userProfileContext);
-	const [receivedMessages, setReceivedMessages] = useState([]);
-	const [sentMessages, setSentMessages] = useState([]);
-	const [receivedUnsubscribe, setReceivedUnsubscribe] = useState(null);
-	const [sentUnsubscribe, setSentUnsubscribe] = useState(null);
+	const receivedMessages = useRef([]);
+	const sentMessages = useRef([]);
+	const receivedUnsubscribe = useRef(null);
+	const sentUnsubscribe = useRef(null);
 	const [chatsList, setChatsList] = useState([]);
 
 	useEffect(() => {
-		const fetchMessages = (field, setMessages, setUnsubscribe) => {
+		const fetchMessages = (field, messagesRef, unsubscribeRef) => {
 			const messagesQuery = query(
 				collection(db, 'messages'),
 				where(field, '==', user.uid)
 			);
 
-			setUnsubscribe(() => onSnapshot(messagesQuery,
+			unsubscribeRef.current = onSnapshot(messagesQuery,
 				(snapshot) => {
-					setMessages(snapshot.docs.map((doc) => ({
+					messagesRef.current = snapshot.docs.map((doc) => ({
 						id: doc.id,
 						...doc.data(),
-					})));
+					}));
+
+					updateChatsList();
 				},
-				(error) => {console.error(`Error fetching messages for "${field}":`, error);})
-			);
+				(error) => {console.error(`Error fetching messages for "${field}":`, error);});
 		}
 
-		if (receivedUnsubscribe) {
-			receivedUnsubscribe();
+		if (receivedUnsubscribe.current) {
+			receivedUnsubscribe.current();
 		}
 
-		if (sentUnsubscribe) {
-			sentUnsubscribe();
+		if (sentUnsubscribe.current) {
+			sentUnsubscribe.current();
 		}
 
 		if (user) {
-			fetchMessages('receiverUid', setReceivedMessages, setReceivedUnsubscribe);
-			fetchMessages('uid', setSentMessages, setSentUnsubscribe);
+			fetchMessages('receiverUid', receivedMessages, receivedUnsubscribe);
+			fetchMessages('uid', sentMessages, sentUnsubscribe);
 		} else {
-			setReceivedMessages([]);
-			setSentMessages([]);
-			setReceivedUnsubscribe(null);
-			setSentUnsubscribe(null);
+			receivedMessages.current = [];
+			sentMessages.current = [];
+			receivedUnsubscribe.current = null;
+			sentUnsubscribe.current = null;
+			setChatsList([]);
 		}
 	}, [user]);
 
-	useEffect(() => {
+	const updateChatsList = () => {
 		if (user?.uid) {
-			const allMessages = sentMessages.concat(receivedMessages);
+			const allMessages = sentMessages.current.concat(receivedMessages.current);
 
 			allMessages.sort(compareDates);
 
@@ -114,7 +116,6 @@ const MessagesContext = ({ children }) => {
 						newChats.push(chat);
 					}
 				}
-
 
 				chat.messages.push(message);
 
@@ -154,10 +155,8 @@ const MessagesContext = ({ children }) => {
 			}
 
 			setChatsList(newChats);
-		} else {
-			setChatsList([]);
 		}
-	}, [receivedMessages, sentMessages]);
+	}
 
 	const getNumUnreadMessages = () => {
 		const totalUnreadMessages = chatsList.reduce((acc, message) => {
