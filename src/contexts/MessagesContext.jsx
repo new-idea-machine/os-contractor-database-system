@@ -17,10 +17,33 @@ import { enforceSchema, messageDataSchema } from '../constants/data';
 
 export const messagesContext = createContext();
 
+/*
+This function compares two dates that may have come from Firebase message documents.  "lhs" is
+the date on the left-hand side of the comparison; "rhs" is the date on the right-hand side.
+
+In theory, all dates should be in the form of a Timestamp object.  In practice, as of this
+writing, there's a lot of dirty data in the database, so this function takes all the different
+possible formats into account.
+
+It returns -1 if "lhs" is earlier than "rhs" (lhs < rhs), 1 if "lhs" is later than "rhs"
+(lhs > rhs) or 0 if "lhs" and "rhs" are equal (lhs == rhs).  It is therefore suitable for use
+as a comparison function when sorting an array.
+*/
+
 const compareDates = (lhs, rhs) => {
+
+	/*
+	This function converts "date" to an actual JavaScript Date object.
+	*/
+
 	const convertDate = (date) => {
-		if (date === null)
-			return null;
+		/*
+		Several possible formats are handled:  string (Firebase date strings have
+		" at " between the date and time), number, a JavaScript Date object, and a
+		Firebase Timestamp data object.  If "date" isn't one of these then a zero-based
+		Date object is returned.
+		*/
+
 		if (typeof date === "string")
 			return new Date(date.replaceAll(" at ", " "));
 		if (typeof date === "number")
@@ -72,13 +95,11 @@ const MessagesContext = ({ children }) => {
 				(error) => {console.error(`Error fetching messages for "${field}":`, error);});
 		}
 
-		if (receivedUnsubscribe.current) {
+		if (receivedUnsubscribe.current)
 			receivedUnsubscribe.current();
-		}
 
-		if (sentUnsubscribe.current) {
+		if (sentUnsubscribe.current)
 			sentUnsubscribe.current();
-		}
 
 		if (user) {
 			fetchMessages('receiverUid', receivedMessages, receivedUnsubscribe);
@@ -92,6 +113,13 @@ const MessagesContext = ({ children }) => {
 		}
 	}, [user]);
 
+	/*
+	This function updates "chatsList" by merging the contents of "sentMessages" &
+	"receivedMessages" (grouping them by correspondent) and generating information about
+	each correspondent.  The messages for each correspondent are sorted in chronological
+	order.
+	*/
+
 	const updateChatsList = () => {
 		if (user?.uid) {
 			const allMessages = sentMessages.current.concat(receivedMessages.current);
@@ -99,6 +127,12 @@ const MessagesContext = ({ children }) => {
 			allMessages.sort(compareDates);
 
 			const newChats = [];
+
+			/*
+			This loop goes through each message one-by-one and determines its
+			correspondent.  It then adds that message to that correspondent's array
+			of messages in "newChats" (adding a new element if necessary).
+			*/
 
 			for (const message of allMessages) {
 				let chat = newChats.find((element) => (element.uid === message.uid));
@@ -134,6 +168,11 @@ const MessagesContext = ({ children }) => {
 					chat.newMessageCount++;
 			}
 
+			/*
+			This loop gets the most up-to-date information about each
+			correspondent.
+			*/
+
 			for (const chat of newChats) {
 				const profile = getUserProfile(chat.uid);
 
@@ -153,6 +192,12 @@ const MessagesContext = ({ children }) => {
 					chat.avatar = profile.profileImg;
 				}
 			}
+
+			newChats.sort((lhs, rhs) => (
+				lhs.firstName < rhs.firstName ? -1 : (
+					lhs.firstName > rhs.firstName ? 1 : (
+						lhs.lastName < rhs.lastName ? -1 : (
+							lhs.lastName > rhs.lastName ? 1 : 0)))))
 
 			setChatsList(newChats);
 		}
