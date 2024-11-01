@@ -1,4 +1,4 @@
-import React, { useRef, useContext } from "react";
+import React, { useRef, useEffect, useContext } from "react";
 import Message from "./Message";
 import SendMessage from "./SendMessage";
 import "./Chat.css";
@@ -12,6 +12,11 @@ const ChatBox = ({ correspondentUid }) => {
 
   updateHasRead(chat);
 
+  useEffect(() => {
+    if (scroll.current)
+      scroll.current.scrollIntoView({ behavior: "smooth" });
+  }, [correspondentUid, chatsList]);
+
   return (chat ?
       <div>
         <div className="messages-wrapper">
@@ -19,7 +24,7 @@ const ChatBox = ({ correspondentUid }) => {
             <Message key={message.id} message={message} />
           ))}
         </div>
-        {/* when a new message enters the chat, the screen scrolls down to the scroll div */}
+        {/* when a new message enters the chat, the screen scrolls down to this element */}
         <span ref={scroll}></span>
         <SendMessage receiverUid={correspondentUid} />
       </div>:
