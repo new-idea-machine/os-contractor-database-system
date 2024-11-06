@@ -6,7 +6,7 @@ function Correspondents({ setCurrentCorrespondentUid }) {
 	const { chatsList } = useContext(messagesContext);
 
 	return (
-		<div>
+		<>
 			<h1>Chats</h1>
 
 			<ul>
@@ -33,7 +33,7 @@ function Correspondents({ setCurrentCorrespondentUid }) {
 				))}
 			</ul>
 
-		</div>
+		</>
 	)
 }
 

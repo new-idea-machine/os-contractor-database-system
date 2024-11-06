@@ -1,0 +1,12 @@
+.Correspondents {
+	position:  fixed;
+	top:  0px;
+	bottom:  0px;
+	left:  300px;
+	width:  calc(50% - 300px);
+	overflow: auto;
+}
+
+.ChatBox {
+	padding-left:  50%;
+}

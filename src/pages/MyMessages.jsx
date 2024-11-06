@@ -3,7 +3,7 @@ import { Navigation } from '../components';
 import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
 
-import '../components/Chat/Chat.css';
+import styles from './MyMessages.module.css';
 
 export default function MyMessages() {
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
@@ -12,8 +12,10 @@ export default function MyMessages() {
 		<>
 			<Navigation menu="Chat" />
 			<main>
-				<div style={{display: "grid", gridTemplateColumns: "1fr 1fr"}}>
+				<div className={styles.Correspondents}>
 					<Correspondents setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
+				</div>
+				<div className={styles.ChatBox}>
 					<ChatBox correspondentUid={ currentCorrespondentUid } />
 				</div>
 			</main>

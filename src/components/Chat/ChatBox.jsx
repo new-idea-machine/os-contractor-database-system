@@ -18,7 +18,7 @@ const ChatBox = ({ correspondentUid }) => {
   }, [correspondentUid, chatsList]);
 
   return (chat ?
-      <div>
+      <>
         <div className="messages-wrapper">
           {chat.messages.map((message) => (
             <Message key={message.id} message={message} />
@@ -27,10 +27,10 @@ const ChatBox = ({ correspondentUid }) => {
         {/* when a new message enters the chat, the screen scrolls down to this element */}
         <span ref={scroll}></span>
         <SendMessage receiverUid={correspondentUid} />
-      </div>:
-      <div>
+      </>:
+      <>
         You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
-      </div>
+      </>
     );
 };
 
