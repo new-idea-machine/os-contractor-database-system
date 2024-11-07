@@ -1,6 +1,11 @@
 import React, { useContext } from "react";
 import { messagesContext } from '../../contexts/MessagesContext';
 
+import styles from "./SendMessage.module.css";
+
+import { ReactComponent as IconSend } from "../../assets/icons/sendMessage.svg";
+
+
 const SendMessage = ({ receiverUid }) => {
   const { sendMessage } = useContext(messagesContext);
 
@@ -16,7 +21,7 @@ const SendMessage = ({ receiverUid }) => {
   };
 
   return (
-    <form onSubmit={send} className="send-message">
+    <form className={styles.SendMessage} onSubmit={send}>
       <label htmlFor="messageInput" hidden>
         Enter Message
       </label>
@@ -24,11 +29,10 @@ const SendMessage = ({ receiverUid }) => {
         id="messageInput"
         name="messageInput"
         type="text"
-        className="form-input__input"
-        placeholder="type message..."
+        placeholder="Type message"
         defaultValue=""
       />
-      <button type="submit">Send</button>
+      <button type="submit"><IconSend /></button>
     </form>
   );
 };

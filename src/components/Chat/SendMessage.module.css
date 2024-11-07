@@ -1,0 +1,28 @@
+.SendMessage {
+	position: fixed;
+	left: 50%;
+	bottom: 0px;
+	right: 0px;
+	height: fit-content;
+	padding: 20px 30px;
+	display: flex;
+	background-color: var(--colour-background);
+}
+
+.SendMessage > input {
+	height: 40px;
+	padding: 10px 10px;
+	border-radius: 5px 0 0 5px;
+	border: none;
+	flex-grow: 1;
+}
+
+.SendMessage > input:placeholder {
+	color: #ddd;
+}
+
+.SendMessage > button {
+	width: 70px;
+	height: 40px;
+	padding: 5px 10px;
+}
