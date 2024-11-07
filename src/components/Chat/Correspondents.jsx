@@ -2,6 +2,8 @@ import React, { useContext } from 'react';
 import { messagesContext } from '../../contexts/MessagesContext';
 import ProfilePicture from '../ProfilePicture';
 
+import styles from './Correspondents.module.css';
+
 function Correspondents({ setCurrentCorrespondentUid }) {
 	const { chatsList } = useContext(messagesContext);
 
@@ -9,26 +11,18 @@ function Correspondents({ setCurrentCorrespondentUid }) {
 		<>
 			<h1>Chats</h1>
 
-			<ul>
+			<ul className={styles.Correspondents}>
 				{chatsList?.map((chat) => (
-					<li key={chat.uid} className="message-container">
-						{/* <div>
-							<Link to={`/chat/${chat.uid}`}>
-								<ProfilePicture profileImage={chat.avatar} size="40px" />
-								<span className="message-name">{chat.name}({chat.newMessageCount})</span>
-								<span>{chat.newMessageCount}</span>
-							</Link>
-						</div> */}
-
-						<button onClick={() => setCurrentCorrespondentUid(chat.uid)}>
-							<ProfilePicture profileImage={chat.avatar} size="40px" />
-							<span className="message-name">
+					<li key={chat.uid} onClick={() => setCurrentCorrespondentUid(chat.uid)}>
+						<ProfilePicture profileImage={chat.avatar} size="60px" />
+						<div>
+							{chat.newMessageCount === 0 || <div />}
+							<span>
 								{chat.firstName}{" "}
 								{chat.lastName}
-							</span>
-							<span>({chat.newMessageCount})</span><br />
+							</span><br />
 							<span>{chat.qualification}</span>
-						</button>
+						</div>
 					</li>
 				))}
 			</ul>
