@@ -25,8 +25,8 @@ export default function ContractorList() {
 				<h2>Our Available Contractors</h2>
 
 				<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
-					{contractors.map((person, index) => (
-						<div key={index}>
+					{contractors.map((person) => (
+						<div key={person.id}>
 							<ContractorCard data={person} />
 						</div>
 					))}
