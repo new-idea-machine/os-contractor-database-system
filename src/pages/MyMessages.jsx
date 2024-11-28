@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Navigation } from '../components';
 import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
@@ -7,6 +7,10 @@ import styles from './MyMessages.module.css';
 
 export default function MyMessages() {
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
+
+	useEffect(() => {console.log("Clear!"); setCurrentCorrespondentUid(null)}, []);
+
+	console.log(`Rendering MyMessages component (${currentCorrespondentUid})...`);
 
 	return (
 		<>
