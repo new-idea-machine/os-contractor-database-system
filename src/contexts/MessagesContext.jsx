@@ -200,8 +200,9 @@ const MessagesContext = ({ children }) => {
 	const updateHasRead = (chat) => {
 		if (chat) {
 			chat.messages.forEach((message) => {
-				if (!message.hasRead) {
+				if ((message.uid === chat.uid) && !message.hasRead) {
 					const messageRef = doc(db, "messages", message.id);
+
 					updateDoc(messageRef, { hasRead: true });
 				}
 			})
