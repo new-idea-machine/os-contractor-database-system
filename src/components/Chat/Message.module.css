@@ -1,0 +1,35 @@
+.Receiver {
+	display: grid;
+	margin: 1em 0px 1em;
+	grid-template-rows: auto;
+	grid-template-columns: 1fr max-content;
+	grid-template-areas:
+	        "message message"
+		"actions time";
+	justify-content: end;
+	text-align: end;
+}
+
+.Sender {
+	display: grid;
+	margin: 1em 0px 1em;
+	grid-template-rows: auto;
+	grid-template-columns: max-content 1fr;
+	grid-template-areas:
+	        "message message"
+		"time actions";
+	justify-content: start;
+	text-align: start;
+}
+
+.Sender *:first-child, .Receiver *:first-child {
+	grid-area: message;
+}
+
+.Sender *:nth-child(2), .Receiver *:nth-child(2) {
+	grid-area: time;
+}
+
+.Sender *:nth-child(3), .Receiver *:nth-child(3) {
+	grid-area: actions;
+}

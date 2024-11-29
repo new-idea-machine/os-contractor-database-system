@@ -19,7 +19,7 @@ const ChatBox = ({ correspondentUid }) => {
 
   return (chat ?
       <>
-        <div className="messages-wrapper">
+        <div>
           {chat.messages.map((message) => (
             <Message key={message.id} message={message} />
           ))}

@@ -3,16 +3,19 @@ import { Timestamp } from "firebase/firestore";
 import { auth } from "../../firebaseconfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+import styles from "./Message.module.css";
+
 const Message = ({ message }) => {
   const [user] = useAuthState(auth);
 
   const createdAt = new Timestamp(message.createdAt.seconds, message.createdAt.nanoseconds);
 
   return (
-    <div className={`chat-bubble ${message.uid === user.uid ? "right" : ""}`}>
-      <p>{message.text}</p>
-      <p>{createdAt.toDate().toLocaleTimeString()}</p>
-    </div>
+    <article className={message.uid === user.uid ? styles.Receiver : styles.Sender}>
+      <div>{message.text}</div>
+      <div>{createdAt.toDate().toLocaleTimeString()}</div>
+      <div>[Buttons]</div>
+    </article>
   );
 };
 
