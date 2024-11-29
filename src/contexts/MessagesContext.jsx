@@ -31,31 +31,20 @@ as a comparison function when sorting an array.
 */
 
 const compareDates = (lhs, rhs) => {
-
 	/*
 	This function converts "date" to an actual JavaScript Date object.
 	*/
 
 	const convertDate = (date) => {
 		/*
-		Several possible formats are handled:  string (Firebase date strings have
-		" at " between the date and time), number, a JavaScript Date object, and a
-		Firebase Timestamp data object.  If "date" isn't one of these then a zero-based
-		Date object is returned.
+		If "date" isn't a Firebase Timestamp data object then a zero-based Date object
+		is returned instead.
 		*/
 
-		if (typeof date === "string")
-			return new Date(date.replaceAll(" at ", " "));
-		if (typeof date === "number")
-			return new Date(date)
-		else if (typeof date === "object") {
-			if (Date.prototype.isPrototypeOf(date))
-				return date;
-			else {
-				const timestamp = new Timestamp(date.seconds, date.nanoseconds);
+		if (typeof date === "object") {
+			const timestamp = new Timestamp(date?.seconds, date?.nanoseconds);
 
-				return timestamp.toDate();
-			}
+			return timestamp.toDate();
 		}
 		else
 			return new Date(0);
@@ -122,8 +111,9 @@ const MessagesContext = ({ children }) => {
 
 	const updateChatsList = () => {
 		if (user?.uid) {
-			const allMessages = sentMessages.current.concat(receivedMessages.current);
+			let allMessages = sentMessages.current.concat(receivedMessages.current);
 
+			allMessages = allMessages.filter((message) => message.createdAt);
 			allMessages.sort(compareDates);
 
 			const newChats = [];
@@ -154,15 +144,17 @@ const MessagesContext = ({ children }) => {
 				chat.messages.push(message);
 
 				/*
-				This ensures that the latest name and avatar for each user is
-				always used.
+				This ensures that the latest name and avatar for each sender is
+				always used in case the correspondent no longer exists.
 				*/
 
-				chat.firstName = message.name;
-				chat.lastName = null;
-				chat.email = message.email;
-				chat.qualification = message.qualification;
-				chat.avatar = message.avatar;
+				if (message.receiverUid === user.uid){
+					chat.firstName = message.name;
+					chat.lastName = null;
+					chat.email = message.email;
+					chat.qualification = message.qualification;
+					chat.avatar = message.avatar;
+				}
 
 				if ((message.receiverUid === user.uid) && (message.hasRead !== true))
 					chat.newMessageCount++;
@@ -177,19 +169,14 @@ const MessagesContext = ({ children }) => {
 				const profile = getUserProfile(chat.uid);
 
 				if (profile) {
-					if (profile.name) {
-						chat.firstName = profile.name;
-						chat.lastName = '';
-					} else {
-						chat.firstName = profile.firstName;
-						chat.lastName = profile.lastName;
-					}
-
+					chat.firstName = profile.firstName;
+					chat.lastName = profile.lastName;
 					chat.email = profile.email;
 					chat.qualification = profile.qualification;
-					chat.avatar = profile.avatar;
-					// chat.avatar = "http://i2.cdn.turner.com/cnnnext/dam/assets/140428161531-bozo-the-clown-restricted-horizontal-large-gallery.jpg";
-					chat.avatar = profile.profileImg;
+
+					if (profile.profileImg) {
+						chat.avatar = profile.profileImg;
+					}
 				}
 			}
 

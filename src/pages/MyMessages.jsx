@@ -8,9 +8,7 @@ import styles from './MyMessages.module.css';
 export default function MyMessages() {
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
 
-	useEffect(() => {console.log("Clear!"); setCurrentCorrespondentUid(null)}, []);
-
-	console.log(`Rendering MyMessages component (${currentCorrespondentUid})...`);
+	useEffect(() => { setCurrentCorrespondentUid(null) }, []);
 
 	return (
 		<>
