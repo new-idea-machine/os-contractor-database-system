@@ -3,6 +3,10 @@ import { Timestamp } from "firebase/firestore";
 import { auth } from "../../firebaseconfig";
 import { useAuthState } from "react-firebase-hooks/auth";
 
+import { ReactComponent as IconArchive } from "../../assets/icons/archiveChat.svg";
+import { ReactComponent as IconStar } from "../../assets/icons/starChat.svg";
+import { ReactComponent as IconTrash } from "../../assets/icons/trashChat.svg";
+
 import styles from "./Message.module.css";
 
 const Message = ({ message }) => {
@@ -14,7 +18,7 @@ const Message = ({ message }) => {
     <article className={message.uid === user.uid ? styles.Receiver : styles.Sender}>
       <div>{message.text}</div>
       <div>{createdAt.toDate().toLocaleTimeString()}</div>
-      <div>[Buttons]</div>
+      <div><IconArchive /> <IconStar /> <IconTrash /></div>
     </article>
   );
 };
