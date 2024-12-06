@@ -58,7 +58,7 @@ const compareDates = (lhs, rhs) => {
 
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
-	const { getUserProfile } = useContext(userProfileContext);
+	const { contractors, recruiters, getUserProfile } = useContext(userProfileContext);
 	const receivedMessages = useRef([]);
 	const sentMessages = useRef([]);
 	const receivedUnsubscribe = useRef(null);
@@ -66,7 +66,7 @@ const MessagesContext = ({ children }) => {
 	const [chatsList, setChatsList] = useState([]);
 
 	useEffect(() => {
-		const fetchMessages = (field, messagesRef, unsubscribeRef) => {
+		const subscribeToSnapshot = (field, messagesRef, unsubscribeRef) => {
 			const messagesQuery = query(
 				collection(db, 'messages'),
 				where(field, '==', user.uid)
@@ -91,8 +91,8 @@ const MessagesContext = ({ children }) => {
 			sentUnsubscribe.current();
 
 		if (user) {
-			fetchMessages('receiverUid', receivedMessages, receivedUnsubscribe);
-			fetchMessages('uid', sentMessages, sentUnsubscribe);
+			subscribeToSnapshot('receiverUid', receivedMessages, receivedUnsubscribe);
+			subscribeToSnapshot('uid', sentMessages, sentUnsubscribe);
 		} else {
 			receivedMessages.current = [];
 			sentMessages.current = [];
@@ -190,11 +190,35 @@ const MessagesContext = ({ children }) => {
 		}
 	}
 
+	useEffect(updateChatsList, [contractors, recruiters]);
+
 	const getNumUnreadMessages = () => {
 		const totalUnreadMessages = chatsList.reduce((acc, message) => {
 				return acc + message.newMessageCount;
 			}, 0);
 		return totalUnreadMessages;
+	}
+
+	const updateMessage = (message, updatedData) => {
+		const messageRef = doc(db, "messages", message.id);
+		const update = {};
+
+		if (message.uid === user.uid) {
+			if (Object.hasOwn(updatedData, "archive")) update.archived = updatedData.archive;
+			if (Object.hasOwn(updatedData, "star")) update.starred = updatedData.star;
+			if (Object.hasOwn(updatedData, "delete")) {
+				update.deletedOn = updatedData.delete ? serverTimestamp() : null;
+			}
+		}
+		else {
+			if (Object.hasOwn(updatedData, "archive")) update.receiverArchived = updatedData.archive;
+			if (Object.hasOwn(updatedData, "star"))  update.receiverStarred = updatedData.star;
+			if (Object.hasOwn(updatedData, "delete")) {
+				update.receiverDeletedOn = updatedData.delete ? serverTimestamp() : null;
+			}
+		}
+
+		updateDoc(messageRef, update);
 	}
 
 	const updateHasRead = (chat) => {
@@ -239,6 +263,7 @@ const MessagesContext = ({ children }) => {
 	const appStates = {
 		chatsList,
 		getNumUnreadMessages,
+		updateMessage,
 		updateHasRead,
 		sendMessage
 	};

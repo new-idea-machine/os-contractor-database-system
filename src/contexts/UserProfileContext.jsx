@@ -95,7 +95,7 @@ function UserProfileContext({ children }) {
 	}
 
 	return (
-		<userProfileContext.Provider value={ { userProfile, contractors, getUserProfile, updateUserProfile } }>
+		<userProfileContext.Provider value={ { userProfile, contractors, recruiters, getUserProfile, updateUserProfile } }>
 			{children}
 		</userProfileContext.Provider>
 	);
