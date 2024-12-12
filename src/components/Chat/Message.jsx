@@ -21,12 +21,12 @@ const Message = ({ message }) => {
   if (message.uid === user.uid) {
     archived = message.archived === true;
     starred = message.starred === true;
-    deleted = (message.deletedOn !== null);
+    deleted = (message.deletedOn);
   }
   else {
     archived = message.receiverArchived === true;
     starred = message.receiverStarred === true;
-    deleted = (message.receiverDeletedOn !== null);
+    deleted = (message.receiverDeletedOn);
   }
 
   const createdAt = new Timestamp(message.createdAt.seconds, message.createdAt.nanoseconds);
