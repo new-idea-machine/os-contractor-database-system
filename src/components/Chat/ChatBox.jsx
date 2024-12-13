@@ -1,37 +1,66 @@
 import React, { useRef, useEffect, useContext } from "react";
+import { messagesContext } from '../../contexts/MessagesContext';
+import ProfilePicture from '../ProfilePicture';
 import Message from "./Message";
 import SendMessage from "./SendMessage";
-import "./Chat.css";
-import { messagesContext } from '../../contexts/MessagesContext';
+
+import styles from "./ChatBox.module.css";
 
 const ChatBox = ({ correspondentUid }) => {
+  const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "full" });
   const scroll = useRef();
-	const { chatsList, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
-	const numUnreadMessages = getNumUnreadMessages();
+  const { chatsList, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+  const numUnreadMessages = getNumUnreadMessages();
   const chat = chatsList.find((chat) => chat.uid === correspondentUid);
-
-  updateHasRead(chat);
+  const messageGroups = [];
 
   useEffect(() => {
     if (scroll.current)
       scroll.current.scrollIntoView({ behavior: "smooth" });
   }, [correspondentUid, chatsList]);
 
+  if (chat) {
+    updateHasRead(chat);
+
+    chat.messages.forEach(message => {
+      const messageDateString = dateFormatter.format(message.createdAt.toDate());
+
+      if ((messageGroups.length === 0) || (messageGroups[messageGroups.length - 1].date !== messageDateString))
+        messageGroups.push({ date: messageDateString, messages: []});
+
+      messageGroups[messageGroups.length - 1].messages.push(message);
+    })
+  }
+
   return (chat ?
-      <>
+    <>
+      <div className={styles.Header}>
+        <ProfilePicture profileImage={chat.avatar} size="80px" />
         <div>
-          {chat.messages.map((message) => (
-            <Message key={message.id} message={message} />
-          ))}
+          <span>{chat.firstName}{" "}{chat.lastName}</span><br />
+          <span>{chat.qualification}</span>
         </div>
-        {/* when a new message enters the chat, the screen scrolls down to this element */}
-        <span ref={scroll}></span>
+      </div>
+      <div className={styles.MessageList}>
+        {messageGroups.map((group) => (
+          <section key={group.date}>
+            <p>{group.date}</p>
+            {group.messages.map((message) => (
+              <Message key={message.id} message={message} />
+            ))}
+          </section>
+        ))}
+      </div>
+      {/* when a new message enters the chat, the screen scrolls down to this element */}
+      <span ref={scroll}></span>
+      <div className={styles.Footer}>
         <SendMessage receiverUid={correspondentUid} />
-      </>:
-      <>
-        You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
-      </>
-    );
+      </div>
+    </>:
+    <div className={styles.NoSelection}>
+      You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
+    </div>
+  );
 };
 
 export default ChatBox;

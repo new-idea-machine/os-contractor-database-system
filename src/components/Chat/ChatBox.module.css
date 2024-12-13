@@ -1,0 +1,28 @@
+.Header {
+	position: fixed;
+	top: 0px;
+	width: 100%;
+	height: 100px;
+	vertical-align: middle;
+	background-color: var(--colour-background);
+}
+
+.Header *:nth-child(2) {
+	display: inline-block;
+}
+
+.MessageList {
+	padding-top: 100px;
+	padding-bottom: 2em;
+}
+
+.Footer {
+	position: fixed;
+	bottom: 0px;
+	width: 100%;
+	height: fit-content;
+}
+
+.NoSelection {
+	text-align: center;
+}
