@@ -4,9 +4,10 @@
 	bottom:  0px;
 	left:  300px;
 	width:  calc(50% - 300px);
+	padding:  30px 50px;
 	overflow: auto;
 }
 
 .ChatBox {
-	padding-left:  50%;
+	padding-left:  calc(50% - 150px);
 }
