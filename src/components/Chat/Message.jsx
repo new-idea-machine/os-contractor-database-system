@@ -34,11 +34,11 @@ const Message = ({ message }) => {
   return (
     <article className={message.uid === user.uid ? styles.Receiver : styles.Sender}>
       <div>{message.text}</div>
-      <div>{createdAt.toDate().toLocaleTimeString()}</div>
-      <div>
-        <IconArchive style={{color: archived ? "red" : "black"}} onClick={() => updateMessage(message, {archive:  !archived})} />
-        <IconStar style={{color: starred ? "red" : "black"}} onClick={() => updateMessage(message, {star:  !starred})} />
-        <IconTrash style={{color: deleted ? "red" : "black"}} onClick={() => updateMessage(message, {delete:  !deleted})} />
+      <div className={styles.Timestamp}>{createdAt.toDate().toLocaleTimeString()}</div>
+      <div className={styles.Actions}>
+        <IconArchive className={archived ? styles.Distinct : null} onClick={() => updateMessage(message, {archive:  !archived})} />
+        <IconStar className={starred ? styles.Distinct : null} onClick={() => updateMessage(message, {star:  !starred})} />
+        <IconTrash className={deleted ? styles.Distinct : null} onClick={() => updateMessage(message, {delete:  !deleted})} />
       </div>
     </article>
   );
