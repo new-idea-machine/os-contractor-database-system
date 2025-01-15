@@ -118,6 +118,31 @@ nav + main {
 	padding: 30px 50px 30px 50px;
 }
 
+p.splitBar {
+	display: grid;
+	margin: 20px 0px;
+	grid-template-columns: 1fr max-content 1fr;
+	text-align: center;
+}
+
+p.splitBar::before {
+	content: "";
+	height: 2px;
+	align-self: center;
+	justify-self: stretch;
+	margin-right: 1em;
+	background-color: var(--input-text-colour-border);
+}
+
+p.splitBar::after {
+	content: "";
+	height: 2px;
+	align-self: center;
+	justify-self: stretch;
+	margin-left: 1em;
+	background-color: var(--input-text-colour-border);
+}
+
 /* Other Styles */
 
 .flexCenter {
