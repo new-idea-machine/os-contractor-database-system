@@ -18,6 +18,10 @@
 	padding-bottom: 4em;
 }
 
+.MessageList :global(p.splitBar) {
+	color:  var(--colour-secondary-8);
+}
+
 .Footer {
 	position: fixed;
 	right: 0px;

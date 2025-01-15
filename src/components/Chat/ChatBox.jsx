@@ -44,7 +44,7 @@ const ChatBox = ({ correspondentUid }) => {
       <div className={styles.MessageList}>
         {messageGroups.map((group) => (
           <section key={group.date}>
-            <p>{group.date}</p>
+            <p className="splitBar">{group.date}</p>
             {group.messages.map((message) => (
               <Message key={message.id} message={message} />
             ))}
