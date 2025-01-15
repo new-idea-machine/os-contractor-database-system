@@ -61,31 +61,6 @@ div#Auth {
 			text-align: left;
 		}
 
-		p.splitBar {
-			display: grid;
-			margin: 20px 0px;
-			grid-template-columns: 1fr max-content 1fr;
-			text-align: center;
-		}
-
-		p.splitBar::before {
-			content: "";
-			height: 2px;
-			align-self: center;
-			justify-self: stretch;
-			margin-right: 1em;
-			background-color: var(--input-text-colour-border);
-		}
-
-		p.splitBar::after {
-			content: "";
-			height: 2px;
-			align-self: center;
-			justify-self: stretch;
-			margin-left: 1em;
-			background-color: var(--input-text-colour-border);
-		}
-
 		button, input[type='button'], input[type='text'], input[type='email'], input[type='password'], input[type='reset'], input[type='submit'], p {
 			margin: 34px 0px;
 		}
