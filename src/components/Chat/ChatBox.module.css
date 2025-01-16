@@ -1,16 +1,25 @@
 .Header {
+	display: grid;
 	position: fixed;
 	top: 0px;
 	right: 0px;
 	width: 50%;
-	height: 140x;
+	height: 80x;
 	padding: 30px 50px 30px 0px;
-	vertical-align: middle;
+	grid-template-rows: 80px;
+	grid-template-columns: 80px 1fr;
+	column-gap: 20px;
+	align-items: center;
 	background-color: var(--colour-background);
 }
 
-.Header *:nth-child(2) {
-	display: inline-block;
+.Header *:nth-child(2) *:first-child {
+	font-size: x-large;
+	font-weight: 600; /* Semi-Bold */
+}
+
+.Header *:nth-child(2) *:nth-child(3) {
+	color:  var(--colour-secondary-8);
 }
 
 .MessageList {
