@@ -7,10 +7,17 @@
 	display:  grid;
 	grid-template-rows:  auto;
 	grid-template-columns:  60px 1fr;
+	margin: 15px 0px 15px;
+	border-bottom: 1px solid var(--colour-secondary-5);
+	padding-bottom: 15px;
 }
 
 .Correspondents > li:hover {
 	cursor:  pointer;
+}
+
+.Correspondents > li div:nth-child(2) {
+	padding-left: 20px;
 }
 
 .Correspondents > li div > div:first-child {
@@ -23,6 +30,10 @@
 }
 
 .Correspondents > li div > span:first-of-type {
-	font-size:  16px;
-	font-weight:  bold;
+	font-size:  large;
+	font-weight:  600; /* Semi-Bold */
+}
+
+.Correspondents > li div > span:first-of-type + br + span {
+	color:  var(--colour-secondary-2)
 }
