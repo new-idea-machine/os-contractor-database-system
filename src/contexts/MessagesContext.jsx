@@ -1,4 +1,4 @@
-import React, { useState, useRef, useEffect, createContext, useContext } from 'react';
+import React, { useState, useEffect, createContext, useContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
 	addDoc,
@@ -59,46 +59,43 @@ const compareDates = (lhs, rhs) => {
 const MessagesContext = ({ children }) => {
 	const { user } = useContext(authContext);
 	const { contractors, recruiters, getUserProfile } = useContext(userProfileContext);
-	const receivedMessages = useRef([]);
-	const sentMessages = useRef([]);
-	const receivedUnsubscribe = useRef(null);
-	const sentUnsubscribe = useRef(null);
+	const [receivedMessages, setReceivedMessages] = useState([]);
+	const [sentMessages, setSentMessages] = useState([]);
+	const [receivedUnsubscribe, setReceivedUnsubscribe] = useState(null);
+	const [sentUnsubscribe, setSentUnsubscribe] = useState(null);
 	const [chatsList, setChatsList] = useState([]);
 
 	useEffect(() => {
-		const subscribeToSnapshot = (field, messagesRef, unsubscribeRef) => {
+		const subscribeToSnapshot = (field, setMessages, setUnsubscribe) => {
 			const messagesQuery = query(
 				collection(db, 'messages'),
 				where(field, '==', user.uid)
 			);
 
-			unsubscribeRef.current = onSnapshot(messagesQuery,
+			setUnsubscribe(() => onSnapshot(messagesQuery,
 				(snapshot) => {
-					messagesRef.current = snapshot.docs.map((doc) => ({
+					setMessages(snapshot.docs.map((doc) => ({
 						id: doc.id,
 						...doc.data(),
-					}));
-
-					updateChatsList();
+					})));
 				},
-				(error) => {console.error(`Error fetching messages for "${field}":`, error);});
+				(error) => {console.error(`Error fetching messages for "${field}":`, error);}));
 		}
 
-		if (receivedUnsubscribe.current)
-			receivedUnsubscribe.current();
+		if (receivedUnsubscribe)
+			receivedUnsubscribe();
 
-		if (sentUnsubscribe.current)
-			sentUnsubscribe.current();
+		if (sentUnsubscribe)
+			sentUnsubscribe();
 
 		if (user) {
-			subscribeToSnapshot('receiverUid', receivedMessages, receivedUnsubscribe);
-			subscribeToSnapshot('uid', sentMessages, sentUnsubscribe);
+			subscribeToSnapshot('receiverUid', setReceivedMessages, setReceivedUnsubscribe);
+			subscribeToSnapshot('uid', setSentMessages, setSentUnsubscribe);
 		} else {
-			receivedMessages.current = [];
-			sentMessages.current = [];
-			receivedUnsubscribe.current = null;
-			sentUnsubscribe.current = null;
-			setChatsList([]);
+			setReceivedMessages([]);
+			setSentMessages([]);
+			setReceivedUnsubscribe(null);
+			setSentUnsubscribe(null);
 		}
 	}, [user]);
 
@@ -111,7 +108,7 @@ const MessagesContext = ({ children }) => {
 
 	const updateChatsList = () => {
 		if (user?.uid) {
-			let allMessages = sentMessages.current.concat(receivedMessages.current);
+			let allMessages = sentMessages.concat(receivedMessages);
 
 			allMessages = allMessages.filter((message) => message.createdAt);
 			allMessages.sort(compareDates);
@@ -190,7 +187,7 @@ const MessagesContext = ({ children }) => {
 		}
 	}
 
-	useEffect(updateChatsList, [contractors, recruiters]);
+	useEffect(updateChatsList, [contractors, recruiters, receivedMessages, sentMessages]);
 
 	const getNumUnreadMessages = () => {
 		const totalUnreadMessages = chatsList.reduce((acc, message) => {
