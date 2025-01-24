@@ -6,10 +6,10 @@ import SendMessage from "./SendMessage";
 
 import styles from "./ChatBox.module.css";
 
-const ChatBox = ({ correspondentUid }) => {
+const ChatBox = ({ chatsList, correspondentUid }) => {
   const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "full" });
   const scroll = useRef();
-  const { chatsList, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+  const { getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
   const numUnreadMessages = getNumUnreadMessages();
   const chat = chatsList.find((chat) => chat.uid === correspondentUid);
   const messageGroups = [];

@@ -1,12 +1,9 @@
-import React, { useContext } from 'react';
-import { messagesContext } from '../../contexts/MessagesContext';
+import React from 'react';
 import ProfilePicture from '../ProfilePicture';
 
 import styles from './Correspondents.module.css';
 
-function Correspondents({ setCurrentCorrespondentUid }) {
-	const { chatsList } = useContext(messagesContext);
-
+function Correspondents({ chatsList, setCurrentCorrespondentUid }) {
 	return (
 		<>
 			<h1>Chats</h1>
