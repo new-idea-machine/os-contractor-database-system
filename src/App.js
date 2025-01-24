@@ -50,8 +50,10 @@ function App() {
                       <Route path="/search" element={<Search />} />
                       <Route path="/UpdateProfile" element={<UpdateProfile />} />
                       <Route path="/About" element={<About />} />
-                      <Route path="/chat/:uid" element={<ChatBox />} />
                       <Route path="/inbox" element={<MyMessages/>} />
+                      <Route path="/inbox/archived" element={<MyMessages view="archived" />} />
+                      <Route path="/inbox/starred" element={<MyMessages view="starred" />} />
+                      <Route path="/inbox/deleted" element={<MyMessages view="deleted" />} />
                       <Route path="/forgotPassword" element={<ForgotPassword/>} />
                       <Route path="/favorites" element={<RecruiterFavoriteList/>} />
                     </Routes>

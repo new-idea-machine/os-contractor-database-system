@@ -17,6 +17,7 @@ import { ReactComponent as IconLogout } from "../../assets/icons/logout.svg";
 import { ReactComponent as IconProfile } from "../../assets/icons/profile.svg";
 import { ReactComponent as IconSearch } from "../../assets/icons/search.svg";
 import { ReactComponent as IconStar } from "../../assets/icons/star.svg";
+import { ReactComponent as IconTrash } from "../../assets/icons/trash.svg";
 
 function Navigation({ menu }) {
   const { logout, user } = useContext(authContext);
@@ -88,14 +89,20 @@ function Navigation({ menu }) {
             </li>
 
             <li>
-              <NavLink to="/inbox">
+              <NavLink to="/inbox/archived">
                 <IconArchive />{" "}Archive
               </NavLink>
             </li>
 
             <li>
-              <NavLink to="/inbox">
+              <NavLink to="/inbox/starred">
                 <IconStar />{" "}Starred
+              </NavLink>
+            </li>
+
+            <li>
+              <NavLink to="/inbox/deleted">
+                <IconTrash />{" "}Deleted
               </NavLink>
             </li>
           </>

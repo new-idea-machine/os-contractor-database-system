@@ -12,7 +12,7 @@ const numDaysToKeepDeletedMessages = process.env.REACT_APP_numDaysToKeepDeletedM
 const millisecondsPerDay = (24 * 60 * 60 * 1000);
 const deletedMessagesTimeLimit = numDaysToKeepDeletedMessages * millisecondsPerDay;
 
-export default function MyMessages() {
+export default function MyMessages({ view }) {
 	const [user] = useAuthState(auth);
 	const { chatsList } = useContext(messagesContext);
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
@@ -72,7 +72,13 @@ export default function MyMessages() {
 		return newChatsList;
 	}
 
-	const filteredChatsList = filterChatsList(filterDeletedArchived);
+	let filter = filterDeletedArchived;
+
+	if (view === "archived") filter = filterDeletedNonArchived;
+	if (view === "starred") filter = filterDeletedNonStarred;
+	if (view === "deleted") filter = filterNonDeleted;
+
+	const filteredChatsList = filterChatsList(filter);
 
 	useEffect(() => { setCurrentCorrespondentUid(null) }, []);
 
