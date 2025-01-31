@@ -6,8 +6,6 @@ import styles from './Correspondents.module.css';
 function Correspondents({ chatsList, setCurrentCorrespondentUid }) {
 	return (
 		<>
-			<h1>Chats</h1>
-
 			<ul className={styles.Correspondents}>
 				{chatsList?.map((chat) => (
 					<li key={chat.uid} onClick={() => setCurrentCorrespondentUid(chat.uid)}>

@@ -5,6 +5,7 @@ import { messagesContext } from '../contexts/MessagesContext';
 import { Navigation } from '../components';
 import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
+import { findKeywordsIn } from '../components/Chat/search';
 
 import styles from './MyMessages.module.css';
 
@@ -16,6 +17,7 @@ export default function MyMessages({ view }) {
 	const [user] = useAuthState(auth);
 	const { chatsList } = useContext(messagesContext);
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
+	const [keywords, setKeywords] = useState("");
 
 	function filterDeleted(message) {
 		/* Filter out a deleted message. */
@@ -63,7 +65,9 @@ export default function MyMessages({ view }) {
 		chatsList.forEach((chat) => {
 			const newChat = structuredClone(chat);
 
-			newChat.messages = chat.messages.filter(filter);
+			newChat.messages = chat.messages.filter((message) => {
+				return filter(message) && findKeywordsIn(keywords, message.text)
+			})
 
 			if (newChat.messages.length > 0)
 				newChatsList.push(newChat);
@@ -82,11 +86,23 @@ export default function MyMessages({ view }) {
 
 	useEffect(() => { setCurrentCorrespondentUid(null) }, []);
 
+	function updateSearchKeywords(event) {
+		event.preventDefault();
+		setKeywords(event.target.keywords.value);
+	}
+
 	return (
 		<>
 			<Navigation menu="Chat" />
 			<main>
 				<div className={styles.Correspondents}>
+					<h1>Chats</h1>
+					<div>
+						<form onSubmit={updateSearchKeywords}>
+							<input name="keywords" defaultValue={keywords} />
+							<input type="submit" value="Search" />
+						</form>
+					</div>
 					<Correspondents chatsList={ filteredChatsList } setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
 				</div>
 				<div className={styles.ChatBox}>
