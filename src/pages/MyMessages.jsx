@@ -5,7 +5,7 @@ import { messagesContext } from '../contexts/MessagesContext';
 import { Navigation } from '../components';
 import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
-import { findKeywordsIn } from '../components/Chat/search';
+import { parseKeywords, findKeywordsIn } from '../components/Chat/search';
 
 import styles from './MyMessages.module.css';
 
@@ -61,12 +61,13 @@ export default function MyMessages({ view }) {
 
 	function filterChatsList(filter) {
 		const newChatsList = [];
+		const keywordExpressions = parseKeywords(keywords);
 
 		chatsList.forEach((chat) => {
 			const newChat = structuredClone(chat);
 
 			newChat.messages = chat.messages.filter((message) => {
-				return filter(message) && findKeywordsIn(keywords, message.text)
+				return filter(message) && findKeywordsIn(keywordExpressions, message.text)
 			})
 
 			if (newChat.messages.length > 0)

@@ -13,6 +13,9 @@ Examples:
 	"ho?dy", true --> /(?:^|\s|\b)ho\Sdy(?:\b|\s|$)/i
 	"howdy ho"    --> /(?:^|\s|\b)howdy ho(?:\b|\s|$)/i
 */
+	console.assert(typeof rawString === "string");
+	console.assert(rawString.length > 0);
+	console.assert(typeof addWildcards === "boolean");
 
 	/*
 	Since "rawString" is coming from the user, it CANNOT BE OVERSTATED ENOUGH how important
@@ -46,8 +49,25 @@ double-quote character.
 
 Return an array of regular expressions that can be used to test other strings.
 
-"keywordString" is the string to be parsed.
+"keywordString" is the string of keywords to be parsed.
+
+Examples of how keyword strings are parsed:
+
+	"First second third"               --> ["first", "second", "third]
+	"\"First  second\" " third"        --> ["first  second ", "third"]
+	"\"First  \"\"second\"\" \" third" --> ["first  \"second\" ", "third"]
+
+Examples of regular expressions that can be generated from a keyword:
+
+	"howdy"       --> /(?:^|\s|\b)howdy(?:\b|\s|$)/i
+	"how**", true --> /(?:^|\s|\b)how\S*(?:\b|\s|$)/i
+	"ho?dy", true --> /(?:^|\s|\b)ho\Sdy(?:\b|\s|$)/i
+	"howdy ho"    --> /(?:^|\s|\b)howdy ho(?:\b|\s|$)/i
 */
+
+	if (typeof keywordString !== "string") {
+		throw new Error("\"keywordString\" must be a string");
+	}
 
 	let currentKeyword = "";  // the keyword that's currently being built
 	let inQuotes = false;     // is the parsing algorithm in quote mode?
@@ -116,26 +136,25 @@ Return an array of regular expressions that can be used to test other strings.
 	return keywords;
 }
 
-function findKeywordsIn(keywords, textToSearch) {
+function findKeywordsIn(keywordExpressions, textToSearch) {
 /*
-Search for keywords in a string and return true if the string contains all of them, and false
-if it doesn't.
+Search for keyword regular expressions in a string and return true if the string matches all of
+them, and false if it doesn't.
 
-"keywords" is a string of keywords to search for.  The commonly-used asterisk ("*") and
-question mark ("?") wildcards are supported.  All characters between a pair of double-quotes
-are taken literally, however, except that two consecutive double-quote characters are taken as
-a single double-quote character.
-
-Examples of how keyword strings are parsed:
-
-	"First second third"               --> ["first", "second", "third]
-	"\"First  second\" " third"        --> ["first  second ", "third"]
-	"\"First  \"\"second\"\" \" third" --> ["first  \"second\" ", "third"]
+"keywordExpressions" is an array of regular expressions of keywords to search for.  Such an
+array can be produced by "parseKeywords()" but, technically, any regular expressions can be
+used.
 */
 
-	const expressions = parseKeywords(keywords);
+	if (!Array.isArray(keywordExpressions)) {
+                throw new Error("\"keywordExpressions\" must be an array of regular expressions");
+	}
 
-	return expressions.every((expression) => expression.test(textToSearch));
+        if (typeof textToSearch !== "string") {
+                throw new Error("\"textToSearch\" must be a string");
+        }
+
+	return keywordExpressions.every((expression) => expression.test(textToSearch));
 }
 
-export { findKeywordsIn };
+export { parseKeywords, findKeywordsIn };
