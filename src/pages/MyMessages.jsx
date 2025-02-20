@@ -7,6 +7,8 @@ import ChatBox from '../components/Chat/ChatBox';
 import Correspondents from '../components/Chat/Correspondents';
 import { parseKeywords, findKeywordsIn } from '../components/Chat/search';
 
+import { ReactComponent as IconSearchChat } from "../assets/icons/searchChat.svg";
+
 import styles from './MyMessages.module.css';
 
 const numDaysToKeepDeletedMessages = process.env.REACT_APP_numDaysToKeepDeletedMessages;
@@ -98,12 +100,18 @@ export default function MyMessages({ view }) {
 			<main>
 				<div className={styles.Correspondents}>
 					<h1>Chats</h1>
-					<div>
-						<form onSubmit={updateSearchKeywords}>
-							<input name="keywords" defaultValue={keywords} />
-							<input type="submit" value="Search" />
-						</form>
-					</div>
+					<form onSubmit={updateSearchKeywords} className={styles.SearchForm}>
+						<input
+							type="text"
+							name="keywords"
+							defaultValue={keywords}
+							placeholder="Search messages"
+							className={styles.SearchInput}
+						/>
+						<button type="submit" className={styles.SearchButton}>
+							<IconSearchChat />
+						</button>
+					</form>
 					<Correspondents chatsList={ filteredChatsList } setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
 				</div>
 				<div className={styles.ChatBox}>

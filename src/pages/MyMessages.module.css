@@ -11,3 +11,30 @@
 .ChatBox {
 	padding-left:  calc(50% - 150px);
 }
+
+.SearchForm {
+	width: 100%;
+	position: relative;
+	display: flex;
+	align-items: center;
+}
+
+.SearchInput {
+	padding-right: 40px !important;
+}
+
+.SearchButton {
+	all: initial;
+	position: absolute;
+	right: 10px;
+	width: 26px;
+	height: 27px;
+	border: none;
+	color: var(--colour-secondary-8);
+	background: none;
+	cursor: pointer;
+
+	&:active {
+		background: none !important;
+	}
+}
