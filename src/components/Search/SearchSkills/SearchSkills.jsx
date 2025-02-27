@@ -1,14 +1,11 @@
-import React, { useEffect, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import "./SearchSkills.css";
-import { developerSkills } from "../../../constants/skills/developerSkills.js";
-import { designerSkills } from "../../../constants/skills/designerSkills";
-import { productManagerSkills } from "../../../constants/skills/productManagerSkills";
-import { projectManagerSkills } from "../../../constants/skills/projectManagerSkills";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "@mui/material";
 import CloseIcon from "@mui/icons-material/Close";
 import { FixedSizeList as List } from "react-window";
+import { skillsContext } from "../../../contexts/SkillsContext";
 
 // To load list of skills faster
 const ListboxComponent = React.forwardRef((props, ref) => {
@@ -49,6 +46,7 @@ export default function SearchSkills(props) {
   const [allSkills, setAllSkills] = useState([]);
   const [inputValue, setInputValue] = useState("");
   const selectedQualification = props.selectedQualification;
+  const { skillsLists } = useContext(skillsContext);
 
   useEffect(() => {
     const updateAllSkills = () => {
@@ -56,31 +54,15 @@ export default function SearchSkills(props) {
 
       if (selectedQualification.length === 0) {
         // Add all skills when no qualification is selected
-        newAllSkills = [
-          ...developerSkills,
-          ...designerSkills,
-          ...productManagerSkills,
-          ...projectManagerSkills,
-        ];
+        for (const skills in skillsLists) {
+          newAllSkills.push(...skillsLists[skills]);
+        }
       } else {
-        selectedQualification.forEach((qualification) => {
-          switch (qualification) {
-            case "Developer":
-              newAllSkills = [...newAllSkills, ...developerSkills];
-              break;
-            case "Designer":
-              newAllSkills = [...newAllSkills, ...designerSkills];
-              break;
-            case "Product Manager":
-              newAllSkills = [...newAllSkills, ...productManagerSkills];
-              break;
-            case "Project Manager":
-              newAllSkills = [...newAllSkills, ...projectManagerSkills];
-              break;
-            default:
-              break;
+        for (const qualification of selectedQualification) {
+          if (skillsLists[qualification]) {
+            newAllSkills.push(...skillsLists[qualification]);
           }
-        });
+        }
       }
       // Remove duplicates and sort
       newAllSkills = [...new Set(newAllSkills)].sort((a, b) =>
@@ -88,8 +70,9 @@ export default function SearchSkills(props) {
       );
       setAllSkills(newAllSkills);
     };
+
     updateAllSkills();
-  }, [selectedQualification]);
+  }, [skillsLists, selectedQualification]);
 
   const handleClearSkills = () => {
     setSelectedSkills([]);

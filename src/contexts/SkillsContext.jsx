@@ -1,53 +1,36 @@
-import React, { useState, useEffect, createContext } from 'react';
-import { db } from '../firebaseconfig';
-import {
-	doc,
-	// addDoc,
-	//   getDoc,
-	// onSnapshot,
-	// setDoc,
-	// serverTimestamp,
-	updateDoc,
-	collection,
-	//   query,
-	getDocs,
-	//   where,
-	//   orderBy,
-} from 'firebase/firestore';
-import developerSkills from '../constants/skills/developerSkills';
+import React, { useState, useEffect, useContext, createContext } from 'react';
+import { contractorsContext } from '../contexts/ContractorsContext';
 
 export const skillsContext = createContext();
 
 const SkillsContext = ({ children }) => {
-	const [skillsList, setSkillsList] = useState([]);
+	const contractorList = useContext(contractorsContext);
+	const [skillsLists, setSkillsLists] = useState([]);
 
-	const getCollection = async () => {
-		const querySnapshot = await getDocs(collection(db, 'skills'));
-		const documents = querySnapshot.docs.map((doc) => ({
-			id: doc.id,
-			...doc.data(),
-		}));
-		setSkillsList(documents);
-	};
 	useEffect(() => {
-		getCollection();
-	}, []);
+		const newSkillsLists = {};
 
-	const updateTechObject = async (data) => {
-		console.log('TRYING TO UPDATE');
-		const userDocRef = doc(db, 'skills', data?.id);
-		if (userDocRef) {
-			await updateDoc(userDocRef, data);
-			console.log('User successfully updated!');
-		} else {
-			console.log('object not found');
+		for (const contractor of contractorList) {
+			if (contractor.qualification) {
+				const qualification = contractor.qualification;
+
+				if (newSkillsLists[qualification] === undefined) {
+					newSkillsLists[qualification] = [];
+				}
+
+				for (const skill of contractor?.skills) {
+					if (!newSkillsLists[qualification].includes(skill.skill)) {
+						newSkillsLists[qualification].push(skill.skill);
+					}
+				}
+			}
 		}
-	};
+
+		setSkillsLists(newSkillsLists);
+	}, [contractorList]);
 
 	const appStates = {
-		skillsList,
-		setSkillsList,
-		updateTechObject,
+		skillsLists
 	};
 
 	return (

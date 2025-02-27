@@ -1,3 +1,10 @@
+const qualificationsList = [
+	"Developer",
+	"Designer",
+	"Product Manager",
+	"Project Manager"
+];
+
 const techDataSchema = {
 	userType: 'techs',
 	firstName: '',
@@ -42,10 +49,10 @@ const formInputs = [
 	{
 		sectionTitle: 'Personal Info',
 		fields: [
-			{ 
-				name: 'firstName', 
-				label: 'First Name', 
-				type: 'text', 
+			{
+				name: 'firstName',
+				label: 'First Name',
+				type: 'text',
 				placeholder: 'Name' },
 			{
 				name: 'lastName',
@@ -81,8 +88,8 @@ const formInputs = [
 			 {
 				name: 'availability',
 			 	label: 'Availability:',
-			 	type: 'select', 
-        		options: ['Full Time', 'Part Time', 'Other'], 
+			 	type: 'select',
+        		options: ['Full Time', 'Part Time', 'Other'],
 			 },
 			 //{
 				//name: 'availabilityDetails', // New field for 'Other' option details
@@ -93,10 +100,10 @@ const formInputs = [
 			 {
 				name: 'workSite',
 			 	label: 'Preferred Work Site:',
-			 	type: 'select', 
-        		options: ['On Site', 'Remote', 'Hybrid', 'Flexible'], 
+			 	type: 'select',
+        		options: ['On Site', 'Remote', 'Hybrid', 'Flexible'],
 			 },
-			
+
 		],
 	},
 ];
@@ -106,10 +113,10 @@ const recFormInputs = [
 	{
 		sectionTitle: 'Personal Info',
 		fields: [
-			{ 
-				name: 'firstName', 
-				label: 'First Name', 
-				type: 'text', 
+			{
+				name: 'firstName',
+				label: 'First Name',
+				type: 'text',
 				placeholder: 'Name' },
 			{
 				name: 'lastName',
@@ -125,7 +132,7 @@ const recFormInputs = [
 				type: 'text',
 				placeholder: 'LinkedIn URL',
 			},
-			
+
 		],
 	},
 	{
@@ -143,9 +150,9 @@ const recFormInputs = [
 				type: 'textArea',
 				placeholder: '',
 			},
-			
+
 		],
 	},
 ];
 
-export { techDataSchema, formInputs, RecDataSchema, recFormInputs };
+export { qualificationsList, techDataSchema, formInputs, RecDataSchema, recFormInputs };
