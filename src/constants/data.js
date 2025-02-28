@@ -78,6 +78,12 @@ function enforceSchema(target, schema) {
 
 	return target;
 }
+const qualificationsList = [
+	"Developer",
+	"Designer",
+	"Product Manager",
+	"Project Manager"
+];
 
 const techDataSchema = {
 	userType: 'techs',
@@ -136,4 +142,4 @@ const messageDataSchema = {
 	uid: ''
 }
 
-export { enforceSchema, techDataSchema, recDataSchema, messageDataSchema };
+export { enforceSchema, qualificationsList, techDataSchema, recDataSchema, messageDataSchema };
