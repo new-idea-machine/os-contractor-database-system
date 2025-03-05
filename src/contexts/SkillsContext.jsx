@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useContext, createContext } from 'react';
-import { contractorsContext } from '../contexts/ContractorsContext';
+import { userProfileContext } from '../contexts/UserProfileContext';
 import { developerSkills } from "../constants/skills/developerSkills.js";
 import { designerSkills } from "../constants/skills/designerSkills";
 import { productManagerSkills } from "../constants/skills/productManagerSkills";
@@ -30,7 +30,7 @@ const allSkillsLowerCase = allSkills.map((skill) => skill.trim().toLocaleLowerCa
 export const skillsContext = createContext();
 
 const SkillsContext = ({ children }) => {
-	const contractorList = useContext(contractorsContext);
+	const { contractors } = useContext(userProfileContext);
 	const [skillsLists, setSkillsLists] = useState([]);
 
 	useEffect(() => {
@@ -41,7 +41,7 @@ const SkillsContext = ({ children }) => {
 		extracted and added to the master list of skills.
 		*/
 
-		for (const contractor of contractorList) {
+		for (const contractor of contractors) {
 			if (contractor.qualification) {
 				const qualification = contractor.qualification;
 
@@ -69,7 +69,7 @@ const SkillsContext = ({ children }) => {
 		}
 
 		setSkillsLists(newSkillsLists);
-	}, [contractorList]);
+	}, [contractors]);
 
 	const appStates = {
 		skillsLists
