@@ -6,21 +6,52 @@
 .Correspondents > li {
 	display:  grid;
 	grid-template-rows:  auto;
-	grid-template-columns:  60px 1fr;
-	margin: 15px 0px 15px;
-	border-bottom: 1px solid var(--colour-secondary-5);
-	padding-bottom: 15px;
+	grid-template-columns:  min-content 1fr max-content;
+	grid-template-areas:
+	        "profilePicture name actions"
+		"profilePicture qualification qualification"
+		"profilePicture summary summary";
+	margin:  15px 0px 15px;
+	border-bottom:  1px solid var(--colour-secondary-5);
+	padding-bottom:  15px;
 }
 
 .Correspondents > li:hover {
 	cursor:  pointer;
 }
 
-.Correspondents > li div:nth-child(2) {
-	padding-left: 20px;
+.Correspondents > li *:first-child {
+	grid-area:  profilePicture;
 }
 
-.Correspondents > li div > div:first-child {
+.Name {
+	grid-area:  name;
+	font-size:  large;
+	font-weight:  600; /* Semi-Bold */
+}
+
+.Actions {
+        grid-area:  actions;
+	color:  var(--colour-secondary-8);
+}
+
+.Actions > * {
+        margin:  0px 10px;
+}
+
+.Qualification {
+	grid-area:  qualification;
+	color:  var(--colour-secondary-2)
+}
+
+.Summary {
+	grid-area:  summary;
+	overflow:  hidden;
+	text-overflow:  ellipsis;
+	white-space:  nowrap;
+}
+
+.Summary div:first-child {
 	float:  right;
 	width:  10px;
 	height:  10px;
@@ -29,11 +60,6 @@
 	border-radius:  5px;
 }
 
-.Correspondents > li div > span:first-of-type {
-	font-size:  large;
-	font-weight:  600; /* Semi-Bold */
-}
-
-.Correspondents > li div > span:first-of-type + br + span {
-	color:  var(--colour-secondary-2)
+.Distinct {
+	color: var(--content-colour-distinct);
 }

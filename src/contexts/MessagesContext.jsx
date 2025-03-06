@@ -170,6 +170,7 @@ const MessagesContext = ({ children }) => {
 					chat.lastName = profile.lastName;
 					chat.email = profile.email;
 					chat.qualification = profile.qualification;
+					chat.summary = profile.summary;
 
 					if (profile.profileImg) {
 						chat.avatar = profile.profileImg;
