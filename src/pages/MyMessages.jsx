@@ -112,7 +112,7 @@ export default function MyMessages({ view }) {
 							<IconSearchChat />
 						</button>
 					</form>
-					<Correspondents chatsList={ filteredChatsList } setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
+					<Correspondents view={ view } chatsList={ filteredChatsList } setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
 				</div>
 				<div className={styles.ChatBox}>
 					<ChatBox chatsList={ filteredChatsList } correspondentUid={ currentCorrespondentUid } />
