@@ -58,7 +58,7 @@ const ChatBox = ({ chatsList, correspondentUid }) => {
       </div>
     </>:
     <div className={styles.NoSelection}>
-      You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}.
+      You have {numUnreadMessages} unread message{numUnreadMessages === 1 ? "" : "s"}
     </div>
   );
 };

@@ -43,5 +43,15 @@
 }
 
 .NoSelection {
+	display: grid;
+	position: fixed;
+	top: 0px;
+	right: 0px;
+	bottom: 0px;
+	width: 50%;
 	text-align: center;
+	align-items: center;
+	font-size: x-large;
+	font-weight: 600; /* Semi-Bold */
+	color: var(--content-colour-distinct);
 }
