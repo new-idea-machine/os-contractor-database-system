@@ -1,6 +1,4 @@
 import React, { useContext } from "react";
-import { useAuthState } from "react-firebase-hooks/auth";
-import { auth } from "../../firebaseconfig";
 import { messagesContext } from '../../contexts/MessagesContext';
 import ProfilePicture from '../ProfilePicture';
 
@@ -10,21 +8,16 @@ import { ReactComponent as IconTrash } from "../../assets/icons/trashChat.svg";
 import styles from './Correspondents.module.css';
 
 function Correspondents({ view, chatsList, setCurrentCorrespondentUid }) {
-	const [user] = useAuthState(auth);
 	const { updateMessage } = useContext(messagesContext);
 
 	function moveArchivedMessages(chat) {
 		for (const message of chat.messages) {
-			const archived = (message.uid === user.uid ? message.archived : message.receiverArchived);
-
-			updateMessage(message, {archive:  !archived})
+			updateMessage(message, {archive:  view !== "archived"})
 		}
 	}
 	function moveDeleteMessages(chat) {
                 for (const message of chat.messages) {
-			const deleted = (message.uid === user.uid ? message.deletedOn !== null : message.receiverDeletedOn !== null);
-
-			updateMessage(message, {delete:  !deleted})
+			updateMessage(message, {delete:  view !== "deleted"})
                 }
         }
 	return (
