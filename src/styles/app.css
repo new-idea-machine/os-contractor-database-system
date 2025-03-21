@@ -114,8 +114,8 @@ nav {
 }
 
 nav + main {
-	margin-left: 300px;
-	padding: 30px 50px 30px 50px;
+	margin-left: 270px;
+	/* padding: 30px 50px 30px 50px; */
 }
 
 p.splitBar {

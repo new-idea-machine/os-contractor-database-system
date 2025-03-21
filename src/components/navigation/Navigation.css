@@ -19,21 +19,22 @@ following layout:
 nav {
   display: grid;
   grid-template-rows: max-content max-content max-content max-content 1fr;
-  grid-template-columns: 1;
+  /* grid-template-columns: 1; */
   row-gap: 1rem;
   justify-items: center;
   align-items: center;
+  width: 16rem;
 }
 
 nav > ul {
   display: inline-grid;
   grid-template-rows: auto;
-  grid-template-columns: 1;
+  /* grid-template-columns: 1; */
   row-gap: 2rem;
   grid-auto-rows: 1rem;
-  justify-content: center;
+  /* justify-content: center;
   justify-items: left;
-  align-items: center;
+  align-items: center; */
   margin-top: 3rem;
   list-style-type: none;
 }

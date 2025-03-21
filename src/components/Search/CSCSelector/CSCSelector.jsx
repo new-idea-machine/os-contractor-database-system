@@ -75,7 +75,7 @@ export default function CSCSelector(props) {
         />
       </Box>
       {country ? (
-        <Box className="selector_state_city">
+        <Box className="selector_country_state">
           <Autocomplete
             value={
               !isEmpty(props?.initialCountry) && !isEmpty(props?.initialState)
@@ -123,10 +123,9 @@ export default function CSCSelector(props) {
           <Autocomplete
             value={
               !isEmpty(props?.initialState) && !isEmpty(props?.initialCity)
-                ? City.getCitiesOfState(
-                    props?.initialCountry,
-                    props?.initialState
-                  ).find((city) => city?.name === props?.initialCity)
+                ? City.getCitiesOfState(country, state).find(
+                    (city) => city?.name === props?.initialCity
+                  )
                 : null
             }
             onChange={(event, value) => {
@@ -138,8 +137,7 @@ export default function CSCSelector(props) {
               }
             }}
             id="combo-box-demo"
-            options={City.getAllCities()
-              .filter((cityValue) => cityValue?.stateCode === state)
+            options={City.getCitiesOfState(country, state)
               .sort((a, b) => a.name.localeCompare(b.name))}
             filterOptions={(options, params) => {
               const filtered = options.filter((option) =>

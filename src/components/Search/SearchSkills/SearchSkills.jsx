@@ -38,7 +38,6 @@ const ListboxComponent = React.forwardRef((props, ref) => {
   );
 });
 
-
 export default function SearchSkills(props) {
   const [selectedSkills, setSelectedSkills] = useState(
     props.initialSelectedSkills || []
@@ -74,10 +73,10 @@ export default function SearchSkills(props) {
     updateAllSkills();
   }, [skillsLists, selectedQualification]);
 
-  const handleClearSkills = () => {
-    setSelectedSkills([]);
-    props.getSelectedSkills([]);
-  };
+  // const handleClearSkills = () => {
+  //   setSelectedSkills([]);
+  //   props.getSelectedSkills([]);
+  // };
 
   useEffect(() => {
     setSelectedSkills(props.initialSelectedSkills || []);
@@ -85,7 +84,7 @@ export default function SearchSkills(props) {
 
   return (
     <div className="search_skills_container">
-      <h2 className="search_skills_title">Search by Skill</h2>
+      <p className="search_skills_title">Search by Skill</p>
       <div className="search_skills">
         <Autocomplete
           className="autocomplete"
@@ -143,9 +142,9 @@ export default function SearchSkills(props) {
           ))}
         </div>
       </div>
-      <div className="clear_skills_button">
+      {/* <div className="clear_skills_button">
         <button onClick={handleClearSkills}>Clear Skills</button>
-      </div>
+      </div> */}
     </div>
   );
 }
