@@ -31,14 +31,14 @@ export default function Home() {
 						a software application that enables users to store, manage, and
 						access information related to contractors.
 					</p>
-					{user ?
-						<button onClick={() => logout()}>
-							<span>Logout</span>
-						</button> :
+					{user === null ?
 						<button onClick={() => navigate('auth')}>
-						<span>Log In or Register</span>
-					</button>
-				}
+							<span>Log In or Register</span>
+						</button> :
+						user && <button onClick={() => logout()}>
+							<span>Logout</span>
+						</button>
+					}
 				</section>
 
 				<footer><h3>CONTRACTOR <b>DB</b></h3></footer>

@@ -10,8 +10,6 @@ import { ReactComponent as BackArrow } from '../assets/icons/backArrow.svg';
 export default function Auth() {
 	const { credential } = useContext(authContext);
 
-	console.log(`Rendering Auth page ("credential" is ${credential === null ? "" : "not "}null)`);
-
 	return (
 		<div id="Auth">
 			<main>

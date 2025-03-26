@@ -32,7 +32,7 @@ function Navigation({ menu }) {
       </NavLink>
 
       <div className="ContractorName">
-        {user?.displayName ? user.displayName : "&nbsp;"}
+        {user?.displayName ? user.displayName : " "}
       </div>
 
       <ul>

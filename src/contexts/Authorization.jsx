@@ -34,7 +34,7 @@ export const authContext = React.createContext();
 export default function AuthControl(props) {
 	const children = props.children;
 	const [credential, setCredential] = useState(null);
-	const [user, setUser] = useState(null);
+	const [user, setUser] = useState(undefined);
 
 	const onAuthStateChangedCallback = (newUser) => {
 		if (newUser) {

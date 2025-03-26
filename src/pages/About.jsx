@@ -34,7 +34,7 @@ export default function About() {
           their talent.
         </p>
 
-				<ResponsiveGrid minColumnWidth="410px" rowGap="10px">
+        <ResponsiveGrid minColumnWidth="410px" rowGap="10px">
           {teamMembers.map((member, index) =>
             <div className='teamCard flexCenter' key={index}>
               <div className='biography'>{member.biography}</div>

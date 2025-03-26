@@ -11,13 +11,13 @@ export default function MyProfile() {
 	const { user } = useContext(authContext);
 	const { userProfile } = useContext(userProfileContext);
 	const navigate = useNavigate();
-	
+
 	useEffect(() => {
-		if (!user) {
+		if (user === null) {
 			toast.error('Please Login To View Profile');
 			navigate('/');
 		}
-	}, []);
+	}, [user]);
 
 	return (
 		<>

@@ -1,6 +1,8 @@
 import React, { useContext, useEffect, useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { auth } from "../firebaseconfig";
 import { useAuthState } from "react-firebase-hooks/auth";
+import { toast } from 'react-toastify';
 import { messagesContext } from '../contexts/MessagesContext';
 import { Navigation } from '../components';
 import ChatBox from '../components/Chat/ChatBox';
@@ -20,6 +22,14 @@ export default function MyMessages({ view }) {
 	const { chatsList } = useContext(messagesContext);
 	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
 	const [keywords, setKeywords] = useState("");
+	const navigate = useNavigate();
+
+	useEffect(() => {
+		if (user === null) {
+			toast.error('Please Login To View Chats');
+			navigate('/');
+		}
+	}, [user]);
 
 	function filterDeleted(message) {
 		/* Filter out a deleted message. */
