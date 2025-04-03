@@ -1,6 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
 import "./ContractorProfile.css";
-import { useParams } from "react-router-dom";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
@@ -27,7 +26,7 @@ import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlin
 import { ReactComponent as IconChats } from "../../assets/icons/chats.svg";
 
 const ContractorProfile = (props) => {
-  const { id } = useParams();
+  const id = props.data.id;
   const contractor = props.data;
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
