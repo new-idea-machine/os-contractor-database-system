@@ -1,7 +1,10 @@
 import React, { useContext, useEffect, useState, createContext } from 'react';
 import { db } from '../firebaseconfig';
 import {
+	addDoc,
 	collection,
+	deleteDoc,
+	getDocs,
 	onSnapshot,
 	query,
 	where
@@ -36,8 +39,32 @@ function FavouritesContext({ children }) {
 		}
 	}, [userProfile]);
 
+	async function addFavourite(uid) {
+		if (!isAFavourite(uid)) {
+			const data = {
+				techId: uid,
+				recruiterId: userProfile.firebaseUID,
+			};
+
+			await addDoc(collection(db, "favs"), data);
+		}
+	}
+
+	async function deleteFavourite(uid) {
+		const connectionsQuery = query(collection(db, "favs"),
+			where("techId", "==", uid),
+			where("recruiterId", "==", userProfile.firebaseUID));
+		const connectionsSnapshot = await getDocs(connectionsQuery);
+
+		connectionsSnapshot.forEach(async (connection) => await deleteDoc(connection.ref));
+	}
+
+	function isAFavourite(uid) {
+		return (favourites.findIndex((techId) => techId === uid) !== -1)
+	}
+
 	return (
-		<favouritesContext.Provider value={ { favourites } }>
+		<favouritesContext.Provider value={ { favourites, addFavourite, deleteFavourite, isAFavourite } }>
 			{children}
 		</favouritesContext.Provider>
 	);
