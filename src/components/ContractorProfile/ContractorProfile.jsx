@@ -12,11 +12,13 @@ import ProfilePicture from "../ProfilePicture";
 import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 import { ReactComponent as IconChats } from "../../assets/icons/chats.svg";
+import { ReactComponent as IconClose } from "../../assets/icons/close.svg";
 
 const ContractorProfile = (props) => {
   const id = props.data.id;
   const firebaseUID = props.data.firebaseUID;
   const contractor = props.data;
+  const onClose = props.onClose;
   const { skillsList } = useContext(skillsContext);
   const [contractorSkills, setContractorSkills] = useState([]);
   const { user } = useContext(authContext);
@@ -88,6 +90,12 @@ const ContractorProfile = (props) => {
       </aside>
 
       <div>
+        {onClose && (
+          <span className="closeButton" onClick={onClose}>
+            <IconClose onClick={onClose}/>
+          </span>
+        )}
+
         <header>
           <h1>{contractor?.firstName}&nbsp;{contractor?.lastName}</h1>
           <h4>{contractor?.qualification}</h4>
@@ -95,7 +103,7 @@ const ContractorProfile = (props) => {
           <section>
             <div>
               {contractor?.location}
-	    </div>
+      	    </div>
 
             <div>
               {contractor?.email}

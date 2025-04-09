@@ -41,10 +41,7 @@ export default function ContractorList() {
 				<h2>Our Available Contractors</h2>
 
 				{selectedContractor ?
-					<div>
-						<button onClick={() => setSelectedContractor(null)}>Close</button>
-						<ContractorProfile data={selectedContractor} />
-					</div> :
+					<ContractorProfile data={selectedContractor} onClose={() => setSelectedContractor(null)} /> :
 					<div>
 						<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
 							{contractors.map((person) => (

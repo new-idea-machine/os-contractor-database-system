@@ -37,3 +37,14 @@ div#ContractorProfile > div > header > section {
 	place-items: start;
 	row-gap: 1em;
 }
+
+div#ContractorProfile span.closeButton {
+	float: right;
+	position: sticky;
+	top: 0px;
+	right: 0px;
+	padding: 3px;
+	background-color:  var(--colour-background-primary);
+	color:  var(--colour-secondary-8);
+	cursor:  pointer
+}
