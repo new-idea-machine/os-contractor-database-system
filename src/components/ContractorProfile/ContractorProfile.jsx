@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./ContractorProfile.css";
+import styles from "./ContractorProfile.module.css";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
@@ -54,7 +54,7 @@ const ContractorProfile = (props) => {
   const isOwnProfile = (contractor?.firebaseUID === userUid);
 
   return (
-    <div id="ContractorProfile">
+    <div className={styles.ContractorProfile}>
       <aside>
         <ProfilePicture profileImage={contractor?.profileImg} size="150px" />
 
@@ -91,7 +91,7 @@ const ContractorProfile = (props) => {
 
       <div>
         {onClose && (
-          <span className="closeButton" onClick={onClose}>
+          <span className={styles.CloseButton} onClick={onClose}>
             <IconClose onClick={onClose}/>
           </span>
         )}
