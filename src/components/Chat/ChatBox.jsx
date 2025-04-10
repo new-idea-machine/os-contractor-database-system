@@ -6,18 +6,18 @@ import SendMessage from "./SendMessage";
 
 import styles from "./ChatBox.module.css";
 
-const ChatBox = ({ chatsList, correspondentUid }) => {
+const ChatBox = ({ chatsList }) => {
   const dateFormatter = new Intl.DateTimeFormat(undefined, { dateStyle: "full" });
   const scroll = useRef();
-  const { getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
+  const { currentCorrespondentUid, getNumUnreadMessages, updateHasRead } = useContext(messagesContext);
   const numUnreadMessages = getNumUnreadMessages();
-  const chat = chatsList.find((chat) => chat.uid === correspondentUid);
+  const chat = chatsList.find((chat) => chat.uid === currentCorrespondentUid);
   const messageGroups = [];
 
   useEffect(() => {
     if (scroll.current)
       scroll.current.scrollIntoView({ behavior: "smooth" });
-  }, [correspondentUid, chatsList]);
+  }, [currentCorrespondentUid, chatsList]);
 
   if (chat) {
     updateHasRead(chat);
@@ -54,7 +54,7 @@ const ChatBox = ({ chatsList, correspondentUid }) => {
       {/* when a new message enters the chat, the screen scrolls down to this element */}
       <span ref={scroll}></span>
       <div className={styles.Footer}>
-        <SendMessage receiverUid={correspondentUid} />
+        <SendMessage receiverUid={currentCorrespondentUid} />
       </div>
     </>:
     <div className={styles.NoSelection}>

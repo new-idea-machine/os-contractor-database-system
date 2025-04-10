@@ -20,7 +20,6 @@ const deletedMessagesTimeLimit = numDaysToKeepDeletedMessages * millisecondsPerD
 export default function MyMessages({ view }) {
 	const [user] = useAuthState(auth);
 	const { chatsList } = useContext(messagesContext);
-	const [currentCorrespondentUid, setCurrentCorrespondentUid] = useState(null);
 	const [keywords, setKeywords] = useState("");
 	const navigate = useNavigate();
 
@@ -82,7 +81,7 @@ export default function MyMessages({ view }) {
 				return filter(message) && findKeywordsIn(keywordExpressions, message.text)
 			})
 
-			if (newChat.messages.length > 0)
+			if ((view === undefined) || (newChat.messages.length > 0))
 				newChatsList.push(newChat);
 		});
 
@@ -96,8 +95,6 @@ export default function MyMessages({ view }) {
 	if (view === "deleted") filter = filterNonDeleted;
 
 	const filteredChatsList = filterChatsList(filter);
-
-	useEffect(() => { setCurrentCorrespondentUid(null) }, []);
 
 	function updateSearchKeywords(event) {
 		event.preventDefault();
@@ -122,10 +119,10 @@ export default function MyMessages({ view }) {
 							<IconSearchChat />
 						</button>
 					</form>
-					<Correspondents view={ view } chatsList={ filteredChatsList } setCurrentCorrespondentUid={ setCurrentCorrespondentUid } />
+					<Correspondents view={ view } chatsList={ filteredChatsList } />
 				</div>
 				<div className={styles.ChatBox}>
-					<ChatBox chatsList={ filteredChatsList } correspondentUid={ currentCorrespondentUid } />
+					<ChatBox chatsList={ filteredChatsList } />
 				</div>
 			</main>
 		</>

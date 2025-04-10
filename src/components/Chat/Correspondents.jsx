@@ -7,8 +7,8 @@ import { ReactComponent as IconTrash } from "../../assets/icons/trashChat.svg";
 
 import styles from './Correspondents.module.css';
 
-function Correspondents({ view, chatsList, setCurrentCorrespondentUid }) {
-	const { updateMessage } = useContext(messagesContext);
+function Correspondents({ view, chatsList }) {
+	const {setCurrentCorrespondentUid, updateMessage } = useContext(messagesContext);
 
 	function moveArchivedMessages(chat) {
 		for (const message of chat.messages) {

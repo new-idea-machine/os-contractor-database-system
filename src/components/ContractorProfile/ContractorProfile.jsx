@@ -6,6 +6,7 @@ import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import { authContext } from '../../contexts/Authorization';
 import { userProfileContext } from '../../contexts/UserProfileContext';
 import { favouritesContext } from '../../contexts/FavouritesContext';
+import { messagesContext } from '../../contexts/MessagesContext';
 import { Link } from "react-router-dom";
 import ProfilePicture from "../ProfilePicture";
 
@@ -26,6 +27,7 @@ const ContractorProfile = (props) => {
   const userUid = user?.uid;
   const userType = userProfile?.userType;
   const { addFavourite, deleteFavourite, isAFavourite } = useContext(favouritesContext);
+  const { setCurrentCorrespondentUid } = useContext(messagesContext);
 
   const toggleFavourite = async () => {
     try {
@@ -83,7 +85,7 @@ const ContractorProfile = (props) => {
         )}
 
         {!isOwnProfile && (
-          <Link to={`/chat/${contractor?.firebaseUID}`}>
+          <Link to={`/inbox`} onClick={() => setCurrentCorrespondentUid(firebaseUID)}>
             <IconChats /> Chat
           </Link>
         )}
