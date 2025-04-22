@@ -6,7 +6,7 @@ export default function ContractorCard({ data, onClick }) {
 
   return (
     <>
-      <div className="contractorCard flexCenter" onClick={onClick}>
+      <div className="card contractorCard flexCenter" onClick={onClick}>
         <ProfilePicture profileImage={data?.profileImg} size="130px" />
 
         <h1>{data?.firstName}&nbsp;{data?.lastName}</h1>
