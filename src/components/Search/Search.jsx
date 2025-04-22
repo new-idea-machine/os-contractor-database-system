@@ -7,7 +7,7 @@ import Grid from "@mui/material/Unstable_Grid2";
 import React, { useContext, useEffect, useState, useMemo } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
 import { useLocation, useNavigate } from "react-router-dom";
-import "./Search.css";
+import style from "./Search.module.css";
 
 const avatarURL = "/assets/avatar.png";
 
@@ -270,26 +270,33 @@ export default function Search() {
                       <img src={avatarURL} alt="Avatar" />
                     </div>
                   )}
-                </div>
-                <div className="result_info">
-                  <div>
-                    <b>{contractor?.firstName}&nbsp;</b>
-                    <b>{contractor?.lastName}&nbsp;</b>
-                    <div className="contractor_qualification2">
-                      {contractor?.qualification}
+                  <div className={style["result_info"]}>
+                    <div>
+                      <p>
+                        {contractor?.firstName}&nbsp;{contractor?.lastName}
+                        &nbsp;
+                      </p>
+                      <div
+                        className={style["contractor_qualification_worksite"]}
+                      >
+                        <div>{contractor?.qualification}</div>
+                        <div className={style["contractor_worksite"]}>
+                          {contractor?.workSite.map((worksite, index) => (
+                            <div key={index}>{worksite}</div>
+                          ))}
+                        </div>
+                      </div>
                     </div>
                   </div>
                   <div>{contractor.summary}</div>
                   <div>
                     {contractor?.skills && (
                       <div className="result_skills_btns">
-                        {contractor?.skills.map((resultSkill, index) => {
-                          return (
-                            <span key={index} className="badge">
-                              {resultSkill.skill}
-                            </span>
-                          );
-                        })}
+                        {contractor?.skills.map((resultSkill, index) => (
+                          <span key={index} className="badge">
+                            {resultSkill.skill}
+                          </span>
+                        ))}
                       </div>
                     )}
                   </div>
