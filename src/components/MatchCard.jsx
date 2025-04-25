@@ -1,10 +1,18 @@
-import React from "react";
+import React, { useContext } from "react";
 import ProfilePicture from "./ProfilePicture";
 import Badge from "./Badge"
+import { userProfileContext } from '../contexts/UserProfileContext';
+import { favouritesContext } from '../contexts/FavouritesContext';
+
+import FavoriteBorderOutlinedIcon from '@mui/icons-material/FavoriteBorderOutlined';
 
 import styles from "./MatchCard.module.css";
 
 function MatchCard({ contractor, onClick }) {
+  const { getUserProfile } = useContext(userProfileContext);
+  const { isAFavourite } = useContext(favouritesContext);
+  const userProfile = getUserProfile();
+
   return (
     <div className={`card ${styles.MatchCard}`} onClick={onClick}>
       <div className={styles.Percent}>
@@ -34,6 +42,11 @@ function MatchCard({ contractor, onClick }) {
             })}
           </>
         )}
+        {userProfile.userType === "recruiter" &&
+          <FavoriteBorderOutlinedIcon style={{ color: isAFavourite(contractor.firebaseUID) ? 'red' : 'black' }} >
+            Add this profile to favorites
+          </FavoriteBorderOutlinedIcon>
+}
       </div>
     </div>
   );
