@@ -42,18 +42,16 @@ export default function ContractorList() {
 
 				{selectedContractor ?
 					<ContractorProfile data={selectedContractor} onClose={() => setSelectedContractor(null)} /> :
-					<div>
-						<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
-							{contractors.map((person) => (
-								<div key={person.id}>
-									<ContractorCard data={person} onClick={() => {
-										setScrollPosition(window.scrollY);
-										setSelectedContractor(person);
-									}} />
-								</div>
-							))}
-						</ResponsiveGrid>
-					</div>
+					<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
+						{contractors.map((person) => (
+							<div key={person.id}>
+								<ContractorCard data={person} onClick={() => {
+									setScrollPosition(window.scrollY);
+									setSelectedContractor(person);
+								}} />
+							</div>
+						))}
+					</ResponsiveGrid>
 				}
 			</main>
 		</>
