@@ -19,6 +19,7 @@
 	color: var(--colour-secondary-8);
 	background: none;
 	cursor: pointer;
+	text-align: center;
 
 	&:active {
 		background: none !important;
