@@ -1,7 +1,7 @@
 import { useState } from "react";
 
-import { ReactComponent as IconSearchChat } from "../assets/icons/searchChat.svg";
-import { ReactComponent as IconClearSearchChat } from "../assets/icons/clearSearchChat.svg";
+import { ReactComponent as IconSearchBar } from "../assets/icons/searchBar.svg";
+import { ReactComponent as IconSearchBarClear } from "../assets/icons/searchBarClear.svg";
 
 import styles from "./SearchBar.module.css";
 
@@ -40,7 +40,7 @@ export default function SearchBar({ placeholder, defaultValue, setSearchTerms })
 				onChange={ onChange }
 			/>
 			<button type="submit" className={ styles.SearchButton }>
-				{ showSearchIcon ? <IconSearchChat /> : <IconClearSearchChat /> }
+				{ showSearchIcon ? <IconSearchBar /> : <IconSearchBarClear /> }
 			</button>
 		</form>
 	);
