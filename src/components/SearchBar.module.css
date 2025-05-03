@@ -5,11 +5,11 @@
 	align-items: center;
 }
 
-.SearchInput {
+.SearchForm > Input {
 	padding-right: 40px !important;
 }
 
-.SearchButton {
+.SearchForm > Button {
 	all: initial;
 	position: absolute;
 	right: 10px;

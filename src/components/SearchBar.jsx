@@ -36,10 +36,9 @@ export default function SearchBar({ placeholder, defaultValue, setSearchTerms })
 				name="searchBar"
 				defaultValue={ defaultValue }
 				placeholder={ placeholder }
-				className={ styles.SearchInput }
 				onChange={ onChange }
 			/>
-			<button type="submit" className={ styles.SearchButton }>
+			<button type="submit">
 				{ showSearchIcon ? <IconSearchBar /> : <IconSearchBarClear /> }
 			</button>
 		</form>
