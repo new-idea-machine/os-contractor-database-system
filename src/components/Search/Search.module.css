@@ -1,7 +1,7 @@
-.container {
+/* .container {
   padding-right: 75px;
   padding-left: 75px;
-}
+} */
 
 .search_container {
   margin: 0px 4px;
@@ -11,7 +11,7 @@
   color: var(--colour-secondary-4);
 }
 
-p {
+p {  
   font-weight: 600;
   margin-top: 28px;
   margin-bottom: 28px;
