@@ -151,7 +151,7 @@ export default function Search() {
   };
 
   return (
-    <div className={style["container"]}>
+    <div>
       <Navigation />
       <main>
         <h1>Search</h1>
