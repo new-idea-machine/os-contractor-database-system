@@ -16,7 +16,7 @@ import { useNavigate } from "react-router-dom";
 import style from "./Search.module.css";
 import { qualificationsList } from "../../constants/data";
 
-const avatarURL = "/assets/avatar2.svg";
+const avatarURL = "/assets/avatar.svg";
 const favContractor = "/assets/heart-icon.svg";
 
 export default function Search() {
