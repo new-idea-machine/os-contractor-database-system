@@ -1,5 +1,5 @@
 import React, { useContext, useEffect, useState } from "react";
-import "./SearchSkills.css";
+import style from "./SearchSkills.module.css";
 import Autocomplete from "@mui/material/Autocomplete";
 import TextField from "@mui/material/TextField";
 import { Checkbox } from "@mui/material";
@@ -38,7 +38,6 @@ const ListboxComponent = React.forwardRef((props, ref) => {
   );
 });
 
-
 export default function SearchSkills(props) {
   const [selectedSkills, setSelectedSkills] = useState(
     props.initialSelectedSkills || []
@@ -74,21 +73,16 @@ export default function SearchSkills(props) {
     updateAllSkills();
   }, [skillsLists, selectedQualification]);
 
-  const handleClearSkills = () => {
-    setSelectedSkills([]);
-    props.getSelectedSkills([]);
-  };
-
   useEffect(() => {
     setSelectedSkills(props.initialSelectedSkills || []);
   }, [props.initialSelectedSkills]);
 
   return (
-    <div className="search_skills_container">
-      <h2 className="search_skills_title">Search by Skill</h2>
-      <div className="search_skills">
+    <div className={style["search_skills_container"]}>
+      <p>Search by skills</p>
+      <div className={style["autocomplete_container"]}>
         <Autocomplete
-          className="autocomplete"
+          className={style["autocomplete"]}
           multiple
           disableClearable
           value={selectedSkills}
@@ -125,12 +119,12 @@ export default function SearchSkills(props) {
           renderTags={() => null}
           ListboxComponent={ListboxComponent}
         />
-        <div className="selected_skills_container">
+        <div className={style["selected_skills_container"]}>
           {selectedSkills.map((skill) => (
-            <div key={skill} className="selected_skills">
+            <div key={skill} className={style["selected_skills"]}>
               <span>{skill}</span>
               <CloseIcon
-                className="close_icon"
+                className={style["close_icon"]}
                 onClick={() => {
                   const updatedSkills = selectedSkills.filter(
                     (s) => s !== skill
@@ -142,9 +136,6 @@ export default function SearchSkills(props) {
             </div>
           ))}
         </div>
-      </div>
-      <div className="clear_skills_button">
-        <button onClick={handleClearSkills}>Clear Skills</button>
       </div>
     </div>
   );
