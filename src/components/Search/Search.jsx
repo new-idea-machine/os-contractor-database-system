@@ -112,7 +112,7 @@ export default function Search() {
     setSelectedSkills([]);
   };
 
-  const handleOptionWorksiteChange = (option) => {
+  const handleOptionWorkSiteChange = (option) => {
     setSelectedWorkSite(selectedWorkSite.includes(option) ? [] : [option]);
     setSelectedSkills([]);
   };
@@ -166,13 +166,15 @@ export default function Search() {
               <p>Search by qualifications</p>
               <div>
                 {qualificationsList.map((option) => (
-                  <div className={style["search_radio"]} key={option}>
-                    <Radio
+                  <label key={option}>
+                    <input
+                      type="checkbox"
                       checked={selectedQualification.includes(option)}
-                      onClick={() => handleOptionQualificationChange(option)}
+                      onChange={() => handleOptionQualificationChange(option)}
+                      className={style["search_radio"]}
                     />
                     {option}
-                  </div>
+                  </label>
                 ))}
               </div>
             </div>
@@ -186,13 +188,14 @@ export default function Search() {
             <p>Search by worksite</p>
             <div>
               {workSiteList.map((option) => (
-                <div className={style["search_radio"]} key={option}>
-                  <Radio
+                <label key={option}>
+                  <input
+                    type="checkbox"
                     checked={selectedWorkSite.includes(option)}
-                    onClick={() => handleOptionWorksiteChange(option)}
+                    onChange={() => handleOptionWorkSiteChange(option)}
                   />
                   {option}
-                </div>
+                </label>
               ))}
             </div>{" "}
           </div>
