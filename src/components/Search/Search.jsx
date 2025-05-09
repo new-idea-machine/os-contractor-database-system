@@ -1,5 +1,4 @@
 /* eslint-disable react-hooks/exhaustive-deps */
-import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
 import { userProfileContext } from "../../contexts/UserProfileContext";
 import Navigation from "../navigation/Navigation";
@@ -171,7 +170,6 @@ export default function Search() {
                       type="checkbox"
                       checked={selectedQualification.includes(option)}
                       onChange={() => handleOptionQualificationChange(option)}
-                      className={style["search_radio"]}
                     />
                     {option}
                   </label>

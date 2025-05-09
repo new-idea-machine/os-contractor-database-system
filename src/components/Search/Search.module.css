@@ -169,3 +169,7 @@ input[type="checkbox"] {
   cursor: pointer;
   margin-right: 10px;
 }
+
+input[type="checkbox"]:checked {
+  background-color: var(--colour-secondary-2);
+  color: var(--colour-secondary-7);}
