@@ -15,6 +15,7 @@ import SearchSkills from "./SearchSkills/SearchSkills";
 import { useNavigate } from "react-router-dom";
 import style from "./Search.module.css";
 import { qualificationsList } from "../../constants/data";
+import { workSiteList } from "../../constants/data";
 
 const avatarURL = "/assets/avatar.svg";
 const favContractor = "/assets/heart-icon.svg";
@@ -29,8 +30,6 @@ export default function Search() {
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedQualification, setSelectedQualification] = useState([]);
   const [selectedWorkSite, setSelectedWorkSite] = useState([]);
-
-  const workSiteList = ["On Site", "Hybrid", "Remote"];
   const contractorListRef = useRef(null);
 
   const filterContractors = useCallback(() => {

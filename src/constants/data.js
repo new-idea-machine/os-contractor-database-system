@@ -88,6 +88,12 @@ const qualificationsList = [
   "Business Analyst",
 ];
 
+const workSiteList = [
+  "On Site",
+  "Hybrid", 
+  "Remote",
+];
+
 const techDataSchema = {
   userType: "techs",
   firstName: "",
@@ -265,6 +271,7 @@ const recFormInputs = [
 export {
   enforceSchema,
   qualificationsList,
+  workSiteList,
   techDataSchema,
   formInputs,
   recDataSchema,
