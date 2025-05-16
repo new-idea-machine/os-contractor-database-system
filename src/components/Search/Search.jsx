@@ -7,14 +7,12 @@ import React, {
   useState,
   useCallback,
   useMemo,
-  useEffect,
   useRef,
 } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
 import { useNavigate } from "react-router-dom";
 import style from "./Search.module.css";
-import { qualificationsList } from "../../constants/data";
-import { workSiteList } from "../../constants/data";
+import { qualificationsList, workSiteList } from "../../constants/data";
 
 const avatarURL = "/assets/avatar.svg";
 const favContractor = "/assets/heart-icon.svg";
@@ -84,24 +82,29 @@ export default function Search() {
     contractorList,
     selectedSkills,
     selectedQualification,
+    selectedWorkSite,
     country,
     state,
     city,
   ]);
 
-  useEffect(() => {
-    setContractors(filterContractors());
-  }, []);
-
   const memoizedSearchState = useMemo(
     () => ({
       selectedQualification,
       selectedSkills,
+      selectedWorkSite,
       country,
       state,
       city,
     }),
-    [selectedSkills, selectedQualification, country, state, city]
+    [
+      selectedSkills,
+      selectedQualification,
+      selectedWorkSite,
+      country,
+      state,
+      city,
+    ]
   );
 
   const handleOptionQualificationChange = (option) => {
@@ -113,7 +116,6 @@ export default function Search() {
 
   const handleOptionWorkSiteChange = (option) => {
     setSelectedWorkSite(selectedWorkSite.includes(option) ? [] : [option]);
-    setSelectedSkills([]);
   };
 
   const handleClearAll = () => {
@@ -132,6 +134,7 @@ export default function Search() {
     const isFilterApplied =
       selectedSkills.length > 0 ||
       selectedQualification.length > 0 ||
+      selectedWorkSite.length > 0 ||
       country ||
       state ||
       city;
