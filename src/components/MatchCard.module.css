@@ -1,0 +1,46 @@
+.MatchCard {
+  display: grid;
+  grid-template-columns: min-content 1fr;
+  grid-template-areas:
+    "percent name"
+    "profile qualification"
+    "profile summary"
+    "profile skills";
+  column-gap: 15px;
+  margin: 10px 0px;
+  cursor: pointer;
+}
+
+.Percent {
+  grid-area: percent;
+  justify-self: center;
+}
+
+.Profile {
+  grid-area: profile;
+  justify-self: center;
+}
+
+.Name {
+  grid-area: name;
+  justify-self: left;
+  font-size: 1.14rem;
+  font-weight: 600; /* Semi-bold */
+}
+
+.Qualification {
+  grid-area: qualification;
+  justify-self: left;
+  font-weight: 600; /* Semi-bold */
+  color: var(--card-colour-qualification);
+}
+
+.Summary {
+  grid-area: summary;
+  justify-self: left;
+}
+
+.Skills {
+  grid-area: skills;
+  justify-self: left;
+}

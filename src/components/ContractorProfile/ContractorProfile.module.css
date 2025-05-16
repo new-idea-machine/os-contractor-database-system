@@ -1,4 +1,4 @@
-div#ContractorProfile {
+.ContractorProfile {
 	/*
 	This element and its children are laid out in the following 1-row, 2-column grid:
 
@@ -27,13 +27,24 @@ div#ContractorProfile {
 	}
 }
 
-div#ContractorProfile > div {
+.ContractorProfile > div {
 	width:  100%;
 }
 
-div#ContractorProfile > div > header > section {
+.ContractorProfile > div > header > section {
 	display: grid;
 	grid-template-columns: 1fr 1fr;
 	place-items: start;
 	row-gap: 1em;
+}
+
+.CloseButton {
+	float: right;
+	position: sticky;
+	top: 0px;
+	right: 0px;
+	padding: 3px;
+	background-color:  var(--colour-background-primary);
+	color:  var(--colour-secondary-8);
+	cursor:  pointer
 }

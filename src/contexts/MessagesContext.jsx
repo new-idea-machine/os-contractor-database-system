@@ -64,6 +64,7 @@ const MessagesContext = ({ children }) => {
 	const [receivedUnsubscribe, setReceivedUnsubscribe] = useState(null);
 	const [sentUnsubscribe, setSentUnsubscribe] = useState(null);
 	const [chatsList, setChatsList] = useState([]);
+	const [currentCorrespondent, setCurrentCorrespondent] = useState(null);
 
 	useEffect(() => {
 		const subscribeToSnapshot = (field, setMessages, setUnsubscribe) => {
@@ -258,12 +259,38 @@ const MessagesContext = ({ children }) => {
 		}
 	};
 
+	const setCurrentCorrespondentUid = (correspondentUid) => {
+		if (chatsList.findIndex((chat) => chat.uid === correspondentUid) < 0) {
+			const profile = getUserProfile(correspondentUid);
+			const newCorrespondent = {
+				uid:  correspondentUid,
+				newMessageCount:  0,
+				messages:  [],
+				firstName:  profile.firstName,
+				lastName:  profile.lastName,
+				email:  profile.email,
+				qualification:  profile.qualification,
+				summary:  profile.summary
+			}
+
+			if (profile.profileImg) {
+				newCorrespondent.avatar = profile.profileImg;
+			}
+
+			setChatsList(chatsList.concat(newCorrespondent));
+		}
+
+		setCurrentCorrespondent(correspondentUid);
+	}
+
 	const appStates = {
 		chatsList,
 		getNumUnreadMessages,
 		updateMessage,
 		updateHasRead,
-		sendMessage
+		sendMessage,
+		currentCorrespondentUid: currentCorrespondent,
+		setCurrentCorrespondentUid
 	};
 
 	return (

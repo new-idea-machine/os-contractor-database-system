@@ -1,13 +1,29 @@
-import React, { useContext } from 'react';
+import React, { useContext, useEffect, useState } from 'react';
 import { authContext } from "../contexts/Authorization";
 import { userProfileContext } from '../contexts/UserProfileContext';
 import { Navigation } from '../components';
 import ResponsiveGrid from '../components/ResponsiveGrid';
 import ContractorCard from '../components/contractorCard/ContractorCard';
+import ContractorProfile from '../components/ContractorProfile/ContractorProfile';
 
 export default function ContractorList() {
 	const { user } = useContext(authContext);
 	const { contractors } = useContext(userProfileContext);
+	const [selectedContractor, setSelectedContractor] = useState(null);
+	const [scrollPosition, setScrollPosition] = useState(0.0);
+
+	useEffect(() => {
+		/*
+		A short timer is used to ensure that the DOM has been fully updated before any
+		scrolling is done.
+		*/
+
+		const timeoutId = setTimeout(() => {
+			window.scrollTo(0.0, selectedContractor ? 0.0 : scrollPosition);
+		}, 10);
+
+		return () => clearTimeout(timeoutId);
+	}, [selectedContractor])
 
 	return (
 		<>
@@ -24,13 +40,19 @@ export default function ContractorList() {
 
 				<h2>Our Available Contractors</h2>
 
-				<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
-					{contractors.map((person) => (
-						<div key={person.id}>
-							<ContractorCard data={person} />
-						</div>
-					))}
-				</ResponsiveGrid>
+				{selectedContractor ?
+					<ContractorProfile data={selectedContractor} onClose={() => setSelectedContractor(null)} /> :
+					<ResponsiveGrid minColumnWidth="310px" rowGap="10px">
+						{contractors.map((person) => (
+							<div key={person.id}>
+								<ContractorCard data={person} onClick={() => {
+									setScrollPosition(window.scrollY);
+									setSelectedContractor(person);
+								}} />
+							</div>
+						))}
+					</ResponsiveGrid>
+				}
 			</main>
 		</>
 	);

@@ -1,6 +1,7 @@
 import React, { useContext } from "react";
 import { Link } from "react-router-dom";
 import { authContext } from '../../contexts/Authorization';
+import { messagesContext } from '../../contexts/MessagesContext';
 import LinkedinIcon from "@mui/icons-material/LinkedIn";
 import ProfilePicture from "../ProfilePicture";
 
@@ -11,6 +12,7 @@ import "./RecruiterProfile.css";
 const RecruiterProfile = (props) => {
   const recruiter = props.data;
   const { user } = useContext(authContext);
+  const { setCurrentCorrespondentUid } = useContext(messagesContext);
   const userUid = user?.uid;
   const isOwnProfile = (recruiter?.firebaseUID === userUid);
 
@@ -32,7 +34,7 @@ const RecruiterProfile = (props) => {
         )}
 
         {!isOwnProfile && (
-          <Link to={`/chat/${recruiter?.firebaseUID}`}>
+	  <Link to={`/inbox`} onClick={() => setCurrentCorrespondentUid(recruiter.firebaseUID)}>
             <IconChats /> Chat
           </Link>
         )}
