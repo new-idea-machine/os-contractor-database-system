@@ -59,10 +59,16 @@ export default function Search() {
       })
       .filter((contractor) => {
         if (selectedWorkSite.length === 0) return true;
+        const contractorWorkSites = Array.isArray(contractor.workSite)
+          ? contractor.workSite
+          : contractor.workSite
+            ? [contractor.workSite]
+            : [];
         return selectedWorkSite.some(
           (worksite) =>
-            worksite.trim().toLowerCase() ===
-            contractor.workSite?.trim().toLowerCase()
+            contractorWorkSites
+              .map((ws) => ws.trim().toLowerCase())
+              .includes(worksite.trim().toLowerCase())
         );
       })
       .filter((contractor) => {
