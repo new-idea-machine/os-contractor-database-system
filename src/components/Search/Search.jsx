@@ -5,8 +5,6 @@ import Navigation from "../navigation/Navigation";
 import React, {
   useContext,
   useState,
-  useCallback,
-  useMemo,
   useRef,
 } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
@@ -29,7 +27,7 @@ export default function Search() {
   const [selectedWorkSite, setSelectedWorkSite] = useState([]);
   const contractorListRef = useRef(null);
 
-  const filterContractors = useCallback(() => {
+  const filterContractors = () => {
     const calculatePercentMatching = (contractor) => {
       if (selectedSkills.length === 0) return "";
       const matchingSkills = contractor.skills.filter((skill) =>
@@ -78,34 +76,7 @@ export default function Search() {
         ...contractor,
         percentMatching: calculatePercentMatching(contractor),
       }));
-  }, [
-    contractorList,
-    selectedSkills,
-    selectedQualification,
-    selectedWorkSite,
-    country,
-    state,
-    city,
-  ]);
-
-  const memoizedSearchState = useMemo(
-    () => ({
-      selectedQualification,
-      selectedSkills,
-      selectedWorkSite,
-      country,
-      state,
-      city,
-    }),
-    [
-      selectedSkills,
-      selectedQualification,
-      selectedWorkSite,
-      country,
-      state,
-      city,
-    ]
-  );
+  };
 
   const handleOptionQualificationChange = (option) => {
     setSelectedQualification(
@@ -235,11 +206,7 @@ export default function Search() {
                   className={style["contractor_container"]}
                   key={contractor?.id}
                   onClick={() => {
-                    navigate(`/contractor/${contractor?.id}`, {
-                      state: {
-                        searchState: memoizedSearchState,
-                      },
-                    });
+                    navigate(`/contractor/${contractor?.id}`);
                   }}
                 >
                   <div className={style["result_container"]}>
