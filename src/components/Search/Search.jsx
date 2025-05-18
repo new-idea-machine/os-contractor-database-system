@@ -257,7 +257,7 @@ export default function Search() {
                           <div className={style.contractor_skills}>
                             {contractor?.skills.map((resultSkill, index) => {
                               return (
-                                <span key={index} className={style["badge"]}>
+                                <span key={index} className={style.badge}>
                                   {resultSkill.skill}
                                 </span>
                               );
