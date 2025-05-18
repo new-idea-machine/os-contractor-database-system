@@ -78,11 +78,11 @@ export default function SearchSkills(props) {
   }, [props.initialSelectedSkills]);
 
   return (
-    <div className={style["search_skills_container"]}>
+    <div className={style.search_skills_container}>
       <p>Search by skills</p>
-      <div className={style["autocomplete_container"]}>
+      <div className={style.autocomplete_container}>
         <Autocomplete
-          className={style["autocomplete"]}
+          className={style.autocomplete}
           multiple
           disableClearable
           value={selectedSkills}
@@ -119,12 +119,12 @@ export default function SearchSkills(props) {
           renderTags={() => null}
           ListboxComponent={ListboxComponent}
         />
-        <div className={style["selected_skills_container"]}>
+        <div className={style.selected_skills_container}>
           {selectedSkills.map((skill) => (
-            <div key={skill} className={style["selected_skills"]}>
+            <div key={skill} className={style.selected_skills}>
               <span>{skill}</span>
               <CloseIcon
-                className={style["close_icon"]}
+                className={style.close_icon}
                 onClick={() => {
                   const updatedSkills = selectedSkills.filter(
                     (s) => s !== skill

@@ -137,15 +137,15 @@ export default function Search() {
       <main>
         <h1>Search</h1>
         {!selectedContractor && (
-          <div className={style["search_container"]}>
+          <div className={style.search_container}>
             <div>
-              <p className={style["search_description"]}>
+              <p className={style.search_description}>
                 &quot;Our success is determined by new developers finding career
                 positions in other companies. We foster skill, determine will,
                 and help to establish the right attitude in new devs, reducing
                 your risk of hiring for your own development team.&quot;
               </p>
-              <div className={style["search_qualification_container"]}>
+              <div className={style.search_qualification_container}>
                 <p>Search by qualifications</p>
                 <div>
                   {qualificationsList.map((option) => (
@@ -166,7 +166,7 @@ export default function Search() {
               initialSelectedSkills={selectedSkills}
               getSelectedSkills={(skill) => setSelectedSkills(skill)}
             />
-            <div className={style["search_qualification_container"]}>
+            <div className={style.search_qualification_container}>
               <p>Search by worksite</p>
               <div>
                 {workSiteList.map((option) => (
@@ -183,7 +183,7 @@ export default function Search() {
             </div>
             {(selectedWorkSite.includes("On Site") ||
               selectedWorkSite.includes("Hybrid")) && (
-              <div className={style["search_location_container"]}>
+              <div className={style.search_location_container}>
                 <p>Search by location</p>
                 <div>
                   <CSCSelector
@@ -197,7 +197,7 @@ export default function Search() {
                 </div>
               </div>
             )}
-            <div className={style["button_container"]}>
+            <div className={style.button_container}>
               <button onClick={handleSearch}>Search</button>
               <button onClick={handleClearAll}>Clear All</button>
             </div>
@@ -207,7 +207,7 @@ export default function Search() {
           <ul ref={contractorListRef}>
             {contractors.length > 0 ? (
               <>
-                <div className={style["message"]}>
+                <div className={style.message}>
                   {contractors.length === 1
                     ? "1 match"
                     : `${contractors.length} matches`}{" "}
@@ -215,14 +215,14 @@ export default function Search() {
                 </div>
                 {contractors.map((contractor) => (
                   <div
-                    className={style["contractor_container"]}
+                    className={style.contractor_container}
                     key={contractor?.id}
                     onClick={() => {
                       setScrollPosition(window.scrollY);
                       setSelectedContractor(contractor);
                     }}
                   >
-                    <div className={style["result_container"]}>
+                    <div className={style.result_container}>
                       <div>
                         {contractor.percentMatching ? (
                           <p>{contractor.percentMatching}%</p>
@@ -236,25 +236,25 @@ export default function Search() {
                         <img src={avatarURL} alt="Avatar" />
                       )}
                     </div>
-                    <div className={style["result_info"]}>
+                    <div className={style.result_info}>
                       <div>
                         <p>
                           {contractor?.firstName}&nbsp;{contractor?.lastName}
                           &nbsp;
                         </p>
                         <div
-                          className={style["contractor_qualification_worksite"]}
+                          className={style.contractor_qualification_worksite}
                         >
                           <div>{contractor?.qualification}</div>
                           <div>{contractor?.workSite}</div>
                         </div>
                       </div>
-                      <div className={style["contractor_summary"]}>
+                      <div className={style.contractor_summary}>
                         {contractor.summary}
                       </div>
                       <div>
                         {contractor?.skills && (
-                          <div className={style["contractor_skills"]}>
+                          <div className={style.contractor_skills}>
                             {contractor?.skills.map((resultSkill, index) => {
                               return (
                                 <span key={index} className={style["badge"]}>
@@ -268,7 +268,7 @@ export default function Search() {
                       <div>
                         <img
                           src={favContractor}
-                          className={style["favorite_contractor"]}
+                          className={style.favorite_contractor}
                           alt="Favourite Contractor"
                         />
                       </div>
@@ -277,7 +277,7 @@ export default function Search() {
                 ))}
               </>
             ) : (
-              <div className={style["message"]}>
+              <div className={style.message}>
                 No contractors found for your search criteria.
               </div>
             )}
