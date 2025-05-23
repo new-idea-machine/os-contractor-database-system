@@ -11,9 +11,9 @@ Some types of members in "schema" are special:
 
 - Basic JavaScript object:  the corresponding member in "target" is checked recursively.
 - Array:  MUST contain a single element as the default value, and all corresponding elements in
-	"target" are checked.
+  "target" are checked.
 - "null":  the data type is undefined & can be anything; "target" is only checked for the
-	presence of this member and its type is ignored.
+  presence of this member and its type is ignored.
 - Function:  not allowed (not even as members of objects).
 
 A quick & easy way to create a new object initialized with all default values from "schema" is
@@ -79,58 +79,58 @@ function enforceSchema(target, schema) {
 	return target;
 }
 const qualificationsList = [
-	"Developer",
-	"Designer",
-	"Product Manager",
-	"Project Manager",
-	"Tester",
-	"QA Manager",
-	"Business Analyst",
+	'Developer',
+	'Designer',
+	'Product Manager',
+	'Project Manager',
+	'Tester',
+	'QA Manager',
+	'Business Analyst',
 ];
 
 const workSiteList = [
-	"On Site",
-	"Hybrid", 
-	"Remote",
+	'On Site',
+	'Hybrid', 
+	'Remote',
 ];
 
 const techDataSchema = {
-	userType: "techs",
-	firstName: "",
-	lastName: "",
-	email: "",
-	qualification: "",
-	summary: "",
-	location: "",
-	profileImg: "",
+	userType: 'techs',
+	firstName: '',
+	lastName: '',
+	email: '',
+	qualification: '',
+	summary: '',
+	location: '',
+	profileImg: '',
 	otherInfo: {
-		linkedinUrl: "",
-		githubUrl: "",
-		resume: "",
+		linkedinUrl: '',
+		githubUrl: '',
+		resume: '',
 	},
-	availability: "",
-	availabilityDetails: "",
-	workSite: "",
-	skills: [{ skill: "" }],
+	availability: '',
+	availabilityDetails: '',
+	workSite: '',
+	skills: [{ skill: '' }],
 	projects: [
 		{
-			title: "",
-			url: "",
-			description: "",
+			title: '',
+			url: '',
+			description: '',
 		},
 	],
 };
 
 const recDataSchema = {
-	userType: "recruiter",
-	firstName: "",
-	lastName: "",
-	email: "",
-	qualification: "",
-	linkedinUrl: "",
-	companyName: "",
-	companyInfo: "",
-	phone: "",
+	userType: 'recruiter',
+	firstName: '',
+	lastName: '',
+	email: '',
+	qualification: '',
+	linkedinUrl: '',
+	companyName: '',
+	companyInfo: '',
+	phone: '',
 };
 
 const messageDataSchema = {
