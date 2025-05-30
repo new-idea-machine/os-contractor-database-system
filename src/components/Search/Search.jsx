@@ -6,9 +6,7 @@ import SearchSkills from "./SearchSkills/SearchSkills";
 import style from "./Search.module.css";
 import { qualificationsList, workSiteList } from "../../constants/data";
 import ContractorProfile from "../ContractorProfile/ContractorProfile";
-
-const avatarURL = "/assets/avatar.svg";
-const favContractor = "/assets/heart-icon.svg";
+import MatchCard from "../MatchCard";
 
 export default function Search() {
   const contractorList = useContext(userProfileContext).contractors;
@@ -62,13 +60,12 @@ export default function Search() {
         const contractorWorkSites = Array.isArray(contractor.workSite)
           ? contractor.workSite
           : contractor.workSite
-            ? [contractor.workSite]
-            : [];
-        return selectedWorkSite.some(
-          (worksite) =>
-            contractorWorkSites
-              .map((ws) => ws.trim().toLowerCase())
-              .includes(worksite.trim().toLowerCase())
+          ? [contractor.workSite]
+          : [];
+        return selectedWorkSite.some((worksite) =>
+          contractorWorkSites
+            .map((ws) => ws.trim().toLowerCase())
+            .includes(worksite.trim().toLowerCase())
         );
       })
       .filter((contractor) => {
@@ -166,7 +163,7 @@ export default function Search() {
               initialSelectedSkills={selectedSkills}
               getSelectedSkills={(skill) => setSelectedSkills(skill)}
             />
-            <div className={style.search_qualification_container}>
+            <div className={style.search_worksite_container}>
               <p>Search by worksite</p>
               <div>
                 {workSiteList.map((option) => (
@@ -214,65 +211,14 @@ export default function Search() {
                   for your project!
                 </div>
                 {contractors.map((contractor) => (
-                  <div
-                    className={style.contractor_container}
-                    key={contractor?.id}
-                    onClick={() => {
-                      setScrollPosition(window.scrollY);
-                      setSelectedContractor(contractor);
-                    }}
-                  >
-                    <div className={style.result_container}>
-                      <div>
-                        {contractor.percentMatching ? (
-                          <p>{contractor.percentMatching}%</p>
-                        ) : (
-                          <p></p>
-                        )}
-                      </div>
-                      {contractor?.profileImg ? (
-                        <img src={contractor?.profileImg} alt="Profile" />
-                      ) : (
-                        <img src={avatarURL} alt="Avatar" />
-                      )}
-                    </div>
-                    <div className={style.result_info}>
-                      <div>
-                        <p>
-                          {contractor?.firstName}&nbsp;{contractor?.lastName}
-                          &nbsp;
-                        </p>
-                        <div
-                          className={style.contractor_qualification_worksite}
-                        >
-                          <div>{contractor?.qualification}</div>
-                          <div>{contractor?.workSite}</div>
-                        </div>
-                      </div>
-                      <div className={style.contractor_summary}>
-                        {contractor.summary}
-                      </div>
-                      <div>
-                        {contractor?.skills && (
-                          <div className={style.contractor_skills}>
-                            {contractor?.skills.map((resultSkill, index) => {
-                              return (
-                                <span key={index} className={style.badge}>
-                                  {resultSkill.skill}
-                                </span>
-                              );
-                            })}
-                          </div>
-                        )}
-                      </div>
-                      <div>
-                        <img
-                          src={favContractor}
-                          className={style.favorite_contractor}
-                          alt="Favourite Contractor"
-                        />
-                      </div>
-                    </div>
+                  <div key={contractor?.id}>
+                    <MatchCard
+                      contractor={contractor}
+                      onClick={() => {
+                        setScrollPosition(window.scrollY);
+                        setSelectedContractor(contractor);
+                      }}
+                    />
                   </div>
                 ))}
               </>
