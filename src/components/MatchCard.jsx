@@ -16,7 +16,7 @@ function MatchCard({ contractor, onClick }) {
   return (
     <div className={`card ${styles.MatchCard}`} onClick={onClick}>
       <div className={styles.Percent}>
-        <b>{"percentMatching" in contractor ? `${contractor.percentMatching}%` : <>&nbsp;</>}</b>
+        <b>{contractor.percentMatching ? `${contractor.percentMatching}%` : <>&nbsp;</>}</b>
       </div>
       <div className={styles.Profile}>
 	      <ProfilePicture profileImage={contractor?.profileImg} size="60px"/>
@@ -24,8 +24,22 @@ function MatchCard({ contractor, onClick }) {
       <div className={styles.Name}>
         <b>{contractor?.firstName}&nbsp;{contractor?.lastName}</b>
       </div>
-      <div className={styles.Qualification}>
-        {contractor?.qualification}
+      <div className={styles.Tag}>
+        <div className={styles.Qualification}>
+          {contractor?.qualification}
+        </div>
+        <div>&ndash;</div>
+        <div className={styles.WorkSite}>
+          {Array.isArray(contractor?.workSite) ? (
+            <>
+              {contractor?.workSite.map((ws, index) => (
+                <div key={index}>{ws}</div>
+              ))}
+            </>
+          ) : (
+            <div>{contractor?.workSite}</div>
+            )}
+        </div>
       </div>
       <div className={styles.Summary}>
         {contractor.summary}
@@ -44,9 +58,10 @@ function MatchCard({ contractor, onClick }) {
         )}
         {userProfile.userType === "recruiter" &&
           <FavoriteBorderOutlinedIcon style={{ color: isAFavourite(contractor.firebaseUID) ? 'red' : 'black' }} >
+          >
             Add this profile to favorites
           </FavoriteBorderOutlinedIcon>
-}
+        }
       </div>
     </div>
   );
