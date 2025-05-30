@@ -10,7 +10,7 @@ import styles from "./MatchCard.module.css";
 
 function MatchCard({ contractor, onClick }) {
   const { getUserProfile } = useContext(userProfileContext);
-  const { isAFavourite } = useContext(favouritesContext);
+  const { isAFavourite, addFavourite, deleteFavourite } = useContext(favouritesContext);
   const userProfile = getUserProfile();
 
   return (
@@ -57,7 +57,15 @@ function MatchCard({ contractor, onClick }) {
           </>
         )}
         {userProfile.userType === "recruiter" &&
-          <FavoriteBorderOutlinedIcon style={{ color: isAFavourite(contractor.firebaseUID) ? 'red' : 'black' }} >
+          <FavoriteBorderOutlinedIcon style={{ color: isAFavourite(contractor.firebaseUID) ? 'red' : 'black' }} 
+            onClick={async (e) => {
+              e.stopPropagation();
+              if (isAFavourite(contractor.firebaseUID)) {
+                await deleteFavourite(contractor.firebaseUID);
+              } else {
+                await addFavourite(contractor.firebaseUID);
+              }
+            }}
           >
             Add this profile to favorites
           </FavoriteBorderOutlinedIcon>
