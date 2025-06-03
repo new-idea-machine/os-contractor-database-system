@@ -25,19 +25,13 @@ function MatchCard({ contractor, onClick }) {
         <b>{contractor?.firstName}&nbsp;{contractor?.lastName}</b>
       </div>
       <div className={styles.Tag}>
-        <div className={styles.Qualification}>
-          {contractor?.qualification}
-        </div>
-        <div>&ndash;</div>
-        <div className={styles.WorkSite}>
-          <div className={styles.WorkSite}>
-            {Array.isArray(contractor?.workSite) ? (
-              contractor.workSite.join(", ")
-            ) : (
-              <span>{contractor?.workSite}</span>
-            )}
-          </div>
-        </div>
+        {contractor?.qualification} 
+        {contractor.qualification && contractor.workSite && <span> &ndash; </span>}
+        {Array.isArray(contractor?.workSite) ? (
+          contractor.workSite.join(", ")
+        ) : (
+          contractor?.workSite
+        )}
       </div>
       <div className={styles.Summary}>
         {contractor.summary}

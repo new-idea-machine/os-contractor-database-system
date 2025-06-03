@@ -31,20 +31,22 @@
 .Tag {
   display: flex;
   gap: 15px;
+  font-weight: 600; /* Semi-bold */
+  color: var(--card-colour-qualification);
 }
 
-.Qualification {
+/* .Qualification {
   grid-area: qualification;
   justify-self: left;
-  font-weight: 600; /* Semi-bold */
+  font-weight: 600;
   color: var(--card-colour-qualification);
 }
 
 .WorkSite {
   grid-area: worksite;
-  font-weight: 600; /* Semi-bold */
+  font-weight: 600;
   color: var(--card-colour-qualification);
-}
+} */
 
 .Summary {
   grid-area: summary;
