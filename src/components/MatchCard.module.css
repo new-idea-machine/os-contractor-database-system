@@ -42,10 +42,6 @@
 
 .WorkSite {
   grid-area: worksite;
-  display: flex;
-  gap: 15px;
-  /* display: inline; */
-  /* justify-self: left; */
   font-weight: 600; /* Semi-bold */
   color: var(--card-colour-qualification);
 }

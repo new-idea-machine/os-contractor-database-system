@@ -30,15 +30,13 @@ function MatchCard({ contractor, onClick }) {
         </div>
         <div>&ndash;</div>
         <div className={styles.WorkSite}>
-          {Array.isArray(contractor?.workSite) ? (
-            <>
-              {contractor?.workSite.map((ws, index) => (
-                <div key={index}>{ws}</div>
-              ))}
-            </>
-          ) : (
-            <div>{contractor?.workSite}</div>
+          <div className={styles.WorkSite}>
+            {Array.isArray(contractor?.workSite) ? (
+              contractor.workSite.join(", ")
+            ) : (
+              <span>{contractor?.workSite}</span>
             )}
+          </div>
         </div>
       </div>
       <div className={styles.Summary}>
