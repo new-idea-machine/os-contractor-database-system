@@ -59,9 +59,9 @@ export default function Search() {
         if (selectedWorkSite.length === 0) return true;
         const contractorWorkSites = Array.isArray(contractor.workSite)
           ? contractor.workSite
-          : contractor.workSite
+          : (contractor.workSite
           ? [contractor.workSite]
-          : [];
+          : []);
         return selectedWorkSite.some((worksite) =>
           contractorWorkSites
             .map((ws) => ws.trim().toLowerCase())
