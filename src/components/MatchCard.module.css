@@ -3,7 +3,7 @@
   grid-template-columns: min-content 1fr;
   grid-template-areas:
     "percent name"
-    "profile qualification"
+    "profile tag"
     "profile summary"
     "profile skills";
   column-gap: 15px;
@@ -29,24 +29,11 @@
 }
 
 .Tag {
-  display: flex;
-  gap: 15px;
+  grid-area: tag;
+  justify-self: left;
   font-weight: 600; /* Semi-bold */
   color: var(--card-colour-qualification);
 }
-
-/* .Qualification {
-  grid-area: qualification;
-  justify-self: left;
-  font-weight: 600;
-  color: var(--card-colour-qualification);
-}
-
-.WorkSite {
-  grid-area: worksite;
-  font-weight: 600;
-  color: var(--card-colour-qualification);
-} */
 
 .Summary {
   grid-area: summary;
