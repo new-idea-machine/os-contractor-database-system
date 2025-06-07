@@ -79,10 +79,19 @@ function enforceSchema(target, schema) {
 	return target;
 }
 const qualificationsList = [
-	"Developer",
-	"Designer",
-	"Product Manager",
-	"Project Manager"
+	'Developer',
+	'Designer',
+	'Product Manager',
+	'Project Manager',
+	'Tester',
+	'QA Manager',
+	'Business Analyst',
+];
+
+const workSiteList = [
+	'On Site',
+	'Hybrid', 
+	'Remote',
 ];
 
 const techDataSchema = {
@@ -99,7 +108,7 @@ const techDataSchema = {
 		githubUrl: '',
 		resume: '',
 	},
-	availability:'',
+	availability: '',
 	availabilityDetails: '',
 	workSite: '',
 	skills: [{ skill: '' }],
@@ -121,9 +130,8 @@ const recDataSchema = {
 	linkedinUrl: '',
 	companyName: '',
 	companyInfo: '',
-	phone:  '',
-
-}
+	phone: '',
+};
 
 const messageDataSchema = {
 	archived: false,
@@ -142,4 +150,4 @@ const messageDataSchema = {
 	uid: ''
 }
 
-export { enforceSchema, qualificationsList, techDataSchema, recDataSchema, messageDataSchema };
+export { enforceSchema,	qualificationsList, workSiteList, techDataSchema, recDataSchema, messageDataSchema};

@@ -3,7 +3,7 @@
   grid-template-columns: min-content 1fr;
   grid-template-areas:
     "percent name"
-    "profile qualification"
+    "profile tag"
     "profile summary"
     "profile skills";
   column-gap: 15px;
@@ -28,8 +28,8 @@
   font-weight: 600; /* Semi-bold */
 }
 
-.Qualification {
-  grid-area: qualification;
+.Tag {
+  grid-area: tag;
   justify-self: left;
   font-weight: 600; /* Semi-bold */
   color: var(--card-colour-qualification);

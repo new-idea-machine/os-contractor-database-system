@@ -1,22 +1,20 @@
 .search_skills_container {
-  border-style: solid;
-  border-color: gray;
-  border-width: 0.5px;
-  border-radius: 5px;
-  padding: 10px;
-  margin-bottom: 15px;
-}
-
-.search_skills_title {
-  text-align: center;
-  margin: 0;
-}
-
-.search_skills {
   display: flex;
   flex-direction: column;
+}
+
+.search_skills_container > p {
+  margin-bottom: 20px;
+  white-space: nowrap;
+}
+
+.autocomplete_container {
+  display: flex;
+  flex-direction: column;
+  justify-self: center;
   align-items: center;
-  margin-top: 10px;
+  width: 100%;
+  margin-bottom: 28px;
 }
 
 .autocomplete {
@@ -24,8 +22,9 @@
 }
 
 .selected_skills_container {
-  display: flex;
-  flex-direction: row;
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  margin-top: 5px;
 }
 
 .selected_skills {
@@ -54,21 +53,4 @@
 
 .close_icon:hover {
   background-color: #b6b5b5;
-}
-
-.clear_skills_button {
-  display: flex;
-  justify-content: flex-end;
-}
-
-.clear_skills_button button {
-  width: 100px;
-  height: 40px;
-  cursor: pointer;
-  border: none;
-  border-radius: 5px;
-}
-
-.clear_skills_button button:hover {
-  background-color: #bdbaba;
 }

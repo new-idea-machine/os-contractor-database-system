@@ -1,73 +1,88 @@
-import AvailabilityFilter from "./SearchSkills/AvailabilityFilter";
-import { Radio } from "@mui/material";
 import CSCSelector from "./CSCSelector/CSCSelector";
 import { userProfileContext } from "../../contexts/UserProfileContext";
-import { Navigation } from "../index";
-import Grid from "@mui/material/Unstable_Grid2";
-import React, { useContext, useEffect, useState, useMemo } from "react";
+import Navigation from "../navigation/Navigation";
+import { useContext, useState, useRef, useEffect } from "react";
 import SearchSkills from "./SearchSkills/SearchSkills";
-import { useLocation, useNavigate } from "react-router-dom";
+import style from "./Search.module.css";
+import { qualificationsList, workSiteList } from "../../constants/data";
+import ContractorProfile from "../ContractorProfile/ContractorProfile";
 import MatchCard from "../MatchCard";
-import "./Search.css";
 
 export default function Search() {
-  const navigate = useNavigate();
-  const [availabilityFilter, setAvailabilityFilter] = useState("all"); // Default to "all"
-  const { contractors } = useContext(userProfileContext);
-  const [city, setCity] = React.useState("");
-  const [matchingContractors, setMatchingContractors] = useState([]);
-  const [country, setCountry] = React.useState("");
-  const location = useLocation();
-  const [state, setState] = React.useState("");
+  const contractorList = useContext(userProfileContext).contractors;
+  const [contractors, setContractors] = useState([]);
+  const [country, setCountry] = useState("");
+  const [city, setCity] = useState("");
+  const [state, setState] = useState("");
   const [selectedSkills, setSelectedSkills] = useState([]);
   const [selectedQualification, setSelectedQualification] = useState([]);
-  const searchStateFromLocation = location.state?.searchState;
-  const qualification = [
-    "Developer",
-    "Designer",
-    "Product Manager",
-    "Project Manager",
-  ];
-
-  const memoizedSearchState = useMemo(
-    () => ({
-      selectedQualification,
-      selectedSkills,
-      country,
-      state,
-      city,
-    }),
-    [selectedSkills, selectedQualification, country, state, city]
-  );
+  const [selectedWorkSite, setSelectedWorkSite] = useState([]);
+  const contractorListRef = useRef(null);
+  const [selectedContractor, setSelectedContractor] = useState(null);
+  const [scrollPosition, setScrollPosition] = useState(0.0);
 
   useEffect(() => {
-    const clearSessionStorage = () => {
-      sessionStorage.removeItem("searchState");
+    const timeoutId = setTimeout(() => {
+      window.scrollTo(0.0, selectedContractor ? 0.0 : scrollPosition);
+    }, 10);
+    return () => clearTimeout(timeoutId);
+  }, [selectedContractor, scrollPosition]);
+
+  const filterContractors = () => {
+    const calculatePercentMatching = (contractor) => {
+      if (selectedSkills.length === 0) return "";
+      const matchingSkills = contractor.skills.filter((skill) =>
+        selectedSkills.includes(skill.skill)
+      ).length;
+
+      return Math.round((matchingSkills / selectedSkills.length) * 100);
     };
 
-    window.addEventListener("beforeunload", clearSessionStorage);
-    if (searchStateFromLocation) {
-      setSelectedSkills(searchStateFromLocation.selectedSkills || []);
-      setSelectedQualification(
-        searchStateFromLocation.selectedQualification || []
-      );
-      setCountry(searchStateFromLocation.country || "");
-      setState(searchStateFromLocation.state || "");
-      setCity(searchStateFromLocation.city || "");
-    } else {
-      const savedState = JSON.parse(sessionStorage.getItem("searchState"));
-      if (savedState) {
-        setSelectedSkills(savedState.selectedSkills || []);
-        setSelectedQualification(savedState.selectedQualification || []);
-        setCountry(savedState.country || "");
-        setState(savedState.state || "");
-        setCity(savedState.city || "");
-      }
-    }
-    return () => {
-      window.removeEventListener("beforeunload", clearSessionStorage);
-    };
-  }, [searchStateFromLocation]);
+    return contractorList
+      .filter(
+        (contractor) =>
+          contractor.availability === "Full Time" ||
+          contractor.availability === "Part Time"
+      )
+      .filter(
+        (contractor) =>
+          selectedQualification.length === 0 ||
+          selectedQualification.includes(contractor.qualification)
+      )
+      .filter((contractor) => {
+        if (selectedSkills.length === 0) return true;
+        return contractor.skills.some((skill) =>
+          selectedSkills.includes(skill.skill)
+        );
+      })
+      .filter((contractor) => {
+        if (selectedWorkSite.length === 0) return true;
+        const contractorWorkSites = Array.isArray(contractor.workSite)
+          ? contractor.workSite
+          : (contractor.workSite
+          ? [contractor.workSite]
+          : []);
+        return selectedWorkSite.some((worksite) =>
+          contractorWorkSites
+            .map((ws) => ws.trim().toLowerCase())
+            .includes(worksite.trim().toLowerCase())
+        );
+      })
+      .filter((contractor) => {
+        if (!country && !state && !city) return true;
+        const matchingLocation = contractor.location.toLowerCase();
+
+        return (
+          (!country || matchingLocation.includes(country.toLowerCase())) &&
+          (!state || matchingLocation.includes(state.toLowerCase())) &&
+          (!city || matchingLocation.includes(city.toLowerCase()))
+        );
+      })
+      .map((contractor) => ({
+        ...contractor,
+        percentMatching: calculatePercentMatching(contractor),
+      }));
+  };
 
   const handleOptionQualificationChange = (option) => {
     setSelectedQualification(
@@ -76,189 +91,150 @@ export default function Search() {
     setSelectedSkills([]);
   };
 
-  useEffect(() => {
-    sessionStorage.setItem(
-      "searchState",
-      JSON.stringify({
-        selectedQualification,
-        selectedSkills: selectedSkills || [],
-        country,
-        state,
-        city,
-      })
-    );
-    const contractorFilteredList = () => {
-      const filteredContractors = filterContractorsByAvailability(
-        contractors,
-        availabilityFilter
-      );
-      for (const contractor of contractors) {
-        let numMatchingSkills = 0;
-
-        if (selectedSkills.length > 0) {
-          for (const option of selectedSkills) {
-            if (contractor?.skills) {
-              const matchingSkills = contractor.skills.filter(
-                (skill) => skill.skill === option
-              );
-              console.log("matching skills ", matchingSkills );
-              numMatchingSkills += matchingSkills.length;
-            }
-          }
-        } else {
-          numMatchingSkills = 1;
-        }
-
-        // Filter contractors by qualification
-        const isMatchingQualification =
-          selectedQualification.length === 0 ||
-          selectedQualification.includes(contractor.qualification);
-
-        // Filter contractors by location (country, state, and city)
-        const isMatchingLocation =
-          (!country || contractor.countryCode === country) &&
-          (!state || contractor.stateCode === state) &&
-          (!city || contractor.city === city);
-
-        const percentMatching = selectedSkills.length
-          ? Math.round((numMatchingSkills / selectedSkills.length) * 100)
-          : 100;
-
-        const shouldShowContractor =
-          numMatchingSkills > 0 &&
-          isMatchingLocation &&
-          isMatchingQualification;
-
-        if (shouldShowContractor) {
-          filteredContractors.push({
-            ...contractor,
-            percentMatching,
-          });
-        }
-      }
-      filteredContractors.sort((a, b) => {
-        if (b.percentMatching === a.percentMatching) {
-          return (a.firstName || "").localeCompare(b.firstName || "");
-        }
-        return b.percentMatching - a.percentMatching;
-      });
-      setMatchingContractors(filteredContractors);
-    };
-
-    contractorFilteredList();
-  }, [
-    availabilityFilter,
-    city,
-    contractors,
-    country,
-    state,
-    selectedSkills,
-    selectedQualification,
-  ]);
-
-  const handleClearQualification = () => {
-    setSelectedQualification([]);
+  const handleOptionWorkSiteChange = (option) => {
+    setSelectedWorkSite(selectedWorkSite.includes(option) ? [] : [option]);
   };
 
-  const handleClearLocation = () => {
+  const handleClearAll = () => {
+    setSelectedQualification([]);
+    setSelectedSkills([]);
+    setSelectedWorkSite([]);
+
     setCountry("");
     setState("");
     setCity("");
+
+    setContractors([]);
   };
 
-  function filterContractorsByAvailability(contractorList, availabilityFilter) {
-    return contractorList.filter((contractor) => {
-      if (availabilityFilter === "all") {
-        return true; // Include all contractors
-      } else if (availabilityFilter === "available") {
-        return contractor.availability === "available";
-      } else if (availabilityFilter === "unavailable") {
-        return contractor.availability === "unavailable";
-      }
-      return false; // Default to not including the contractor
-    });
-  }
+  const handleSearch = () => {
+    const isFilterApplied =
+      selectedSkills.length > 0 ||
+      selectedQualification.length > 0 ||
+      selectedWorkSite.length > 0 ||
+      country ||
+      state ||
+      city;
+
+    if (isFilterApplied) {
+      setContractors(filterContractors());
+      setTimeout(() => {
+        if (contractorListRef.current) {
+          contractorListRef.current.scrollIntoView({ behavior: "smooth" });
+        }
+      }, 0);
+    } else {
+      setContractors([]);
+    }
+  };
 
   return (
     <div>
       <Navigation />
-      <main className="search_container">
-        <AvailabilityFilter
-          availabilityFilter={availabilityFilter}
-          setAvailabilityFilter={setAvailabilityFilter}
-          onChange={(filter) => setAvailabilityFilter(filter)}
-        />
-        <div className="search_options">
-          <h2>Search by Qualification</h2>
-          <div>
-            <Grid container spacing={10} minHeight={120}>
-              <Grid
-                xs
-                display="flex"
-                justifyContent="center"
-                alignItems="center"
-              >
-                {qualification.map((option) => (
-                  <div className="search_options_radio" key={option}>
-                    <Radio
-                      checked={selectedQualification.includes(option)}
-                      onClick={() => handleOptionQualificationChange(option)}
+      <main>
+        <h1>Search</h1>
+        {!selectedContractor && (
+          <div className={style.search_container}>
+            <div>
+              <p className={style.search_description}>
+                &quot;Our success is determined by new developers finding career
+                positions in other companies. We foster skill, determine will,
+                and help to establish the right attitude in new devs, reducing
+                your risk of hiring for your own development team.&quot;
+              </p>
+              <div className={style.search_qualification_container}>
+                <p>Search by qualifications</p>
+                <div>
+                  {qualificationsList.map((option) => (
+                    <label key={option}>
+                      <input
+                        type="checkbox"
+                        checked={selectedQualification.includes(option)}
+                        onChange={() => handleOptionQualificationChange(option)}
+                      />
+                      {option}
+                    </label>
+                  ))}
+                </div>
+              </div>
+            </div>
+            <SearchSkills
+              selectedQualification={selectedQualification}
+              initialSelectedSkills={selectedSkills}
+              getSelectedSkills={(skill) => setSelectedSkills(skill)}
+            />
+            <div className={style.search_worksite_container}>
+              <p>Search by worksite</p>
+              <div>
+                {workSiteList.map((option) => (
+                  <label key={option}>
+                    <input
+                      type="checkbox"
+                      checked={selectedWorkSite.includes(option)}
+                      onChange={() => handleOptionWorkSiteChange(option)}
                     />
                     {option}
-                    <br />
-                  </div>
+                  </label>
                 ))}
-              </Grid>
-            </Grid>
-            <div className="clear_button">
-              <button onClick={handleClearQualification}>
-                Clear Qualification
-              </button>
+              </div>{" "}
+            </div>
+            {(selectedWorkSite.includes("On Site") ||
+              selectedWorkSite.includes("Hybrid")) && (
+              <div className={style.search_location_container}>
+                <p>Search by location</p>
+                <div>
+                  <CSCSelector
+                    initialCountry={country}
+                    initialState={state}
+                    initialCity={city}
+                    getCountry={(country) => setCountry(country)}
+                    getState={(state) => setState(state)}
+                    getCity={(city) => setCity(city)}
+                  />
+                </div>
+              </div>
+            )}
+            <div className={style.button_container}>
+              <button onClick={handleSearch}>Search</button>
+              <button onClick={handleClearAll}>Clear All</button>
             </div>
           </div>
-        </div>
-        <SearchSkills
-          selectedQualification={selectedQualification}
-          initialSelectedSkills={selectedSkills}
-          getSelectedSkills={(skill) => setSelectedSkills(skill)}
-        />
-
-        <div className="search_options">
-          <h2>Search by Location</h2>
-
-          <div className="search_location">
-            <CSCSelector
-              initialCountry={country}
-              initialState={state}
-              initialCity={city}
-              getCountry={(country) => setCountry(country)}
-              getState={(state) => setState(state)}
-              getCity={(city) => setCity(city)}
-            />
-          </div>
-          <div className="clear_button">
-            <button onClick={handleClearLocation}>Clear location</button>
-          </div>
-        </div>
-        <ul>
-          {matchingContractors.length === 0 ? (
-            <div className="no-results-message">No results</div>
-          ) : (
-            matchingContractors.map((contractor) => (
-              <MatchCard
-                key={contractor.id}
-                contractor={contractor}
-                onClick={() => {
-                  navigate(`/contractor/${contractor?.id}`, {
-                    state: {
-                      searchState: memoizedSearchState,
-                    },
-                  });
-                }}
-              />
-            ))
-          )}
-        </ul>
+        )}
+        {!selectedContractor && (
+          <ul ref={contractorListRef}>
+            {contractors.length > 0 ? (
+              <>
+                <div className={style.message}>
+                  {contractors.length === 1
+                    ? "1 match"
+                    : `${contractors.length} matches`}{" "}
+                  for your project!
+                </div>
+                {contractors.map((contractor) => (
+                  <div key={contractor?.id}>
+                    <MatchCard
+                      contractor={contractor}
+                      onClick={() => {
+                        setScrollPosition(window.scrollY);
+                        setSelectedContractor(contractor);
+                      }}
+                    />
+                  </div>
+                ))}
+              </>
+            ) : (
+              <div className={style.message}>
+                No contractors found for your search criteria.
+              </div>
+            )}
+          </ul>
+        )}
+        {selectedContractor && (
+          <ContractorProfile
+            data={selectedContractor}
+            onClose={() => setSelectedContractor(null)}
+          />
+        )}
       </main>
     </div>
   );
