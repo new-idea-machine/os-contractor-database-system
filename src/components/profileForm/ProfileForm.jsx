@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import React, { useState, useContext, useRef, ChangeEvent } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
@@ -20,6 +20,8 @@ export default function ProfileForm(props) {
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
+	const [newVideo, setNewVideo] = useState(null);
+	const [newVideoFile, setNewVideoFile] = useState(null);
 	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills);
 	const [projects, setProjects] = useState(initialFormData.projects);
@@ -56,6 +58,21 @@ export default function ProfileForm(props) {
 		]);
 	};
 
+	const handleVideoChange = (event) => {
+		const newVideo = event.target.files[0];
+
+		if (newVideo) {
+			setNewVideoFile(newVideo);
+			setNewVideo(URL.createObjectURL(newVideo));
+		}
+	}
+
+	const handleButtonClick = () => {
+		const filePickerElement = document.getElementById('VideoPicker');
+
+		filePickerElement.dispatchEvent(new MouseEvent('click'));
+	}
+
 	const form = useRef();
 
 	const onSubmit = async (event) => {
@@ -65,6 +82,7 @@ export default function ProfileForm(props) {
 			// Upload new image
 
 			let newImageUrl;
+			let newVideoUrl;
 
 			if (newImageFile) {
 				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
@@ -72,6 +90,14 @@ export default function ProfileForm(props) {
 				await uploadBytes(storageRef, newImageFile);
 
 				newImageUrl = await getDownloadURL(storageRef);
+			}
+
+			if (newVideoFile) {
+				let storageRef = ref(store, `files/${uuidv4() + newVideoFile.name}`);
+
+				await uploadBytes(storageRef, newVideoFile);
+
+				newVideoUrl = await getDownloadURL(storageRef);
 			}
 
 			// Upload new data
@@ -87,6 +113,7 @@ export default function ProfileForm(props) {
 			newUserProfile.location = formElements.location.value;
 
 			if (newImageUrl) newUserProfile.profileImg = newImageUrl;
+			if (newVideoUrl) newUserProfile.video = newVideoUrl;
 
 			newUserProfile.otherInfo.githubUrl = formElements.githubUrl.value;
 			newUserProfile.otherInfo.linkedinUrl = formElements.linkedinUrl.value;
@@ -141,6 +168,17 @@ export default function ProfileForm(props) {
 							</label>
 
 							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={initialFormData?.summary} />
+						</section>
+
+						<section style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+							<h3>Video</h3>
+							<button type='button' style={{width: '200px'}} onClick={handleButtonClick}>Add Video</button>
+							<input id='VideoPicker' type='file' style={{display: 'none'}} onChange={handleVideoChange} />
+							<video 
+								src={newVideo}
+								controls
+								autoplay
+								style={{ width: '300px', marginTop: '10px' }} />
 						</section>
 
 						<section className={styles.Projects}>
