@@ -1,3 +1,14 @@
+import { Timestamp } from "firebase/firestore";
+
+// Helper function to check if a value is a valid timestamp
+function isValidTimestamp(value) {
+	try {
+  		return value instanceof Date || value instanceof Timestamp;
+	} catch (error) {
+		return false;
+	}
+}
+
 /*
 This function ensures that "target (object)" has all of the members defined in "schema
 (object)".  It does not remove extraneous members from "target" -- it only ensures that the
@@ -90,7 +101,7 @@ const qualificationsList = [
 
 const workSiteList = [
 	'On Site',
-	'Hybrid', 
+	'Hybrid',
 	'Remote',
 ];
 
@@ -150,4 +161,4 @@ const messageDataSchema = {
 	uid: ''
 }
 
-export { enforceSchema,	qualificationsList, workSiteList, techDataSchema, recDataSchema, messageDataSchema};
+export { isValidTimestamp, enforceSchema, qualificationsList, workSiteList, techDataSchema, recDataSchema, messageDataSchema};
