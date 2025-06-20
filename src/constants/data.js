@@ -1,3 +1,32 @@
+import { Timestamp } from "firebase/firestore";
+
+function isValidFirebaseUserUID(value) {
+	const firebaseUserIdFormat = /^[0-9a-f]{28}$/i;
+
+	return (typeof value === "string") && firebaseUserIdFormat.test(value);
+}
+
+// Helper function to check if a value is a valid timestamp
+function isValidTimestamp(value) {
+	try {
+  		return value instanceof Date || value instanceof Timestamp;
+	} catch (error) {
+		return false;
+	}
+}
+
+function enforceTimestamp(value) {
+	if ((value === null) || (value instanceof Timestamp)) {
+		return value;
+	} else if (value instanceof Date) {
+		return Timestamp.fromDate(value);
+	} else if ((typeof value === "number") || (typeof value === "bigint")) {
+		return Timestamp.fromMillis(value);
+        } else {
+		throw new Error("Invalid timestamp value:  " + value);
+	}
+}
+
 /*
 This function ensures that "target (object)" has all of the members defined in "schema
 (object)".  It does not remove extraneous members from "target" -- it only ensures that the
@@ -90,7 +119,7 @@ const qualificationsList = [
 
 const workSiteList = [
 	'On Site',
-	'Hybrid', 
+	'Hybrid',
 	'Remote',
 ];
 
@@ -150,4 +179,14 @@ const messageDataSchema = {
 	uid: ''
 }
 
-export { enforceSchema,	qualificationsList, workSiteList, techDataSchema, recDataSchema, messageDataSchema};
+export {
+	isValidFirebaseUserUID,
+	isValidTimestamp,
+	enforceTimestamp,
+	enforceSchema,
+	qualificationsList,
+	workSiteList,
+	techDataSchema,
+	recDataSchema,
+	messageDataSchema
+};
