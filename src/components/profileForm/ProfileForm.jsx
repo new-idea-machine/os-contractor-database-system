@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef, ChangeEvent } from 'react';
+import React, { useState, useContext, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
