@@ -67,7 +67,7 @@ export default function ProfileForm(props) {
 		}
 	}
 
-	const handleButtonClick = () => {
+	const openVideoFilePicker = () => {
 		const filePickerElement = document.getElementById('VideoPicker');
 
 		filePickerElement.dispatchEvent(new MouseEvent('click'));
@@ -172,7 +172,7 @@ export default function ProfileForm(props) {
 
 						<section style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
 							<h3>Video</h3>
-							<button type='button' style={{width: '200px'}} onClick={handleButtonClick}>Add Video</button>
+							<button type='button' style={{width: '200px'}} onClick={openVideoFilePicker}>Add Video</button>
 							<input id='VideoPicker' type='file' style={{display: 'none'}} onChange={handleVideoChange} />
 							<video 
 								src={videoFile}
