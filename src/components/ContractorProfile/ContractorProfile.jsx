@@ -132,7 +132,7 @@ const ContractorProfile = (props) => {
         {contractor?.video && (
           <section>
             <h2>Video</h2>
-            <video src={contractor.video} controls style={{ width: '300px', marginTop: '10px' }} />
+            <video src={contractor.video} controls />
           </section>
         )}
 

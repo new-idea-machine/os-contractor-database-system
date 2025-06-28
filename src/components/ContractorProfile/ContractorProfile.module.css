@@ -48,3 +48,8 @@
 	color:  var(--colour-secondary-8);
 	cursor:  pointer
 }
+
+video {
+	width: 300px;
+	margin-top: 10px;
+}
