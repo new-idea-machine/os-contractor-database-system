@@ -17,12 +17,17 @@ contained in it will be spread out evenly across it.
 		"lastName summary summary"
 		"location summary summary"
 		"email summary summary";
+}
 
-	*[style*="grid-area: workSite;"] {
-		align-self: center;
-		display: flex;
-		justify-content: space-between;
-	}
+.PersonalInfo > div {
+	grid-area: profileImg;
+}
+
+.PersonalInfo > label:nth-last-child(2) {
+	grid-area: workSite;
+	align-self: center;
+	display: flex;
+	justify-content: space-between;
 }
 
 .Projects div.Cell {
@@ -34,4 +39,39 @@ contained in it will be spread out evenly across it.
 		"description";
 	width: 100%;
 	height: 250px;
+}
+
+.Video {
+	display: flex;
+	align-items: center;
+	justify-content: space-between;
+}
+
+.Video > button {
+	width: 200px;
+}
+
+.Video > input {
+	display: none;
+}
+
+.Video > video {
+	width: 300px;
+	margin-top: 10px;
+}
+
+.Projects > button {
+	float: right;
+	width: 200px;
+}
+
+.Skills > button {
+	display: inline;
+	width: 40px;
+}
+
+button[type=submit] {
+	width: 100px;
+	margin-left: auto;
+	margin-right: auto;
 }

@@ -147,7 +147,7 @@ export default function ProfileForm(props) {
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section className={styles.PersonalInfo}>
-							<div style={{gridArea: "profileImg"}}>
+							<div>
 								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
@@ -160,7 +160,7 @@ export default function ProfileForm(props) {
 							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={initialFormData?.qualification} />
 							<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={initialFormData?.qualification} />
 
-							<label style={{gridArea: "workSite"}}>
+							<label>
 								<span>Work location</span>
 								<label><input type='radio' name='workSite' value='On Site' defaultChecked={initialFormData?.workSite === 'On Site'}/> On Site</label>
 								<label><input type='radio' name='workSite' value='Hybrid' defaultChecked={initialFormData?.workSite === 'Hybrid'}/> Hybrid</label>
@@ -170,19 +170,19 @@ export default function ProfileForm(props) {
 							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={initialFormData?.summary} />
 						</section>
 
-						<section style={{display: 'flex', alignItems: 'center', justifyContent: 'space-between'}}>
+						<section className={styles.Video}>
 							<h3>Video</h3>
-							<button type='button' style={{width: '200px'}} onClick={openVideoFilePicker}>Add Video</button>
-							<input id='VideoPicker' type='file' style={{display: 'none'}} onChange={handleVideoChange} />
+							<button type='button' onClick={openVideoFilePicker}>Add Video</button>
+							<input id='VideoPicker' type='file' onChange={handleVideoChange} />
 							<video 
 								src={videoFile}
 								controls
 								autoplay
-								style={{ width: '300px', marginTop: '10px' }} />
+							/>
 						</section>
 
 						<section className={styles.Projects}>
-							<button type='button' style={{float: 'right', width: '200px'}} onClick={addProject}>Add Project</button>
+							<button type='button' onClick={addProject}>Add Project</button>
 							<h3>Projects</h3>
 							<ResponsiveGrid minColumnWidth='250px' rowGap='20px' columnGap='20px'>
 								{projects.map((project, index) => (
@@ -244,14 +244,14 @@ export default function ProfileForm(props) {
 							</ResponsiveGrid>
 						</section>
 
-						<section>
+						<section className={styles.Skills}>
 							<h3>Skills</h3>
-							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
+							<button type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
 								<Badge key={skill.skill} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
 							))}
 			     			</section>
-						<button type='submit' style={{width: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
+						<button type='submit'>
 							<span>Save</span>
 						</button>
 					</form>
