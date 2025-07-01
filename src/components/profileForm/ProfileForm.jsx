@@ -73,6 +73,13 @@ export default function ProfileForm(props) {
 		filePickerElement.dispatchEvent(new MouseEvent('click'));
 	}
 
+	const uploadFileAndGetUrl = async (file) => {
+        if (!file) return null;
+        const storageRef = ref(store, `files/${uuidv4() + file.name}`);
+        await uploadBytes(storageRef, file);
+        return await getDownloadURL(storageRef);
+    };
+
 	const form = useRef();
 
 	const onSubmit = async (event) => {
@@ -81,24 +88,8 @@ export default function ProfileForm(props) {
 		try {
 			// Upload new image
 
-			let newImageUrl;
-			let videoFileUrl;
-
-			if (newImageFile) {
-				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
-
-				await uploadBytes(storageRef, newImageFile);
-
-				newImageUrl = await getDownloadURL(storageRef);
-			}
-
-			if (newVideoFile) {
-				let storageRef = ref(store, `files/${uuidv4() + newVideoFile.name}`);
-
-				await uploadBytes(storageRef, newVideoFile);
-
-				videoFileUrl = await getDownloadURL(storageRef);
-			}
+			const newImageUrl = await uploadFileAndGetUrl(newImageFile);
+            const videoFileUrl = await uploadFileAndGetUrl(newVideoFile);
 
 			// Upload new data
 
