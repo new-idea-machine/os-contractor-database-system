@@ -114,6 +114,7 @@ export default function ProfileForm(props) {
 			newUserProfile.projects = projects;
 
 			await updateUserProfile(newUserProfile);
+			console.log(newUserProfile);	
 
 			// Delete old image (if any)
 
@@ -168,7 +169,7 @@ export default function ProfileForm(props) {
 							<video 
 								src={videoFile}
 								controls
-								autoplay
+								autoPlay
 							/>
 						</section>
 
