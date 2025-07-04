@@ -80,6 +80,15 @@ export default function ProfileForm(props) {
         return await getDownloadURL(storageRef);
     };
 
+	const removeOldFile = async (fileUrl, newFileUrl) => {
+		if (fileUrl && newFileUrl && (fileUrl !== newFileUrl)) {
+			const storageRef = ref(store, fileUrl);
+
+			await deleteObject(storageRef);
+		}
+	};
+
+
 	const form = useRef();
 
 	const onSubmit = async (event) => {
@@ -119,12 +128,9 @@ export default function ProfileForm(props) {
 			// Delete old image (if any)
 
 			const imageUrl = userProfile?.profileImg;
-
-			if (imageUrl && newImageUrl && (imageUrl !== newImageUrl)) {
-				const storageRef = ref(store, imageUrl);
-
-				await deleteObject(storageRef);
-			}
+			const videoUrl = userProfile?.video;
+			await removeOldFile(imageUrl, newImageUrl);
+			await removeOldFile(videoUrl, videoFileUrl);
 
 			navigate('/myProfile');
 		} catch(error) {
@@ -163,7 +169,6 @@ export default function ProfileForm(props) {
 						</section>
 
 						<section className={styles.Video}>
-							{console.log(videoFile)}
 							<h3>Video</h3>
 							<button type='button' onClick={openVideoFilePicker}>Add Video</button>
 							<input id='VideoPicker' type='file' onChange={handleVideoChange} />
