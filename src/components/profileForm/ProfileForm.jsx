@@ -1,4 +1,4 @@
-import React, { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
@@ -163,11 +163,12 @@ export default function ProfileForm(props) {
 						</section>
 
 						<section className={styles.Video}>
+							{console.log(videoFile)}
 							<h3>Video</h3>
 							<button type='button' onClick={openVideoFilePicker}>Add Video</button>
 							<input id='VideoPicker' type='file' onChange={handleVideoChange} />
 							<video 
-								src={videoFile}
+								src={videoFile ? videoFile : userProfile?.video}
 								controls
 								autoPlay
 							/>
