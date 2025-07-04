@@ -43,21 +43,38 @@ contained in it will be spread out evenly across it.
 
 .Video {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	justify-content: space-between;
 }
 
-.Video > button {
+.Video h3 {
+	align-self: flex-start;
+}
+
+.Video button {
 	width: 200px;
 }
 
-.Video > input {
+.Video input {
 	display: none;
 }
 
-.Video > video {
+.Video video {
 	width: 300px;
 	margin-top: 10px;
+}
+
+.VideoContainer {
+	display: flex;
+	align-items: center;
+	gap: 30px;
+}
+
+.VideoContainer > div {
+	display: flex;
+	flex-direction: column;
+	gap: 20px;
 }
 
 .Projects > button {

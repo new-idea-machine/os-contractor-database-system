@@ -22,6 +22,7 @@ export default function ProfileForm(props) {
 	const [newImageFile, setNewImageFile] = useState(null);
 	const [videoFile, setVideoFile] = useState(null);
 	const [newVideoFile, setNewVideoFile] = useState(null);
+	const [status, setStatus] = useState('');
 	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills);
 	const [projects, setProjects] = useState(initialFormData.projects);
@@ -80,11 +81,42 @@ export default function ProfileForm(props) {
         return await getDownloadURL(storageRef);
     };
 
+	const deleteVideo = async (videoUrl) => {
+		try {
+			if (!videoUrl) return;
+			const match = decodeURIComponent(videoUrl).match(/\/o\/(.+)\?/);
+			const filePath = match ? match[1] : null;
+			if (!filePath) throw new Error('Invalid video URL');
+			const storageRef = ref(store, filePath);
+			await deleteObject(storageRef);
+			setStatus('success');
+			setVideoFile(null);
+			setNewVideoFile(null);
+			if (userProfile) {
+				userProfile.video = null;
+			}
+		} catch (error) {
+			toast.error('Failed to delete video. Please try again.');
+			console.error('Error deleting video:', error);
+			setStatus('error');
+		}
+	};
+
 	const removeOldFile = async (fileUrl, newFileUrl) => {
 		if (fileUrl && newFileUrl && (fileUrl !== newFileUrl)) {
-			const storageRef = ref(store, fileUrl);
+			const match = decodeURIComponent(fileUrl).match(/\/o\/(.+)\?/);
+			const filePath = match ? match[1] : null;
+			if (!filePath) return;
+			const storageRef = ref(store, filePath);
 
-			await deleteObject(storageRef);
+			try {
+				await deleteObject(storageRef);
+			} catch (error) {
+				if (error.code !== 'storage/object-not-found') {
+					console.error('Error deleting old file:', error);
+					throw error;
+				}
+			}
 		}
 	};
 
@@ -170,13 +202,19 @@ export default function ProfileForm(props) {
 
 						<section className={styles.Video}>
 							<h3>Video</h3>
-							<button type='button' onClick={openVideoFilePicker}>Add Video</button>
-							<input id='VideoPicker' type='file' onChange={handleVideoChange} />
-							<video 
-								src={videoFile ? videoFile : userProfile?.video}
-								controls
-								autoPlay
-							/>
+							<div className={styles.VideoContainer}>
+								{status === 'success' && <span className={styles.success}>Click Save to see the update.</span>}
+								<input id='VideoPicker' type='file' onChange={handleVideoChange} />
+								<video 
+									src={videoFile ? videoFile : userProfile?.video}
+									controls
+									autoPlay
+								/>
+								<div>
+									<button type='button' onClick={openVideoFilePicker}>Add Video</button>
+									<button type='button' onClick={() => deleteVideo(userProfile.video)}>Delete Video</button>
+								</div>
+							</div>
 						</section>
 
 						<section className={styles.Projects}>
