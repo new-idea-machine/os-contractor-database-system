@@ -1,4 +1,4 @@
-import { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
 import { ref, getDownloadURL, uploadBytesResumable, deleteObject } from 'firebase/storage';
@@ -13,6 +13,32 @@ import DeleteAccount from '../DeleteAccount';
 import { useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
+import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
+
+function useBlocker(shouldBlock, message = "A video upload is in progress. Please wait until it finishes.") {
+    const navigator = useContext(NavigationContext)?.navigator;
+    useEffect(() => {
+        if (!shouldBlock || !navigator) return;
+        const originalPush = navigator.push;
+        const originalReplace = navigator.replace;
+
+        function block(method) {
+            return (...args) => {
+                if (window.confirm(message)) {
+                    method.apply(navigator, args);
+                }
+            };
+        }
+
+        navigator.push = block(originalPush);
+        navigator.replace = block(originalReplace);
+
+        return () => {
+            navigator.push = originalPush;
+            navigator.replace = originalReplace;
+        };
+    }, [shouldBlock, message, navigator]);
+}
 
 export default function ProfileForm(props) {
 	const navigate = useNavigate();
@@ -27,6 +53,19 @@ export default function ProfileForm(props) {
 	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills);
 	const [projects, setProjects] = useState(initialFormData.projects);
+
+	useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (uploadProgress > 0 && uploadProgress < 100) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [uploadProgress]);
 
 	const deleteSkill = (index) => {
 		setSkills((prevSkills) => {
@@ -68,6 +107,7 @@ export default function ProfileForm(props) {
 			setUploadProgress(0);
 
 			try {
+				toast.error('Video is uploading. Please wait until it finishes before saving.');
 				const url = await uploadFileAndGetUrl(file, setUploadProgress);
 				setNewVideoFile({ file, url });
 			} catch (error) {
@@ -199,6 +239,8 @@ export default function ProfileForm(props) {
 		}
 	};
 
+	useBlocker(uploadProgress > 0 && uploadProgress < 100);
+
 	return (
 		<>
 			{userProfile && (
@@ -323,7 +365,7 @@ export default function ProfileForm(props) {
 								<Badge key={skill.skill} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
 							))}
 			     			</section>
-						<button type='submit'>
+						<button type='submit' disabled={uploadProgress > 0 && uploadProgress < 100}>
 							<span>Save</span>
 						</button>
 					</form>
