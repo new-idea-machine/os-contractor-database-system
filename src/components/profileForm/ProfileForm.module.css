@@ -67,14 +67,47 @@ contained in it will be spread out evenly across it.
 
 .VideoContainer {
 	display: flex;
+	flex-direction: column;
 	align-items: center;
 	gap: 30px;
 }
 
 .VideoContainer > div {
 	display: flex;
+	gap: 30px;
+	align-items: center;
+}
+
+.VideoContainer .VideoButtons {
+	display: flex;
 	flex-direction: column;
 	gap: 20px;
+}
+
+.ProgressBarWrapper {
+  margin: 10px 0;
+  width: 100%;
+  background: #eee;
+  border-radius: 4px;
+  position: relative;
+  height: 24px;
+  display: flex;
+  align-items: center;
+}
+
+.ProgressBar {
+  background: #4caf50;
+  height: 100%;
+  border-radius: 4px 0 0 4px;
+  transition: width 0.3s;
+}
+
+.ProgressBarWrapper span {
+  position: absolute;
+  width: 100%;
+  text-align: center;
+  color: #222;
+  font-weight: bold;
 }
 
 .Projects > button {

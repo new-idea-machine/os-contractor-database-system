@@ -1,7 +1,7 @@
 import { useState, useContext, useRef } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
-import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './ProfileForm.module.css';
 import { userProfileContext } from '../../contexts/UserProfileContext';
@@ -23,6 +23,7 @@ export default function ProfileForm(props) {
 	const [videoFile, setVideoFile] = useState(null);
 	const [newVideoFile, setNewVideoFile] = useState(null);
 	const [status, setStatus] = useState('');
+	const [uploadProgress, setUploadProgress] = useState(0);
 	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills);
 	const [projects, setProjects] = useState(initialFormData.projects);
@@ -59,12 +60,20 @@ export default function ProfileForm(props) {
 		]);
 	};
 
-	const handleVideoChange = (event) => {
-		const videoFile = event.target.files[0];
+	const handleVideoChange = async (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			setNewVideoFile(file);
+			setVideoFile(URL.createObjectURL(file));
+			setUploadProgress(0);
 
-		if (videoFile) {
-			setNewVideoFile(videoFile);
-			setVideoFile(URL.createObjectURL(videoFile));
+			try {
+				const url = await uploadFileAndGetUrl(file, setUploadProgress);
+				setNewVideoFile({ file, url });
+			} catch (error) {
+				toast.error('Failed to upload video.');
+				setUploadProgress(0);
+			}
 		}
 	}
 
@@ -74,12 +83,27 @@ export default function ProfileForm(props) {
 		filePickerElement.dispatchEvent(new MouseEvent('click'));
 	}
 
-	const uploadFileAndGetUrl = async (file) => {
-        if (!file) return null;
-        const storageRef = ref(store, `files/${uuidv4() + file.name}`);
-        await uploadBytes(storageRef, file);
-        return await getDownloadURL(storageRef);
-    };
+	const uploadFileAndGetUrl = async (file, onProgress) => {
+		if (!file) return null;
+		const storageRef = ref(store, `files/${uuidv4() + file.name}`);
+		return new Promise((resolve, reject) => {
+			const uploadTask = uploadBytesResumable(storageRef, file);
+			uploadTask.on(
+				'state_changed',
+				(snapshot) => {
+					if (onProgress) {
+						const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+						onProgress(progress);
+					}
+				},
+				(error) => reject(error),
+				async () => {
+					const url = await getDownloadURL(uploadTask.snapshot.ref);
+					resolve(url);
+				}
+			);
+		});
+	};
 
 	const deleteVideo = async (videoUrl) => {
 		try {
@@ -127,10 +151,14 @@ export default function ProfileForm(props) {
 		event.preventDefault();
 
 		try {
-			// Upload new image
+			// Upload new files
 
 			const newImageUrl = await uploadFileAndGetUrl(newImageFile);
-            const videoFileUrl = await uploadFileAndGetUrl(newVideoFile);
+
+			let videoFileUrl = null;
+			if (newVideoFile && newVideoFile.url) {
+				videoFileUrl = newVideoFile.url;
+			}
 
 			// Upload new data
 
@@ -203,17 +231,25 @@ export default function ProfileForm(props) {
 						<section className={styles.Video}>
 							<h3>Video</h3>
 							<div className={styles.VideoContainer}>
-								{status === 'success' && <span className={styles.success}>Click Save to see the update.</span>}
-								<input id='VideoPicker' type='file' onChange={handleVideoChange} />
-								<video 
-									src={videoFile ? videoFile : userProfile?.video}
-									controls
-									autoPlay
-								/>
 								<div>
-									<button type='button' onClick={openVideoFilePicker}>Add Video</button>
-									<button type='button' onClick={() => deleteVideo(userProfile.video)}>Delete Video</button>
+									<input id='VideoPicker' type='file' onChange={handleVideoChange} />
+									<video 
+										src={videoFile ? videoFile : userProfile?.video}
+										controls
+										autoPlay
+									/>
+									<div className={styles.VideoButtons}>
+										<button type='button' onClick={openVideoFilePicker}>Add Video</button>
+										<button type='button' onClick={() => deleteVideo(userProfile.video)}>Delete Video</button>
+										{status === 'success' && <span className={styles.success}>Click Save to see the update.</span>}
+									</div>
 								</div>
+								{uploadProgress > 0 && uploadProgress < 100 && (
+									<div className={styles.ProgressBarWrapper}>
+										<div className={styles.ProgressBar} style={{ width: `${uploadProgress}%` }} />
+										<span>{uploadProgress}%</span>
+									</div>
+								)}
 							</div>
 						</section>
 
