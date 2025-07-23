@@ -129,6 +129,13 @@ const ContractorProfile = (props) => {
           </p>
         </section>
 
+        {contractor?.video && (
+          <section>
+            <h2>Video</h2>
+            <video src={contractor.video} controls autoPlay />
+          </section>
+        )}
+
         {contractor?.projects && (
           <section id="Projects">
             <h2>Projects</h2>

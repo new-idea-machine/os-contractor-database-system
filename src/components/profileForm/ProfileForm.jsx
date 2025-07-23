@@ -1,7 +1,7 @@
-import React, { useState, useContext, useRef } from 'react';
+import { useState, useContext, useRef, useEffect } from 'react';
 import { toast } from 'react-toastify';
 import { store } from '../../firebaseconfig';
-import { ref, getDownloadURL, uploadBytes, deleteObject } from 'firebase/storage';
+import { ref, getDownloadURL, uploadBytesResumable, deleteObject } from 'firebase/storage';
 import { v4 as uuidv4 } from 'uuid';
 import styles from './ProfileForm.module.css';
 import { userProfileContext } from '../../contexts/UserProfileContext';
@@ -13,6 +13,32 @@ import DeleteAccount from '../DeleteAccount';
 import { useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
+import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
+
+function useBlocker(shouldBlock, message = "A video upload is in progress. Please wait until it finishes.") {
+    const navigator = useContext(NavigationContext)?.navigator;
+    useEffect(() => {
+        if (!shouldBlock || !navigator) return;
+        const originalPush = navigator.push;
+        const originalReplace = navigator.replace;
+
+        function block(method) {
+            return (...args) => {
+                if (window.confirm(message)) {
+                    method.apply(navigator, args);
+                }
+            };
+        }
+
+        navigator.push = block(originalPush);
+        navigator.replace = block(originalReplace);
+
+        return () => {
+            navigator.push = originalPush;
+            navigator.replace = originalReplace;
+        };
+    }, [shouldBlock, message, navigator]);
+}
 
 export default function ProfileForm(props) {
 	const navigate = useNavigate();
@@ -20,9 +46,26 @@ export default function ProfileForm(props) {
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
+	const [videoFile, setVideoFile] = useState(null);
+	const [newVideoFile, setNewVideoFile] = useState(null);
+	const [status, setStatus] = useState('');
+	const [uploadProgress, setUploadProgress] = useState(0);
 	const initialFormData = enforceSchema(userProfile ? structuredClone(userProfile) : {}, techDataSchema);
 	const [skills, setSkills] = useState(initialFormData.skills);
 	const [projects, setProjects] = useState(initialFormData.projects);
+
+	useEffect(() => {
+        const handleBeforeUnload = (e) => {
+            if (uploadProgress > 0 && uploadProgress < 100) {
+                e.preventDefault();
+                e.returnValue = '';
+            }
+        };
+        window.addEventListener('beforeunload', handleBeforeUnload);
+        return () => {
+            window.removeEventListener('beforeunload', handleBeforeUnload);
+        };
+    }, [uploadProgress]);
 
 	const deleteSkill = (index) => {
 		setSkills((prevSkills) => {
@@ -56,22 +99,105 @@ export default function ProfileForm(props) {
 		]);
 	};
 
+	const handleVideoChange = async (event) => {
+		const file = event.target.files[0];
+		if (file) {
+			setNewVideoFile(file);
+			setVideoFile(URL.createObjectURL(file));
+			setUploadProgress(0);
+
+			try {
+				toast.error('Video is uploading. Please wait until it finishes before saving.');
+				const url = await uploadFileAndGetUrl(file, setUploadProgress);
+				setNewVideoFile({ file, url });
+			} catch (error) {
+				toast.error('Failed to upload video.');
+				setUploadProgress(0);
+			}
+		}
+	}
+
+	const openVideoFilePicker = () => {
+		const filePickerElement = document.getElementById('VideoPicker');
+
+		filePickerElement.dispatchEvent(new MouseEvent('click'));
+	}
+
+	const uploadFileAndGetUrl = async (file, onProgress) => {
+		if (!file) return null;
+		const storageRef = ref(store, `files/${uuidv4() + file.name}`);
+		return new Promise((resolve, reject) => {
+			const uploadTask = uploadBytesResumable(storageRef, file);
+			uploadTask.on(
+				'state_changed',
+				(snapshot) => {
+					if (onProgress) {
+						const progress = Math.round((snapshot.bytesTransferred / snapshot.totalBytes) * 100);
+						onProgress(progress);
+					}
+				},
+				(error) => reject(error),
+				async () => {
+					const url = await getDownloadURL(uploadTask.snapshot.ref);
+					resolve(url);
+				}
+			);
+		});
+	};
+
+	const deleteVideo = async (videoUrl) => {
+		try {
+			if (!videoUrl) return;
+			const match = decodeURIComponent(videoUrl).match(/\/o\/(.+)\?/);
+			const filePath = match ? match[1] : null;
+			if (!filePath) throw new Error('Invalid video URL');
+			const storageRef = ref(store, filePath);
+			await deleteObject(storageRef);
+			setStatus('success');
+			setVideoFile(null);
+			setNewVideoFile(null);
+			if (userProfile) {
+				userProfile.video = null;
+			}
+		} catch (error) {
+			toast.error('Failed to delete video. Please try again.');
+			console.error('Error deleting video:', error);
+			setStatus('error');
+		}
+	};
+
+	const removeOldFile = async (fileUrl, newFileUrl) => {
+		if (fileUrl && newFileUrl && (fileUrl !== newFileUrl)) {
+			const match = decodeURIComponent(fileUrl).match(/\/o\/(.+)\?/);
+			const filePath = match ? match[1] : null;
+			if (!filePath) return;
+			const storageRef = ref(store, filePath);
+
+			try {
+				await deleteObject(storageRef);
+			} catch (error) {
+				if (error.code !== 'storage/object-not-found') {
+					console.error('Error deleting old file:', error);
+					throw error;
+				}
+			}
+		}
+	};
+
+
 	const form = useRef();
 
 	const onSubmit = async (event) => {
 		event.preventDefault();
 
 		try {
-			// Upload new image
+			// Upload new files
 
-			let newImageUrl;
+			const newImageUrl = await uploadFileAndGetUrl(newImageFile);
 
-			if (newImageFile) {
-				let storageRef = ref(store, `files/${uuidv4() + newImageFile.name}`);
-
-				await uploadBytes(storageRef, newImageFile);
-
-				newImageUrl = await getDownloadURL(storageRef);
+			let videoFileUrl = null;
+			if (newVideoFile && newVideoFile.url) {
+				videoFileUrl = newVideoFile.url;
 			}
 
 			// Upload new data
@@ -87,6 +213,7 @@ export default function ProfileForm(props) {
 			newUserProfile.location = formElements.location.value;
 
 			if (newImageUrl) newUserProfile.profileImg = newImageUrl;
+			if (videoFileUrl) newUserProfile.video = videoFileUrl;
 
 			newUserProfile.otherInfo.githubUrl = formElements.githubUrl.value;
 			newUserProfile.otherInfo.linkedinUrl = formElements.linkedinUrl.value;
@@ -96,16 +223,14 @@ export default function ProfileForm(props) {
 			newUserProfile.projects = projects;
 
 			await updateUserProfile(newUserProfile);
+			console.log(newUserProfile);	
 
 			// Delete old image (if any)
 
 			const imageUrl = userProfile?.profileImg;
-
-			if (imageUrl && newImageUrl && (imageUrl !== newImageUrl)) {
-				const storageRef = ref(store, imageUrl);
-
-				await deleteObject(storageRef);
-			}
+			const videoUrl = userProfile?.video;
+			await removeOldFile(imageUrl, newImageUrl);
+			await removeOldFile(videoUrl, videoFileUrl);
 
 			navigate('/myProfile');
 		} catch(error) {
@@ -114,13 +239,15 @@ export default function ProfileForm(props) {
 		}
 	};
 
+	useBlocker(uploadProgress > 0 && uploadProgress < 100);
+
 	return (
 		<>
 			{userProfile && (
 				<div id='UpdateProfile'>
 					<form id='UserProfile' ref={form} onSubmit={onSubmit}>
 						<section className={styles.PersonalInfo}>
-							<div style={{gridArea: "profileImg"}}>
+							<div>
 								<Upload setNewImageFile={setNewImageFile} />
 							</div>
 
@@ -133,7 +260,7 @@ export default function ProfileForm(props) {
 							<InputSection field={ { type:  'text', name:  'qualification',  label:  'Qualification' } } value={initialFormData?.qualification} />
 							<InputSection field={ { type:  'select', name:  'availability',  label:  'Availability', options: ['Full Time', 'Part Time', 'Other'] } } value={initialFormData?.qualification} />
 
-							<label style={{gridArea: "workSite"}}>
+							<label>
 								<span>Work location</span>
 								<label><input type='radio' name='workSite' value='On Site' defaultChecked={initialFormData?.workSite === 'On Site'}/> On Site</label>
 								<label><input type='radio' name='workSite' value='Hybrid' defaultChecked={initialFormData?.workSite === 'Hybrid'}/> Hybrid</label>
@@ -143,8 +270,33 @@ export default function ProfileForm(props) {
 							<InputSection field={ { type:  'textArea', name:  'summary',  label:  'About' } } value={initialFormData?.summary} />
 						</section>
 
+						<section className={styles.Video}>
+							<h3>Video</h3>
+							<div className={styles.VideoContainer}>
+								<div>
+									<input id='VideoPicker' type='file' onChange={handleVideoChange} />
+									<video 
+										src={videoFile ? videoFile : userProfile?.video}
+										controls
+										autoPlay
+									/>
+									<div className={styles.VideoButtons}>
+										<button type='button' onClick={openVideoFilePicker}>Add Video</button>
+										<button type='button' onClick={() => deleteVideo(userProfile.video)}>Delete Video</button>
+										{status === 'success' && <span className={styles.success}>Click Save to see the update.</span>}
+									</div>
+								</div>
+								{uploadProgress > 0 && uploadProgress < 100 && (
+									<div className={styles.ProgressBarWrapper}>
+										<div className={styles.ProgressBar} style={{ width: `${uploadProgress}%` }} />
+										<span>{uploadProgress}%</span>
+									</div>
+								)}
+							</div>
+						</section>
+
 						<section className={styles.Projects}>
-							<button type='button' style={{float: 'right', width: '200px'}} onClick={addProject}>Add Project</button>
+							<button type='button' onClick={addProject}>Add Project</button>
 							<h3>Projects</h3>
 							<ResponsiveGrid minColumnWidth='250px' rowGap='20px' columnGap='20px'>
 								{projects.map((project, index) => (
@@ -206,14 +358,14 @@ export default function ProfileForm(props) {
 							</ResponsiveGrid>
 						</section>
 
-						<section>
+						<section className={styles.Skills}>
 							<h3>Skills</h3>
-							<button style={{display: 'inline', width: '40px'}} type="button" onClick={addSkill}>+</button>
+							<button type="button" onClick={addSkill}>+</button>
 							{skills.map((skill, index) => (
 								<Badge key={skill.skill} onClose={() => deleteSkill(index)}>{skill.skill}</Badge>
 							))}
 			     			</section>
-						<button type='submit' style={{width: '100px', marginLeft: 'auto', marginRight: 'auto'}}>
+						<button type='submit' disabled={uploadProgress > 0 && uploadProgress < 100}>
 							<span>Save</span>
 						</button>
 					</form>
