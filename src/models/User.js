@@ -1,4 +1,5 @@
 import { GeoPoint } from "firebase/firestore";
+import { geohashForLocation } from "firebase/geofire";
 import { enforceTimestamp } from "../constants/data";
 import { Project } from "./Project";
 
@@ -15,6 +16,7 @@ class User {
   #email = "";
   #favourites = [];
   #firstNames = "";
+  #geohash = "";
   #gitHubURL = "";
   #isAdmin = false;
   #isContractor = false;
@@ -52,6 +54,7 @@ class User {
       }
 
       this.#firstNames = data.firstNames || this.#firstNames;
+      this.#geohash = data.geohash || this.#geohash;
       this.#gitHubURL = data.gitHubURL || this.#gitHubURL;
       this.#isAdmin = typeof data.isAdmin === "boolean" ? data.isAdmin : this.#isAdmin;
       this.#isContractor = typeof data.isContractor === "boolean" ? data.isContractor : this.#isContractor;
@@ -209,6 +212,7 @@ class User {
     }
 
     this.#location = value;
+    this.#geohash = geohashForLocation([value.latitude, value.longitude]);
   }
 
   set profileImageURL(value) {
@@ -314,6 +318,7 @@ class User {
       email:  this.#email,
       favourites:  this.#favourites,
       firstNames:  this.#firstNames,
+      geohash:  this.#geohash,
       gitHubURL:  this.#gitHubURL,
       isAdmin:  this.#isAdmin,
       isContractor:  this.#isContractor,

@@ -1,4 +1,5 @@
 import { GeoPoint, serverTimestamp } from "firebase/firestore";
+import { geohashForLocation } from "firebase/geofire";
 import { enforceTimestamp } from "../constants/data";
 
 class Contract {
@@ -12,6 +13,7 @@ class Contract {
   #description = "";
   #skills = [];
   #location = null; // Firebase GeoPoint
+  #geohash = "";
   #rate = null;
   #applicants = [];
 
@@ -27,6 +29,7 @@ class Contract {
       this.#description = data.description || this.#description;
       this.#skills = data.skills || this.#skills;
       this.#location = (data.location instanceof GeoPoint ? data.location : this.#location);
+      this.#geohash = data.geohash || this.#geohash;
       this.#rate = data.rate || this.#rate;
       this.#applicants = data.applicants || this.#applicants;
     }
@@ -103,6 +106,7 @@ class Contract {
     }
 
     this.#location = value;
+    this.#geohash = geohashForLocation([value.latitude, value.longitude]);
   }
 
   set rate(value) {
@@ -142,6 +146,7 @@ class Contract {
       description:  this.#description,
       skills:  this.#skills,
       location:  this.#location,
+      geohash:  this.#geohash,
       rate:  this.#rate,
       applicants:  this.#applicants
     };
