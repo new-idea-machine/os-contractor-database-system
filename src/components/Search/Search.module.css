@@ -2,16 +2,14 @@
   margin: 0px 4px;
 }
 
-.search_description {
-  color: var(--colour-secondary-4);
-  text-wrap: wrap;
-}
-
-p {
+.search_container p {
   font-weight: 600;
   margin-top: 28px;
   margin-bottom: 28px;
-  text-wrap: nowrap;
+}
+
+.search_description {
+  color: var(--colour-secondary-4);
 }
 
 /* Qualification  */
