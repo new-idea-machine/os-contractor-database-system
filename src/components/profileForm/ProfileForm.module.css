@@ -125,3 +125,7 @@ button[type=submit] {
 	margin-left: auto;
 	margin-right: auto;
 }
+
+button[type=submit]:disabled {
+	background-color: #919191;
+}

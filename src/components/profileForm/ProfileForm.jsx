@@ -13,36 +13,10 @@ import DeleteAccount from '../DeleteAccount';
 import { useNavigate } from 'react-router-dom';
 import ResponsiveGrid from '../ResponsiveGrid';
 import Badge from '../Badge';
-import { UNSAFE_NavigationContext as NavigationContext } from 'react-router-dom';
 
-function useBlocker(shouldBlock, message = "A video upload is in progress. Please wait until it finishes.") {
-    const navigator = useContext(NavigationContext)?.navigator;
-    useEffect(() => {
-        if (!shouldBlock || !navigator) return;
-        const originalPush = navigator.push;
-        const originalReplace = navigator.replace;
-
-        function block(method) {
-            return (...args) => {
-                if (window.confirm(message)) {
-                    method.apply(navigator, args);
-                }
-            };
-        }
-
-        navigator.push = block(originalPush);
-        navigator.replace = block(originalReplace);
-
-        return () => {
-            navigator.push = originalPush;
-            navigator.replace = originalReplace;
-        };
-    }, [shouldBlock, message, navigator]);
-}
-
-export default function ProfileForm(props) {
+export default function ProfileForm() {
 	const navigate = useNavigate();
-
+	
 	const { updateUserProfile, userProfile } = useContext(userProfileContext);
 
 	const [newImageFile, setNewImageFile] = useState(null);
@@ -55,10 +29,10 @@ export default function ProfileForm(props) {
 	const [projects, setProjects] = useState(initialFormData.projects);
 
 	useEffect(() => {
-        const handleBeforeUnload = (e) => {
+        const handleBeforeUnload = (event) => {
             if (uploadProgress > 0 && uploadProgress < 100) {
-                e.preventDefault();
-                e.returnValue = '';
+                event.preventDefault();
+                event.returnValue = '';
             }
         };
         window.addEventListener('beforeunload', handleBeforeUnload);
@@ -66,6 +40,14 @@ export default function ProfileForm(props) {
             window.removeEventListener('beforeunload', handleBeforeUnload);
         };
     }, [uploadProgress]);
+
+	const guardedNavigate = (to) => {
+		if (uploadProgress > 0 && uploadProgress < 100) {
+		toast.warn('Upload in progress. Please wait until it finishes.');
+		return;
+		}
+		navigate(to);
+	};
 
 	const deleteSkill = (index) => {
 		setSkills((prevSkills) => {
@@ -184,7 +166,6 @@ export default function ProfileForm(props) {
 		}
 	};
 
-
 	const form = useRef();
 
 	const onSubmit = async (event) => {
@@ -223,7 +204,6 @@ export default function ProfileForm(props) {
 			newUserProfile.projects = projects;
 
 			await updateUserProfile(newUserProfile);
-			console.log(newUserProfile);	
 
 			// Delete old image (if any)
 
@@ -232,14 +212,12 @@ export default function ProfileForm(props) {
 			await removeOldFile(imageUrl, newImageUrl);
 			await removeOldFile(videoUrl, videoFileUrl);
 
-			navigate('/myProfile');
+			guardedNavigate('/myProfile');
 		} catch(error) {
 			console.error(error);
 			toast.error('Profile failed to be completely updated.');
 		}
 	};
-
-	useBlocker(uploadProgress > 0 && uploadProgress < 100);
 
 	return (
 		<>
@@ -309,8 +287,8 @@ export default function ProfileForm(props) {
 												type: 'text',
 												placeholder: 'Title',
 											}}
-											onChange={(e) => {
-												const value = e.target.value;
+											onChange={(event) => {
+												const value = event.target.value;
 												setProjects((prevProjects) =>
 													prevProjects.map((p, i) =>
 														i === index ? { ...p, title: value } : p
@@ -326,8 +304,8 @@ export default function ProfileForm(props) {
 												type: 'text',
 												placeholder: 'URL',
 											}}
-											onChange={(e) => {
-												const value = e.target.value;
+											onChange={(event) => {
+												const value = event.target.value;
 												setProjects((prevProjects) =>
 													prevProjects.map((p, i) =>
 														i === index ? { ...p, url: value } : p
@@ -343,8 +321,8 @@ export default function ProfileForm(props) {
 												type: 'textArea',
 												placeholder: 'Description',
 											}}
-											onChange={(e) => {
-												const value = e.target.value;
+											onChange={(event) => {
+												const value = event.target.value;
 												setProjects((prevProjects) =>
 													prevProjects.map((p, i) =>
 														i === index ? { ...p, description: value } : p
@@ -369,6 +347,7 @@ export default function ProfileForm(props) {
 							<span>Save</span>
 						</button>
 					</form>
+					
 					<ChangePassword />
 					<DeleteAccount />
 				</div>

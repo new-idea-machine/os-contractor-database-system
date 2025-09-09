@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./ContractorProfile.module.css";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
