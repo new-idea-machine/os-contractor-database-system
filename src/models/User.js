@@ -709,6 +709,12 @@ class User {
       throw new Error("Value must be an array of Project objects");
     }
 
+    for (let i = 0; i < value.length - 1; i++) {
+      if (value.findLastIndex((project) => project.title === value[i].title) !== i) {
+        throw new Error("Each project in array must have a unique title");
+      }
+    }
+
     this.#projects = value;
   }
 
