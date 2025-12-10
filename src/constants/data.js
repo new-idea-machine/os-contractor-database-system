@@ -1,12 +1,68 @@
+
 import { Timestamp } from "firebase/firestore";
 
+/**
+ * Parse an array of strings and add valid, non-empty trimmed strings to a target array.
+ *
+ * This utility function filters and processes string arrays by:
+ * - Checking if the input is actually an array
+ * - Validating each element is a string
+ * - Trimming whitespace from each string
+ * - Only adding non-empty strings to the target array
+ *
+ * @param {Array} stringsArray - The source array to parse (may contain non-string elements)
+ * @param {string[]} targetArray - The destination array to populate with valid strings
+ * @returns {void}
+ * @example
+ * const skills = [];
+ * parseStringsArray(["  JavaScript  ", "", "React", 123, "Node.js  "], skills);
+ * // skills is now ["JavaScript", "React", "Node.js"]
+ */
+function parseStringsArray(stringsArray, targetArray) {
+	if (Array.isArray(stringsArray)) {
+		stringsArray.forEach((element) => {
+			if (typeof element === "string") {
+				const trimmedString = element.trim();
+
+				if (trimmedString !== "")
+					targetArray.push(trimmedString);
+			}
+		});
+	}
+}
+
+/**
+ * Determine whether a value is a properly formatted Firebase user UID or not.
+ *
+ * @param {*} value - The value to validate
+ * @returns {boolean} True if the value is a valid Firebase user UID, false otherwise
+ * @example
+ * isValidFirebaseUserUID("abc123def456789012345678"); // true
+ * isValidFirebaseUserUID("invalid-uid"); // false
+ * isValidFirebaseUserUID(123); // false
+ */
 function isValidFirebaseUserUID(value) {
+	/*
+	Firebase user UIDs are 28-character hexadecimal strings.  This function checks to see
+	whether the provided value matches this format by using a regular expression.
+	*/
+
 	const firebaseUserIdFormat = /^[0-9a-f]{28}$/i;
 
 	return (typeof value === "string") && firebaseUserIdFormat.test(value);
 }
 
-// Helper function to check if a value is a valid timestamp
+/**
+ * Check if a value is a valid timestamp (either a Date or Firestore Timestamp).
+ *
+ * @param {*} value - The value to validate
+ * @returns {boolean} True if the value is a Date or Timestamp instance, false if it isn't
+ * @example
+ * isValidTimestamp(new Date()); // true
+ * isValidTimestamp(Timestamp.now()); // true
+ * isValidTimestamp("2024-01-01"); // false
+ * isValidTimestamp(1234567890); // false
+ */
 function isValidTimestamp(value) {
 	try {
   		return value instanceof Date || value instanceof Timestamp;
@@ -15,6 +71,27 @@ function isValidTimestamp(value) {
 	}
 }
 
+/**
+ * Convert various timestamp formats to a Firestore Timestamp or null.
+ *
+ * This function ensures consistent timestamp handling by converting different
+ * timestamp representations to Firestore's Timestamp type.  It handles:
+ * - null values (returned as-is)
+ * - Firestore Timestamp instances (returned as-is)
+ * - JavaScript Date objects (converted to Timestamp)
+ * - Numeric milliseconds (converted to Timestamp)
+ * - BigInt milliseconds (converted to Timestamp)
+ *
+ * @param {Timestamp|Date|number|bigint|null} value - The timestamp value to convert
+ * @returns {Timestamp|null} A Firestore Timestamp instance or null
+ * @throws {Error} If the value cannot be converted to a valid timestamp
+ * @example
+ * enforceTimestamp(null); // null
+ * enforceTimestamp(new Date()); // Timestamp instance
+ * enforceTimestamp(1234567890000); // Timestamp instance
+ * enforceTimestamp(Timestamp.now()); // Same Timestamp instance
+ * enforceTimestamp("invalid"); // throws Error
+ */
 function enforceTimestamp(value) {
 	if ((value === null) || (value instanceof Timestamp)) {
 		return value;
@@ -27,31 +104,54 @@ function enforceTimestamp(value) {
 	}
 }
 
-/*
-This function ensures that "target (object)" has all of the members defined in "schema
-(object)".  It does not remove extraneous members from "target" -- it only ensures that the
-members specified in "schema" are present in "target".
-
-The values of "schema's" members are default values.  If a member of "target" is missing or
-isn't of the same type as the corresponding member of "schema" then that member's value is set
-to the the default value from "schema".
-
-Some types of members in "schema" are special:
-
-- Basic JavaScript object:  the corresponding member in "target" is checked recursively.
-- Array:  MUST contain a single element as the default value, and all corresponding elements in
-  "target" are checked.
-- "null":  the data type is undefined & can be anything; "target" is only checked for the
-  presence of this member and its type is ignored.
-- Function:  not allowed (not even as members of objects).
-
-A quick & easy way to create a new object initialized with all default values from "schema" is
-to pass "{}" into "target".
-
-This function returns "target" and therefore can be invoked as either a function or a
-statement.
-*/
-
+/**
+ * Ensure that a target object conforms to a specified schema by adding missing members
+ * with default values.
+ *
+ * This function validates and populates an object based on a schema definition.  It ensures
+ * that all members defined in the schema exist in the target object with the correct types.
+ * If a member is missing or has the wrong type then it's set to the default value from the
+ * schema.
+ *
+ * To avoid inadvertent data loss, extraneous members are NOT removed from the target -- only
+ * the required members are ensured to be present and of the correct type.
+ *
+ * Regarding the types of default values in a schema:
+ * - Primitive types (string, number, boolean):  Checked for type match
+ * - Object:  Members of the target are all recursively validated against the schema
+ * - Array:  Must contain exactly one element as the default value; all elements in the target
+ *   member are validated, too
+ * - null:  Type is undefined/flexible (only its presence is checked for, not its type)
+ * - Function:  Not allowed (not even as members of objects)
+ *
+ * @param {Object} target - The object to validate and populate
+ * @param {Object} schema - The schema defining required members and their default values
+ * @returns {Object} The modified target object (which is also modified in place)
+ * @throws {AssertionError} If target or schema are not objects, or if schema contains
+ *   functions
+ * @example
+ * // Define a schema
+ *
+ * const userSchema = {
+ *   name: '',
+ *   age: 0,
+ *   settings: {
+ *     theme: 'light',
+ *     notifications: true
+ *   },
+ *   tags: ['']
+ * };
+ *
+ * // Validate and populate an incomplete object
+ *
+ * const user = { name: 'John' };
+ * enforceSchema(user, userSchema);
+ * // user is now: { name: 'John', age: 0, settings: { theme: 'light', notifications: true }, tags: [] }
+ *
+ * // Create a new object with all defaults
+ *
+ * const newUser = enforceSchema({}, userSchema);
+ */
 function enforceSchema(target, schema) {
 	console.assert(typeof target === 'object');
 	console.assert(typeof schema === 'object');
@@ -85,7 +185,7 @@ function enforceSchema(target, schema) {
 			if (schemaKeyType === 'array') {
 				target[key] = [];
 			} else 	if (schemaKeyType === 'object') {
-				target[key] = {};    // this will be populated in the next step
+				target[key] = {};  // this will be populated in the next step
 			} else if ((schemaKeyType !== 'null') || (targetKeyType === 'undefined')) {
 				target[key] = schema[key];
 			}
@@ -180,6 +280,7 @@ const messageDataSchema = {
 }
 
 export {
+	parseStringsArray,
 	isValidFirebaseUserUID,
 	isValidTimestamp,
 	enforceTimestamp,

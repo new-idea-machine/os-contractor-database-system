@@ -58,22 +58,9 @@
  * @requires ../constants/data
  */
 
-import { enforceTimestamp } from "../constants/data";
+import { enforceTimestamp, parseStringsArray } from "../constants/data";
 import { Location } from "./Location";
 import { Project } from "./Project";
-
-function parseStringsArray(stringsArray, targetArray) {
-  if (Array.isArray(stringsArray)) {
-    stringsArray.forEach((element) => {
-      if (typeof element === "string") {
-        const trimmedString = element.trim();
-
-        if (trimmedString !== "")
-          targetArray.push(trimmedString);
-      }
-    });
-  }
-}
 
 /**
  * User model for storing contractor and recruiter profile information.
