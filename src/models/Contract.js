@@ -1,5 +1,12 @@
 import { serverTimestamp } from "firebase/firestore";
-import { enforceTimestamp, isValidFirebaseUserUID, parseStringsArray } from "../constants/data";
+import {
+  isValidTimestamp,
+  enforceTimestamp,
+  isValidFirebaseUserUID,
+  parseStringsArray,
+  contractApplicationStatusList,
+  contractExperienceLevelsList,
+  contractTypesList } from "../constants/data";
 import { Location } from "./Location";
 
 /**
@@ -20,124 +27,6 @@ import { Location } from "./Location";
  * @class Contract
  */
 class Contract {
-  // Application status constants
-
-  /**
-   * Application status:  Open for applications
-   * @static
-   * @constant {string}
-   */
-  static APPLICATION_STATUS_OPEN = "Open";
-
-  /**
-   * Application status:  Applications under review
-   * @static
-   * @constant {string}
-   */
-  static APPLICATION_STATUS_IN_REVIEW = "In Review";
-
-  /**
-   * Application status:  Position has been filled
-   * @static
-   * @constant {string}
-   */
-  static APPLICATION_STATUS_FILLED = "Filled";
-
-  /**
-   * Application status:  Posting is closed
-   * @static
-   * @constant {string}
-   */
-  static APPLICATION_STATUS_CLOSED = "Closed";
-
-  /**
-   * Array of valid contract status values
-   * @static
-   * @constant {string[]}
-   */
-  static VALID_APPLICATION_STATUSES = [
-    Contract.APPLICATION_STATUS_OPEN,
-    Contract.APPLICATION_STATUS_IN_REVIEW,
-    Contract.APPLICATION_STATUS_FILLED,
-    Contract.APPLICATION_STATUS_CLOSED
-  ];
-
-  // Experience level constants
-
-  /**
-   * Experience level:  Junior
-   * @static
-   * @constant {string}
-   */
-  static EXPERIENCE_JUNIOR = "Junior";
-
-  /**
-   * Experience level:  Intermediate
-   * @static
-   * @constant {string}
-   */
-  static EXPERIENCE_MID = "Intermediate";
-
-  /**
-   * Experience level:  Senior
-   * @static
-   * @constant {string}
-   */
-  static EXPERIENCE_SENIOR = "Senior";
-
-  /**
-   * Experience level: Lead
-   * @static
-   * @constant {string}
-   */
-  static EXPERIENCE_LEAD = "Lead";
-
-  /**
-   * Array of valid experience level values
-   * @static
-   * @constant {string[]}
-   */
-  static VALID_EXPERIENCE_LEVELS = [
-    Contract.EXPERIENCE_JUNIOR,
-    Contract.EXPERIENCE_MID,
-    Contract.EXPERIENCE_SENIOR,
-    Contract.EXPERIENCE_LEAD
-  ];
-
-  // Contract type constants
-
-  /**
-   * Contract type:  Fixed-term
-   * @static
-   * @constant {string}
-   */
-  static TYPE_FIXED_TERM = "Fixed-term";
-
-  /**
-   * Contract type:  Ongoing
-   * @static
-   * @constant {string}
-   */
-  static TYPE_ONGOING = "Ongoing";
-
-  /**
-   * Contract type:  Project-based
-   * @static
-   * @constant {string}
-   */
-  static TYPE_PROJECT_BASED = "Project-based";
-
-  /**
-   * Array of valid contract type values
-   * @static
-   * @constant {string[]}
-   */
-  static VALID_CONTRACT_TYPES = [
-    Contract.TYPE_FIXED_TERM,
-    Contract.TYPE_ONGOING,
-    Contract.TYPE_PROJECT_BASED
-  ];
-
   // Private members
 
   /**
@@ -246,25 +135,27 @@ class Contract {
   #companyName = "";
 
   /**
-   * Required experience level for the position (must be one of the "experience" constants)
+   * Required experience level for the position (must be one of the "contractExperienceLevels"
+   * constants)
    * @private
    * @type {string}
    */
-  #experienceLevel = this.EXPERIENCE_JUNIOR;
+  #experienceLevel = contractExperienceLevelsList[0];
 
   /**
-   * Current status of the contract posting (must be one of the "contract status" constants)
+   * Current status of the contract posting (must be one of the "contractApplicationStatusList"
+   * constants)
    * @private
    * @type {string}
    */
-  #status = this.STATUS_OPEN;
+  #applicationStatus = contractApplicationStatusList[0];
 
   /**
-   * Type of contract being offered (must be one of the "contract type" constants)
+   * Type of contract being offered (must be one of the "contractTypesList" constants)
    * @private
    * @type {string}
    */
-  #contractType = this.TYPE_ONGOING;
+  #contractType = contractTypesList[0];
 
   /**
    * Deadline for submitting applications
@@ -331,7 +222,7 @@ class Contract {
    * @param {boolean} [data.worksite_remote] - Remote work required
    * @param {string} [data.companyName] - Company name
    * @param {string} [data.experienceLevel] - Required experience level
-   * @param {string} [data.status] - Contract status
+   * @param {string} [data.applicationStatus] - Contract application status
    * @param {string} [data.contractType] - Type of contract
    * @param {Timestamp} [data.applicationDeadline] - Application deadline
    * @param {number} [data.numberOfPositions] - Number of positions available
@@ -364,9 +255,9 @@ class Contract {
       this.#worksite_remote = (typeof data.worksite_remote === "boolean" ? data.worksite_remote : this.#worksite_remote);
 
       this.#companyName = (typeof data.companyName === "string" ? data.companyName : this.#companyName);
-      this.#experienceLevel = (typeof data.experienceLevel === "string" ? data.experienceLevel : this.#experienceLevel);
-      this.#status = (typeof data.status === "string" ? data.status : this.#status);
-      this.#contractType = (typeof data.contractType === "string" ? data.contractType : this.#contractType);
+      this.#experienceLevel = (contractExperienceLevelsList.includes(data.experienceLevel) ? data.experienceLevel : this.#experienceLevel);
+      this.#applicationStatus = (contractApplicationStatusList.includes(data.applicationStatus) ? data.status : this.#applicationStatus);
+      this.#contractType = (contractTypesList.includes(data.contractType) ? data.contractType : this.#contractType);
       this.#applicationDeadline = enforceTimestamp(data.applicationDeadline);
       this.#numberOfPositions = (typeof data.numberOfPositions === "number" ? parseInt(data.numberOfPositions) : this.#numberOfPositions);
       this.#requirements = (typeof data.requirements === "string" ? data.requirements : this.#requirements);
@@ -390,7 +281,7 @@ class Contract {
   get applicants() { return this.#applicants; }
   get companyName() { return this.#companyName; }
   get experienceLevel() { return this.#experienceLevel; }
-  get status() { return this.#status; }
+  get applicationStatus() { return this.#applicationStatus; }
   get contractType() { return this.#contractType; }
   get applicationDeadline() { return this.#applicationDeadline; }
   get numberOfPositions() { return this.#numberOfPositions; }
@@ -404,18 +295,31 @@ class Contract {
     if (!isValidFirebaseUserUID(value)) {
       throw new Error("Value must be a valid Firebase user UID");
     }
+
     this.#postedBy = value;
   }
 
   set postedOn(value) {
+    if ((value !== null) && !isValidTimestamp(value)) {
+      throw new Error("Posted-on must be a valid timestamp");
+    }
+
     this.#postedOn = enforceTimestamp(value);
   }
 
   set deletedOn(value) {
+    if ((value !== null) && !isValidTimestamp(value)) {
+      throw new Error("Deleted-on must be a valid timestamp");
+    }
+
     this.#deletedOn = enforceTimestamp(value);
   }
 
   set startDate(value) {
+    if ((value !== null) && !isValidTimestamp(value)) {
+      throw new Error("Start date must be a valid timestamp");
+    }
+
     this.#startDate = enforceTimestamp(value);
   }
 
@@ -423,12 +327,13 @@ class Contract {
     if (typeof value !== "string") {
       throw new Error("Duration must be a string");
     }
+
     this.#duration = value;
   }
 
   set title(value) {
     if ((typeof value !== "string") || (value.trim() === "")) {
-      throw new Error("Value must be a non-empty string");
+      throw new Error("Title must be a non-empty string");
     }
 
     this.#title = value.trim();
@@ -436,7 +341,7 @@ class Contract {
 
   set description(value) {
     if ((typeof value !== "string") || (value.trim() === "")) {
-      throw new Error("Value must be a non-empty string");
+      throw new Error("Description must be a non-empty string");
     }
 
     this.#description = value.trim();
@@ -444,7 +349,7 @@ class Contract {
 
   set skills(value) {
     if (!Array.isArray(value) || value.some((skill) => (typeof skill !== "string") || (skill.trim() === ""))) {
-      throw new Error("Value must be an array of non-empty strings (duplicates will be discarded)");
+      throw new Error("Skills must be an array of non-empty strings (duplicates will be discarded)");
     }
 
     this.#skills = [...new Set(value.map((skill) => skill.trim()))]; // Remove duplicates using Set
@@ -452,7 +357,7 @@ class Contract {
 
   set location(value) {
     if (value && !(value instanceof Location)) {
-      throw new Error("Value must be a Location object");
+      throw new Error("Location must be a Location object");
     }
 
     this.#location = value;
@@ -468,7 +373,7 @@ class Contract {
 
   set applicants(value) {
     if (!Array.isArray(value) || value.some((applicant) => !isValidFirebaseUserUID(applicant))) {
-      throw new Error("Value must be an array of Firebase user UID's (duplicates will be discarded)");
+      throw new Error("Applicants must be an array of Firebase user UID's (duplicates will be discarded)");
     }
 
     this.#applicants = [...new Set(value.map((applicant) => applicant.trim()))]; // Remove duplicates using Set
@@ -478,31 +383,39 @@ class Contract {
     if (typeof value !== "string") {
       throw new Error("Company name must be a string");
     }
+
     this.#companyName = value;
   }
 
   set experienceLevel(value) {
-    if (typeof value !== "string") {
-      throw new Error("Experience level must be a string");
+    if (!contractExperienceLevelsList.includes(value)) {
+      throw new Error(`Experience level must be one of:  ${contractExperienceLevelsList.join(", ")}`);
     }
+
     this.#experienceLevel = value;
   }
 
-  set status(value) {
-    if (!Contract.VALID_APPLICATION_STATUSES.includes(value)) {
-      throw new Error(`Status must be one of: ${Contract.VALID_APPLICATION_STATUSES.join(", ")}`);
+  set applicationStatus(value) {
+    if (!contractApplicationStatusList.includes(value)) {
+      throw new Error(`Application status must be one of:  ${contractApplicationStatusList.join(", ")}`);
     }
-    this.#status = value;
+
+    this.#applicationStatus = value;
   }
 
   set contractType(value) {
-    if (typeof value !== "string") {
-      throw new Error("Contract type must be a string");
+    if (!contractTypesList.includes(value)) {
+      throw new Error(`Contract type must be one of:  ${contractTypesList.join(", ")}`);
     }
+
     this.#contractType = value;
   }
 
   set applicationDeadline(value) {
+    if ((value !== null) && !isValidTimestamp(value)) {
+      throw new Error("Application deadline must be a valid timestamp");
+    }
+
     this.#applicationDeadline = enforceTimestamp(value);
   }
 
@@ -510,6 +423,7 @@ class Contract {
     if (typeof value !== "number" || value <= 0) {
       throw new Error("Number of positions must be a positive number");
     }
+
     this.#numberOfPositions = value;
   }
 
@@ -517,6 +431,7 @@ class Contract {
     if (typeof value !== "string") {
       throw new Error("Requirements must be a string");
     }
+
     this.#requirements = value;
   }
 
@@ -524,6 +439,7 @@ class Contract {
     if (typeof value !== "string") {
       throw new Error("Responsibilities must be a string");
     }
+
     this.#responsibilities = value;
   }
 
@@ -531,6 +447,7 @@ class Contract {
     if (typeof value !== "string") {
       throw new Error("Worksite details must be a string");
     }
+
     this.#worksiteDetails = value;
   }
 
@@ -538,6 +455,7 @@ class Contract {
     if (typeof value !== "number" || value < 0) {
       throw new Error("View count must be a positive number");
     }
+
     this.#viewCount = Math.round(value);
   }
 
@@ -569,7 +487,7 @@ class Contract {
       worksite_remote:  this.#worksite_remote,
       companyName:  this.#companyName,
       experienceLevel:  this.#experienceLevel,
-      status:  this.#status,
+      applicationStatus:  this.#applicationStatus,
       contractType:  this.#contractType,
       applicationDeadline:  this.#applicationDeadline,
       numberOfPositions:  this.#numberOfPositions,

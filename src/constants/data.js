@@ -223,6 +223,26 @@ const workSiteList = [
 	'Remote',
 ];
 
+const contractApplicationStatusList = [
+	"Open",
+	"In Review",
+        "Filled",
+        "Closed",
+];
+
+const contractExperienceLevelsList = [
+	"Junior",
+	"Intermediate",
+	"Senior",
+	"Lead"
+];
+
+const contractTypesList = [
+        "Fixed-Term",
+        "Ongoing",
+        "Project-Based"
+];
+
 const techDataSchema = {
 	userType: 'techs',
 	firstName: '',
@@ -287,6 +307,9 @@ export {
 	enforceSchema,
 	qualificationsList,
 	workSiteList,
+	contractApplicationStatusList,
+        contractExperienceLevelsList,
+        contractTypesList,
 	techDataSchema,
 	recDataSchema,
 	messageDataSchema
