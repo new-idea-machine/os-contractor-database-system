@@ -27,6 +27,58 @@ import { Location } from "./Location";
  * @class Contract
  */
 class Contract {
+
+  // Static private members
+
+  /**
+   * Current authenticated user's ID (set once during app initialization)
+   * @private
+   * @static
+   * @type {?string}
+   */
+  static #currentUserId = null;
+
+  // Static getters
+
+  /**
+   * Get the current user's ID.
+   * @static
+   * @returns {?string} Current user ID, or null if not set
+   */
+  static get currentUserId() {
+    return Contract.#currentUserId;
+  }
+
+  // Static setters
+
+  /**
+   * Set the current user ID context for all Contract instances.
+   *
+   * This should be set whenever a user logs in or logs out.
+   *
+   * @static
+   * @param {?string} userId - The authenticated user's ID, or null to clear
+   * @throws {Error} If userId is not valid
+   * @example
+   * import { UserAuth } from '../contexts/Authorization';
+   * import Contract from '../models/Contract';
+   *
+   * function App() {
+   *   const { userId } = UserAuth();
+   *
+   *   useEffect(() => {
+   *     Contract.currentUserId = userId;
+   *   }, [userId]);
+   * }
+   */
+  static set currentUserId(userId) {
+    if ((userId !== null) && !isValidFirebaseUserUID(userId)) {
+      throw new Error("userId must be either null or a valid Firebase UserUID");
+    }
+
+    Contract.#currentUserId = userId;
+  }
+
   // Private members
 
   /**
@@ -48,7 +100,7 @@ class Contract {
    * @private
    * @type {string}
    */
-  #postedBy = "";
+  #postedBy = Contract.#currentUserId;
 
   /**
    * Timestamp when the contract was posted
@@ -267,6 +319,7 @@ class Contract {
   }
 
   // Getters
+
   get title() { return this.#title; }
   get companyName() { return this.#companyName; }
   get postedBy() { return this.#postedBy; }
@@ -279,18 +332,23 @@ class Contract {
   get responsibilities() { return this.#responsibilities; }
   get requirements() { return this.#requirements; }
   get experienceLevel() { return this.#experienceLevel; }
-  get skills() { return this.#skills; }
+  get skills() { return (this.createdByCurrentUser() ? this.#skills : structuredClone(this.#skills)); }
   get rate() { return this.#rate; }
   get location() { return this.#location; }
   get startDate() { return this.#startDate; }
   get duration() { return this.#duration; }
   get deletedOn() { return this.#deletedOn; }
-  get applicants() { return this.#applicants; }
+  get applicants() { return (this.createdByCurrentUser() ? this.#applicants : null); }
   get worksiteDetails() { return this.#worksiteDetails; }
   get viewCount() { return this.#viewCount; }
 
   // Setters with validation
+
   set title(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if ((typeof value !== "string") || (value.trim() === "")) {
       throw new Error("Title must be a non-empty string");
     }
@@ -299,6 +357,10 @@ class Contract {
   }
 
   set companyName(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Company name must be a string");
     }
@@ -306,15 +368,11 @@ class Contract {
     this.#companyName = value;
   }
 
-  set postedBy(value) {
-    if (!isValidFirebaseUserUID(value)) {
-      throw new Error("Value must be a valid Firebase user UID");
+  set postedOn(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
     }
 
-    this.#postedBy = value;
-  }
-
-  set postedOn(value) {
     if ((value !== null) && !isValidTimestamp(value)) {
       throw new Error("Posted-on must be a valid timestamp");
     }
@@ -323,6 +381,10 @@ class Contract {
   }
 
   set contractType(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (!contractTypesList.includes(value)) {
       throw new Error(`Contract type must be one of:  ${contractTypesList.join(", ")}`);
     }
@@ -331,6 +393,10 @@ class Contract {
   }
 
   set applicationStatus(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (!contractApplicationStatusList.includes(value)) {
       throw new Error(`Application status must be one of:  ${contractApplicationStatusList.join(", ")}`);
     }
@@ -339,6 +405,10 @@ class Contract {
   }
 
   set numberOfPositions(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "number" || value <= 0) {
       throw new Error("Number of positions must be a positive number");
     }
@@ -347,6 +417,10 @@ class Contract {
   }
 
   set applicationDeadline(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if ((value !== null) && !isValidTimestamp(value)) {
       throw new Error("Application deadline must be a valid timestamp");
     }
@@ -355,6 +429,10 @@ class Contract {
   }
 
   set description(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if ((typeof value !== "string") || (value.trim() === "")) {
       throw new Error("Description must be a non-empty string");
     }
@@ -363,6 +441,10 @@ class Contract {
   }
 
   set responsibilities(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Responsibilities must be a string");
     }
@@ -371,6 +453,10 @@ class Contract {
   }
 
   set requirements(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Requirements must be a string");
     }
@@ -379,6 +465,10 @@ class Contract {
   }
 
   set experienceLevel(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (!contractExperienceLevelsList.includes(value)) {
       throw new Error(`Experience level must be one of:  ${contractExperienceLevelsList.join(", ")}`);
     }
@@ -387,6 +477,10 @@ class Contract {
   }
 
   set skills(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (!Array.isArray(value) || value.some((skill) => (typeof skill !== "string") || (skill.trim() === ""))) {
       throw new Error("Skills must be an array of non-empty strings (duplicates will be discarded)");
     }
@@ -395,6 +489,10 @@ class Contract {
   }
 
   set rate(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Rate must be a string");
     }
@@ -403,6 +501,10 @@ class Contract {
   }
 
   set location(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (value && !(value instanceof Location)) {
       throw new Error("Location must be a Location object");
     }
@@ -411,6 +513,10 @@ class Contract {
   }
 
   set startDate(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if ((value !== null) && !isValidTimestamp(value)) {
       throw new Error("Start date must be a valid timestamp");
     }
@@ -419,6 +525,10 @@ class Contract {
   }
 
   set duration(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Duration must be a string");
     }
@@ -427,6 +537,10 @@ class Contract {
   }
 
   set deletedOn(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if ((value !== null) && !isValidTimestamp(value)) {
       throw new Error("Deleted-on must be a valid timestamp");
     }
@@ -435,14 +549,22 @@ class Contract {
   }
 
   set applicants(value) {
-    if (!Array.isArray(value) || value.some((applicant) => !isValidFirebaseUserUID(applicant))) {
-      throw new Error("Applicants must be an array of Firebase user UID's (duplicates will be discarded)");
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
     }
 
-    this.#applicants = [...new Set(value.map((applicant) => applicant.trim()))]; // Remove duplicates using Set
+    if (!Array.isArray(value) || value.some((applicant) => !isValidFirebaseUserUID(applicant))) {
+      throw new Error("Value must be an array of Firebase user UID's (duplicates will be discarded)");
+    }
+
+    this.#applicants = [...new Set(value)]; // Remove duplicates using Set
   }
 
   set worksiteDetails(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "string") {
       throw new Error("Worksite details must be a string");
     }
@@ -451,6 +573,10 @@ class Contract {
   }
 
   set viewCount(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     if (typeof value !== "number" || value < 0) {
       throw new Error("View count must be a positive number");
     }
@@ -459,21 +585,61 @@ class Contract {
   }
 
   // Methods
+
   isActive() {
     return (this.#deletedOn === null);
   }
 
   delete() {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
     this.#deletedOn = serverTimestamp();
+  }
+
+  apply() {
+    const userId = Contract.#currentUserId;
+
+    if (!userId) {
+      throw new Error("Current user not set.  Call Contract.setCurrentUser() first.");
+    }
+
+    if (!this.#applicants.includes(userId)) {
+      this.#applicants.push(userId);
+    }
+  }
+
+  hasApplied() {
+    const userId = Contract.#currentUserId;
+
+    if (!userId) {
+      throw new Error("Current user not set.  Call Contract.setCurrentUser() first.");
+    }
+
+    return this.#applicants.includes(userId);
+  }
+
+  withdrawApplication() {
+    const userId = Contract.#currentUserId;
+
+    if (!userId) {
+      throw new Error("Current user not set.  Call Contract.setCurrentUser() first.");
+    }
+
+    this.#applicants = this.#applicants.filter((applicant) => applicant !== userId);
+  }
+
+  incrementViewCount() {
+    ++this.#viewCount;
   }
 
   // Convert to Firebase document
   toFirebaseDocument() {
-    return {
+    const doc = {
       title:  this.#title,
       companyName:  this.#companyName,
       postedBy:  this.#postedBy,
-      postedOn:  this.#postedOn,
       contractType:  this.#contractType,
       applicationStatus:  this.#applicationStatus,
       numberOfPositions:  this.#numberOfPositions,
@@ -495,13 +661,47 @@ class Contract {
       worksiteDetails:  this.#worksiteDetails,
       viewCount:  this.#viewCount
     };
+
+    // Only set postedOn if we're creating a new document
+
+    if (!this.#postedOn) {
+      doc.postedOn = serverTimestamp();
+    }
+
+    return doc;
   }
 
-  // Create from Firebase document
-  static fromFirebaseDocument(doc) {
-    const data = doc?.data();
+  /**
+   * Firebase Firestore converter for automatic conversion between Contract instances and Firestore documents.
+   *
+   * This converter enables direct use of Contract instances with Firestore operations:
+   * - `doc.withConverter(Contract.firebaseConverter)` for reading/writing documents
+   * - Automatic conversion from Firestore documents to Contract instances
+   * - Automatic conversion from Contract instances to Firestore documents
+   *
+   * @example
+   * // Reading a contract from Firestore
+   *
+   * const contractRef = doc(db, "contracts", contractId).withConverter(Contract.firebaseConverter);
+   * const contractSnap = await getDoc(contractRef);
+   * const contract = contractSnap.data();  // Returns Contract instance
+   *
+   * // Writing a contract to Firestore
+   *
+   * await setDoc(contractRef, contract);  // Automatically converted to plain object
+   */
+  static firebaseConverter = {
+    fromFirestore:  (snapshot, options) => new Contract(snapshot.data(options)),
+    toFirestore:  (contract) => contract.toFirebaseDocument()
+  };
 
-    return data ? new Contract(data) : null;
+  /**
+   * Checks if the current user is the creator of this contract.
+   *
+   * @returns {boolean} True if the current user matches the postedBy field, false otherwise
+   */
+  createdByCurrentUser() {
+    return Contract.currentUserId === this.#postedBy;
   }
 }
 
