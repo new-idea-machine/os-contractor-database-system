@@ -1,3 +1,54 @@
+/**
+ * @fileoverview Contract data model for managing job postings and contract opportunities.
+ *
+ * This model represents contract information that recruiters can post for contractors to view
+ * and apply to.  It includes comprehensive information about the position, requirements,
+ * compensation, and work arrangements.
+ *
+ * Key features:
+ * - Comprehensive job posting details (title, description, requirements, responsibilities)
+ * - Application tracking and status management
+ * - Soft deletion support with timestamp tracking
+ * - Location and worksite arrangement specifications (remote, on-site, hybrid)
+ * - Skills and experience level requirements
+ * - Compensation and contract duration details
+ * - View count tracking for analytics
+ * - Applicant management (apply, withdraw, check application status)
+ * - Creator-only modification permissions
+ *
+ * @example
+ * import { doc, getDoc, setDoc, collection, addDoc, query, where, getDocs } from "firebase/firestore";
+ * import { db } from "../firebase";
+ * import Contract from "../models/Contract";
+ *
+ * // Fetch a document from Firebase using automatic converter
+ *
+ * const contractRef = doc(db, "contracts", contractId).withConverter(Contract.firebaseConverter);
+ * const contractSnap = await getDoc(contractRef);
+ * const contract = contractSnap.data();  // Already a Contract instance
+ *
+ * // Access contract data
+ *
+ * console.log(`Author: ${contract.author}`);
+ * console.log(`Text: ${contract.text}`);
+ *
+ * // Update contract properties and save back to Firebase (automatic conversion to plain object)
+ *
+ * contract.text = "This contract has been edited.";
+ * await setDoc(contractRef, contract);
+ *
+ * // Or update specific fields without converter
+ *
+ * const newContractData = contract.toFirebaseDocument();
+ * newContractData.text = "This contract has been edited without automatic conversion.";
+ * await updateDoc(doc(db, "contracts", contractId), newContractData);
+ *
+ * @module models/Contract
+ * @requires firebase/firestore
+ * @requires constants/data
+ * @requires models/Location
+ */
+
 import { serverTimestamp } from "firebase/firestore";
 import {
   isValidTimestamp,
@@ -10,14 +61,6 @@ import {
 import { Location } from "./Location";
 
 /**
- * @fileoverview Contract data model for managing job postings and contract opportunities.
- *
- * This model represents contract information that recruiters can post for contractors to view
- * and apply to. It includes comprehensive information about the position, requirements,
- * compensation, and work arrangements.
- */
-
-/**
  * Contract model for storing job posting and contract opportunity information.
  *
  * Manages comprehensive contract data including posting details, job requirements, location,
@@ -25,6 +68,14 @@ import { Location } from "./Location";
  * tracking throughout the hiring lifecycle.
  *
  * @class Contract
+ * @example
+ * const contract = new Contract({
+ *   title: "Senior React Developer",
+ *   entityName: "Tech Solutions Inc.",
+ *   contractType: "Fixed-Term",
+ *   description: "Looking for an experienced React developer...",
+ *   rate: "$85/hour"
+ * });
  */
 class Contract {
 
@@ -89,18 +140,18 @@ class Contract {
   #title = "";
 
   /**
-   * Name of the company offering the contract
+   * Name of the entity (e.g. individual, company or organization ) offering the contract
    * @private
    * @type {string}
    */
-  #companyName = "";
+  #entityName = "";
 
   /**
    * User ID of the recruiter who posted this contract
    * @private
    * @type {string}
    */
-  #postedBy = Contract.#currentUserId;
+  #postedBy;  // See constructor for default value
 
   /**
    * Timestamp when the contract was posted
@@ -256,10 +307,16 @@ class Contract {
   /**
    * Create a new Contract instance.
    *
+   * Contract model for storing job posting and contract opportunity information.
+   *
+   * Manages comprehensive contract data including posting details, job requirements, location,
+   * compensation, skills needed, and applicant tracking.  Supports soft deletion and status
+   * tracking throughout the hiring lifecycle.
+   *
    * @constructor
    * @param {Object} [data={}] - Contract data object
    * @param {string} [data.title] - Job title
-   * @param {string} [data.companyName] - Company name
+   * @param {string} [data.entityName] - Entity name
    * @param {string} [data.postedBy] - User ID of the recruiter who posted this contract
    * @param {Timestamp} [data.postedOn] - Posting timestamp
    * @param {string} [data.contractType] - Type of contract
@@ -286,8 +343,8 @@ class Contract {
   constructor(data = {}) {
     if (data && typeof data === "object" && !Array.isArray(data)) {
       this.#title = (typeof data.title === "string" ? data.title : this.#title);
-      this.#companyName = (typeof data.companyName === "string" ? data.companyName : this.#companyName);
-      this.#postedBy = (isValidFirebaseUserUID(data.postedBy) ? data.postedBy : this.#postedBy);
+      this.#entityName = (typeof data.entityName === "string" ? data.entityName : this.#entityName);
+      this.#postedBy = (isValidFirebaseUserUID(data.postedBy) ? data.postedBy : Contract.#currentUserId);
       this.#postedOn = enforceTimestamp(data.postedOn);
       this.#contractType = (contractTypesList.includes(data.contractType) ? data.contractType : this.#contractType);
       this.#applicationStatus = (contractApplicationStatusList.includes(data.applicationStatus) ? data.status : this.#applicationStatus);
@@ -320,26 +377,132 @@ class Contract {
 
   // Getters
 
+  /**
+   * Get the job title or position name.
+   * @returns {string} The contract title
+   */
   get title() { return this.#title; }
-  get companyName() { return this.#companyName; }
+
+  /**
+   * Get the name of the entity offering the contract.
+   * @returns {string} The entity name
+   */
+  get entityName() { return this.#entityName; }
+
+  /**
+   * Get the user ID of the recruiter who posted this contract.
+   * @returns {string} The poster's user ID
+   */
   get postedBy() { return this.#postedBy; }
+
+  /**
+   * Get the timestamp when the contract was posted.
+   * @returns {?Timestamp} The posting timestamp, or null if not set
+   */
   get postedOn() { return this.#postedOn; }
+
+  /**
+   * Get the type of contract being offered.
+   * @returns {string} The contract type
+   */
   get contractType() { return this.#contractType; }
+
+  /**
+   * Get the current status of the contract posting.
+   * @returns {string} The application status
+   */
   get applicationStatus() { return this.#applicationStatus; }
+
+  /**
+   * Get the number of positions available for this contract.
+   * @returns {number} The number of positions
+   */
   get numberOfPositions() { return this.#numberOfPositions; }
+
+  /**
+   * Get the deadline for submitting applications.
+   * @returns {?Timestamp} The application deadline, or null if not set
+   */
   get applicationDeadline() { return this.#applicationDeadline; }
+
+  /**
+   * Get the detailed description of the contract position.
+   * @returns {string} The job description
+   */
   get description() { return this.#description; }
+
+  /**
+   * Get the key responsibilities for the role.
+   * @returns {string} The responsibilities
+   */
   get responsibilities() { return this.#responsibilities; }
+
+  /**
+   * Get the specific requirements for the position.
+   * @returns {string} The requirements
+   */
   get requirements() { return this.#requirements; }
+
+  /**
+   * Get the required experience level for the position.
+   * @returns {string} The experience level
+   */
   get experienceLevel() { return this.#experienceLevel; }
+
+  /**
+   * Get the array of required skills for the position.
+   * Returns a deep copy for non-creators to prevent unauthorized modifications.
+   * @returns {string[]} Array of required skills
+   */
   get skills() { return (this.createdByCurrentUser() ? this.#skills : structuredClone(this.#skills)); }
+
+  /**
+   * Get the compensation rate.
+   * @returns {string} The rate (e.g., "$75/hour", "$5000/month")
+   */
   get rate() { return this.#rate; }
+
+  /**
+   * Get the geographical location of the work.
+   * @returns {?Location} The location instance, or null if not set
+   */
   get location() { return this.#location; }
+
+  /**
+   * Get the expected or actual start date for the contract.
+   * @returns {?Timestamp} The start date, or null if not set
+   */
   get startDate() { return this.#startDate; }
+
+  /**
+   * Get the duration of the contract.
+   * @returns {string} The duration (e.g., "6 months", "1 year")
+   */
   get duration() { return this.#duration; }
+
+  /**
+   * Get the timestamp when the contract was soft-deleted.
+   * @returns {?Timestamp} The deletion timestamp, or null if active
+   */
   get deletedOn() { return this.#deletedOn; }
+
+  /**
+   * Get the array of user IDs who have applied to this contract.
+   * Only accessible to the contract creator for privacy.
+   * @returns {?string[]} Array of applicant user IDs, or null if not the creator
+   */
   get applicants() { return (this.createdByCurrentUser() ? this.#applicants : null); }
+
+  /**
+   * Get additional details about work location or arrangement.
+   * @returns {string} The worksite details
+   */
   get worksiteDetails() { return this.#worksiteDetails; }
+
+  /**
+   * Get the number of times this contract posting has been viewed.
+   * @returns {number} The view count
+   */
   get viewCount() { return this.#viewCount; }
 
   // Setters with validation
@@ -586,10 +749,19 @@ class Contract {
 
   // Methods
 
+  /**
+   * Check if this contract is currently active (not soft-deleted).
+   * @returns {boolean} True if the contract is active, false if deleted
+   */
   isActive() {
     return (this.#deletedOn === null);
   }
 
+  /**
+   * Soft-delete this contract by setting the deletedOn timestamp.
+   * Only the contract's creator can delete a contract.
+   * @throws {Error} If the current user is not the contract creator
+   */
   delete() {
     if (!this.createdByCurrentUser()) {
       throw new Error("Only the user who created this contract can make changes to it")
@@ -598,6 +770,11 @@ class Contract {
     this.#deletedOn = serverTimestamp();
   }
 
+  /**
+   * Apply to this contract as the current user.
+   * Adds the current user's ID to the applicants array if not already present.
+   * @throws {Error} If current user is not set
+   */
   apply() {
     const userId = Contract.#currentUserId;
 
@@ -610,6 +787,11 @@ class Contract {
     }
   }
 
+  /**
+   * Check if the current user has applied to this contract.
+   * @returns {boolean} True if the current user has applied, false otherwise
+   * @throws {Error} If current user is not set
+   */
   hasApplied() {
     const userId = Contract.#currentUserId;
 
@@ -620,6 +802,11 @@ class Contract {
     return this.#applicants.includes(userId);
   }
 
+  /**
+   * Withdraw the current user's application from this contract.
+   * Removes the current user's ID from the applicants array.
+   * @throws {Error} If current user is not set
+   */
   withdrawApplication() {
     const userId = Contract.#currentUserId;
 
@@ -630,15 +817,32 @@ class Contract {
     this.#applicants = this.#applicants.filter((applicant) => applicant !== userId);
   }
 
+  /**
+   * Increment the view count for this contract by one.
+   * Typically called whenever a user views the contract details.
+   */
   incrementViewCount() {
     ++this.#viewCount;
   }
 
-  // Convert to Firebase document
+  /**
+   * Convert this contract to a plain JavaScript object suitable for Firebase Firestore.
+   *
+   * This method prepares the contract data for storage in Firestore, including all
+   * necessary metadata and arrays. The postedOn timestamp is only included if it's not
+   * already set (i.e., when creating a new document).
+   *
+   * @returns {Object} Plain object representation of the contract for Firestore
+   * @example
+   * // Save contract to Firestore
+   *
+   * const contractData = contract.toFirebaseDocument();
+   * await setDoc(doc(db, "contracts", contractId), contractData);
+   */
   toFirebaseDocument() {
     const doc = {
       title:  this.#title,
-      companyName:  this.#companyName,
+      entityName:  this.#entityName,
       postedBy:  this.#postedBy,
       contractType:  this.#contractType,
       applicationStatus:  this.#applicationStatus,
