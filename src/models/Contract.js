@@ -161,6 +161,14 @@ class Contract {
   #postedOn = null;
 
   /**
+   * Current status of the contract posting (must be one of the "contractApplicationStatusList"
+   * constants)
+   * @private
+   * @type {string}
+   */
+  #applicationStatus = contractApplicationStatusList[0];
+
+  /**
    * Type of contract being offered (must be one of the "contractTypesList" constants)
    * @private
    * @type {string}
@@ -168,12 +176,39 @@ class Contract {
   #contractType = contractTypesList[0];
 
   /**
-   * Current status of the contract posting (must be one of the "contractApplicationStatusList"
-   * constants)
+   * Geographical location of the work
+   * @private
+   * @type {?Location}
+   */
+  #location = null;
+
+  /**
+   * Is the work to be done both remotely & on-site?
+   * @private
+   * @type {boolean}
+   */
+  #worksite_hybrid = false;
+
+  /**
+   * Is the work to be done only on-site?
+   * @private
+   * @type {boolean}
+   */
+  #worksite_onSite = false;
+
+  /**
+   * Is the work to be done only remotely?
+   * @private
+   * @type {boolean}
+   */
+  #worksite_remote = false;
+
+  /**
+   * Additional details about work location or arrangement
    * @private
    * @type {string}
    */
-  #applicationStatus = contractApplicationStatusList[0];
+  #worksiteDetails = "";
 
   /**
    * Number of positions available for this contract
@@ -233,13 +268,6 @@ class Contract {
   #rate = "";
 
   /**
-   * Geographical location of the work
-   * @private
-   * @type {?Location}
-   */
-  #location = null;
-
-  /**
    * Expected or actual start date for the contract
    * @private
    * @type {?Timestamp}
@@ -268,34 +296,6 @@ class Contract {
   #applicants = [];
 
   /**
-   * Is the work to be done both remotely & on-site?
-   * @private
-   * @type {boolean}
-   */
-  #worksite_hybrid = false;
-
-  /**
-   * Is the work to be done only on-site?
-   * @private
-   * @type {boolean}
-   */
-  #worksite_onSite = false;
-
-  /**
-   * Is the work to be done only remotely?
-   * @private
-   * @type {boolean}
-   */
-  #worksite_remote = false;
-
-  /**
-   * Additional details about work location or arrangement
-   * @private
-   * @type {string}
-   */
-  #worksiteDetails = "";
-
-  /**
    * Number of times this contract posting has been viewed
    * @private
    * @type {number}
@@ -319,8 +319,13 @@ class Contract {
    * @param {string} [data.entityName] - Entity name
    * @param {string} [data.postedBy] - User ID of the recruiter who posted this contract
    * @param {Timestamp} [data.postedOn] - Posting timestamp
-   * @param {string} [data.contractType] - Type of contract
    * @param {string} [data.applicationStatus] - Contract application status
+   * @param {string} [data.contractType] - Type of contract
+   * @param {Location|Object} [data.location] - Location instance or location data
+   * @param {boolean} [data.worksite_hybrid] - Hybrid work required
+   * @param {boolean} [data.worksite_onSite] - On-site work required
+   * @param {boolean} [data.worksite_remote] - Remote work required
+   * @param {string} [data.worksiteDetails] - Additional worksite details
    * @param {number} [data.numberOfPositions] - Number of positions available
    * @param {Timestamp} [data.applicationDeadline] - Application deadline
    * @param {string} [data.description] - Job description
@@ -329,15 +334,10 @@ class Contract {
    * @param {string} [data.experienceLevel] - Required experience level
    * @param {string[]} [data.skills] - Required skills
    * @param {string} [data.rate] - Compensation rate (e.g., "$75/hour")
-   * @param {Location|Object} [data.location] - Location instance or location data
    * @param {Timestamp} [data.startDate] - Expected or actual start date
    * @param {string} [data.duration] - Contract duration (e.g., "6 months")
    * @param {Timestamp} [data.deletedOn] - Soft delete timestamp
    * @param {string[]} [data.applicants] - Array of applicant user IDs
-   * @param {boolean} [data.worksite_hybrid] - Hybrid work required
-   * @param {boolean} [data.worksite_onSite] - On-site work required
-   * @param {boolean} [data.worksite_remote] - Remote work required
-   * @param {string} [data.worksiteDetails] - Additional worksite details
    * @param {number} [data.viewCount] - View count
    */
   constructor(data = {}) {
@@ -346,8 +346,13 @@ class Contract {
       this.#entityName = (typeof data.entityName === "string" ? data.entityName : this.#entityName);
       this.#postedBy = (isValidFirebaseUserUID(data.postedBy) ? data.postedBy : Contract.#currentUserId);
       this.#postedOn = enforceTimestamp(data.postedOn);
-      this.#contractType = (contractTypesList.includes(data.contractType) ? data.contractType : this.#contractType);
       this.#applicationStatus = (contractApplicationStatusList.includes(data.applicationStatus) ? data.status : this.#applicationStatus);
+      this.#contractType = (contractTypesList.includes(data.contractType) ? data.contractType : this.#contractType);
+      this.#location = data?.location instanceof Location ? data.location : new Location(data?.location);
+      this.#worksite_hybrid = (typeof data.worksite_hybrid === "boolean" ? data.worksite_hybrid : this.#worksite_hybrid);
+      this.#worksite_onSite = (typeof data.worksite_onSite === "boolean" ? data.worksite_onSite : this.#worksite_onSite);
+      this.#worksite_remote = (typeof data.worksite_remote === "boolean" ? data.worksite_remote : this.#worksite_remote);
+      this.#worksiteDetails = (typeof data.worksiteDetails === "string" ? data.worksiteDetails : this.#worksiteDetails);
       this.#numberOfPositions = (typeof data.numberOfPositions === "number" ? parseInt(data.numberOfPositions) : this.#numberOfPositions);
       this.#applicationDeadline = enforceTimestamp(data.applicationDeadline);
       this.#description = (typeof data.description === "string" ? data.description : this.#description);
@@ -358,7 +363,6 @@ class Contract {
       parseStringsArray(data.skills, this.#skills);
 
       this.#rate = (typeof data.rate === "string" ? data.rate : this.#rate);
-      this.#location = data?.location instanceof Location ? data.location : new Location(data?.location);
       this.#startDate = enforceTimestamp(data.startDate);
       this.#duration = (typeof data.duration === "string" ? data.duration : this.#duration);
       this.#deletedOn = enforceTimestamp(data.deletedOn);
@@ -367,10 +371,6 @@ class Contract {
         parseStringsArray(data.applicants.filter((applicant) => isValidFirebaseUserUID(applicant)), this.#applicants);
       }
 
-      this.#worksite_hybrid = (typeof data.worksite_hybrid === "boolean" ? data.worksite_hybrid : this.#worksite_hybrid);
-      this.#worksite_onSite = (typeof data.worksite_onSite === "boolean" ? data.worksite_onSite : this.#worksite_onSite);
-      this.#worksite_remote = (typeof data.worksite_remote === "boolean" ? data.worksite_remote : this.#worksite_remote);
-      this.#worksiteDetails = (typeof data.worksiteDetails === "string" ? data.worksiteDetails : this.#worksiteDetails);
       this.#viewCount = (typeof data.viewCount === "number" ? parseInt(data.viewCount) : this.#viewCount);
     }
   }
@@ -402,16 +402,28 @@ class Contract {
   get postedOn() { return this.#postedOn; }
 
   /**
+   * Get the current status of the contract posting.
+   * @returns {string} The application status
+   */
+  get applicationStatus() { return this.#applicationStatus; }
+
+  /**
    * Get the type of contract being offered.
    * @returns {string} The contract type
    */
   get contractType() { return this.#contractType; }
 
   /**
-   * Get the current status of the contract posting.
-   * @returns {string} The application status
+   * Get the geographical location of the work.
+   * @returns {?Location} The location instance, or null if not set
    */
-  get applicationStatus() { return this.#applicationStatus; }
+  get location() { return this.#location; }
+
+  /**
+   * Get additional details about work location or arrangement.
+   * @returns {string} The worksite details
+   */
+  get worksiteDetails() { return this.#worksiteDetails; }
 
   /**
    * Get the number of positions available for this contract.
@@ -463,12 +475,6 @@ class Contract {
   get rate() { return this.#rate; }
 
   /**
-   * Get the geographical location of the work.
-   * @returns {?Location} The location instance, or null if not set
-   */
-  get location() { return this.#location; }
-
-  /**
    * Get the expected or actual start date for the contract.
    * @returns {?Timestamp} The start date, or null if not set
    */
@@ -494,12 +500,6 @@ class Contract {
   get applicants() { return (this.createdByCurrentUser() ? this.#applicants : null); }
 
   /**
-   * Get additional details about work location or arrangement.
-   * @returns {string} The worksite details
-   */
-  get worksiteDetails() { return this.#worksiteDetails; }
-
-  /**
    * Get the number of times this contract posting has been viewed.
    * @returns {number} The view count
    */
@@ -519,16 +519,16 @@ class Contract {
     this.#title = value.trim();
   }
 
-  set companyName(value) {
+  set entityName(value) {
     if (!this.createdByCurrentUser()) {
       throw new Error("Only the user who created this contract can make changes to it")
     }
 
     if (typeof value !== "string") {
-      throw new Error("Company name must be a string");
+      throw new Error("Entity name must be a string");
     }
 
-    this.#companyName = value;
+    this.#entityName = value;
   }
 
   set postedOn(value) {
@@ -543,6 +543,18 @@ class Contract {
     this.#postedOn = enforceTimestamp(value);
   }
 
+  set applicationStatus(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
+    if (!contractApplicationStatusList.includes(value)) {
+      throw new Error(`Application status must be one of:  ${contractApplicationStatusList.join(", ")}`);
+    }
+
+    this.#applicationStatus = value;
+  }
+
   set contractType(value) {
     if (!this.createdByCurrentUser()) {
       throw new Error("Only the user who created this contract can make changes to it")
@@ -555,16 +567,28 @@ class Contract {
     this.#contractType = value;
   }
 
-  set applicationStatus(value) {
+  set location(value) {
     if (!this.createdByCurrentUser()) {
       throw new Error("Only the user who created this contract can make changes to it")
     }
 
-    if (!contractApplicationStatusList.includes(value)) {
-      throw new Error(`Application status must be one of:  ${contractApplicationStatusList.join(", ")}`);
+    if (value && !(value instanceof Location)) {
+      throw new Error("Location must be a Location object");
     }
 
-    this.#applicationStatus = value;
+    this.#location = value;
+  }
+
+  set worksiteDetails(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the user who created this contract can make changes to it")
+    }
+
+    if (typeof value !== "string") {
+      throw new Error("Worksite details must be a string");
+    }
+
+    this.#worksiteDetails = value;
   }
 
   set numberOfPositions(value) {
@@ -663,18 +687,6 @@ class Contract {
     this.#rate = value;
   }
 
-  set location(value) {
-    if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
-    }
-
-    if (value && !(value instanceof Location)) {
-      throw new Error("Location must be a Location object");
-    }
-
-    this.#location = value;
-  }
-
   set startDate(value) {
     if (!this.createdByCurrentUser()) {
       throw new Error("Only the user who created this contract can make changes to it")
@@ -721,18 +733,6 @@ class Contract {
     }
 
     this.#applicants = [...new Set(value)]; // Remove duplicates using Set
-  }
-
-  set worksiteDetails(value) {
-    if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
-    }
-
-    if (typeof value !== "string") {
-      throw new Error("Worksite details must be a string");
-    }
-
-    this.#worksiteDetails = value;
   }
 
   set viewCount(value) {
@@ -844,8 +844,13 @@ class Contract {
       title:  this.#title,
       entityName:  this.#entityName,
       postedBy:  this.#postedBy,
-      contractType:  this.#contractType,
       applicationStatus:  this.#applicationStatus,
+      contractType:  this.#contractType,
+      location:  this.#location,
+      worksite_hybrid:  this.#worksite_hybrid,
+      worksite_onSite:  this.#worksite_onSite,
+      worksite_remote:  this.#worksite_remote,
+      worksiteDetails:  this.#worksiteDetails,
       numberOfPositions:  this.#numberOfPositions,
       applicationDeadline:  this.#applicationDeadline,
       description:  this.#description,
@@ -854,15 +859,10 @@ class Contract {
       experienceLevel:  this.#experienceLevel,
       skills:  this.#skills,
       rate:  this.#rate,
-      location:  this.#location,
       startDate:  this.#startDate,
       duration:  this.#duration,
       deletedOn:  this.#deletedOn,
       applicants:  this.#applicants,
-      worksite_hybrid:  this.#worksite_hybrid,
-      worksite_onSite:  this.#worksite_onSite,
-      worksite_remote:  this.#worksite_remote,
-      worksiteDetails:  this.#worksiteDetails,
       viewCount:  this.#viewCount
     };
 
