@@ -17,7 +17,7 @@
  * - Automatic Firebase document conversion
  * - Work preference and availability tracking
  * - Soft delete functionality with deletedOn timestamp
- * - Skills and favorites management with duplicate prevention
+ * - Skills and favourites management with duplicate prevention
  * - Firebase-compatible document serialization
  *
  * @example
@@ -58,7 +58,7 @@
  * @requires ../constants/data
  */
 
-import { enforceTimestamp, parseStringsArray } from "../constants/data";
+import { isValidFirebaseUserUID, enforceTimestamp, parseStringsArray } from "../constants/data";
 import { Location } from "./Location";
 import { Project } from "./Project";
 
@@ -72,6 +72,8 @@ import { Project } from "./Project";
  * @class User
  */
 class User {
+  // Static constants
+
   /**
    * Availability status:  Not available for work
    * @static
@@ -110,7 +112,65 @@ class User {
    */
   static WORKSITE_TEXTS = { onSite: "On-Site", remote: "Remote", hybrid: "Hybrid" };
 
+  // Static private members
+
+  /**
+   * Current authenticated user's ID (set once during app initialization)
+   * @private
+   * @static
+   * @type {?string}
+   */
+  static #currentUserId = null;
+
+  // Static getters
+
+  /**
+   * Get the current user's ID.
+   * @static
+   * @returns {?string} Current user ID, or null if not set
+   */
+  static get currentUserId() {
+    return User.#currentUserId;
+  }
+
+  // Static setters
+
+  /**
+   * Set the current user ID context for all User instances.
+   *
+   * This should be set whenever a user logs in or logs out.
+   *
+   * @static
+   * @param {?string} userId - The authenticated user's ID, or null to clear
+   * @throws {Error} If userId is not valid
+   * @example
+   * import { UserAuth } from '../contexts/Authorization';
+   * import User from '../models/User';
+   *
+   * function App() {
+   *   const { userId } = UserAuth();
+   *
+   *   useEffect(() => {
+   *     User.currentUserId = userId;
+   *   }, [userId]);
+   * }
+   */
+  static set currentUserId(userId) {
+    if ((userId !== null) && !isValidFirebaseUserUID(userId)) {
+      throw new Error("userId must be either null or a valid Firebase UserUID");
+    }
+
+    User.#currentUserId = userId;
+  }
+
   // Private members
+
+  /**
+   * User's unique identifier (Firebase Firestore document ID)
+   * @private
+   * @type {string}
+   */
+  #userId = null;
 
   /**
    * User's availability-for-work status (see constructor for default value)
@@ -134,7 +194,7 @@ class User {
   #email = "";
 
   /**
-   * Array of user IDs that this user has marked as favorites
+   * Array of user IDs that this user has marked as favourites
    * @private
    * @type {string[]}
    */
@@ -272,11 +332,12 @@ class User {
    * Create a new User instance.
    *
    * @constructor
+   * @param {string} userId - User ID for this instance
    * @param {Object} [data={}] - User data object
    * @param {number} [data.availability] - Availability status (use static constants)
    * @param {Timestamp} [data.deletedOn] - Soft delete timestamp
    * @param {string} [data.email] - Email address
-   * @param {string[]} [data.favourites] - Array of favorite user IDs
+   * @param {string[]} [data.favourites] - Array of favourite user IDs
    * @param {string} [data.firstNames] - First name(s)
    * @param {string} [data.gitHubURL] - GitHub profile URL
    * @param {boolean} [data.isAdmin] - Administrator flag
@@ -296,8 +357,14 @@ class User {
    * @param {boolean} [data.worksite_onSite] - On-site work preference
    * @param {boolean} [data.worksite_remote] - Remote work preference
    */
-  constructor(data = {}) {
+  constructor(userId, data = {}) {
     const defaultAvailability = User.AVAILABILITY_NOT_AVAILABLE;
+
+    if (!isValidFirebaseUserUID(userId)) {
+      throw new Error(`${userId} is not a valid Firebase User UID`);
+    }
+
+    this.#userId = userId;
 
     /*
     This constructor considers the possibility that data may be invalid or missing and will add
@@ -349,6 +416,12 @@ class User {
   // Getters
 
   /**
+   * Get the user's ID.
+   * @returns {string} User ID
+   */
+  get userId() { return this.#userId; }
+
+  /**
    * Get the user's availability-for-work status.
    * @returns {number} Availability status (use static AVAILABILITY_* constants to interpret)
    */
@@ -367,14 +440,14 @@ class User {
   get email() { return this.#email; }
 
   /**
-   * Get the array of user IDs that this user has marked as favorites.
+   * Get the array of user IDs that this user has marked as favourites.
    *
    * When manipulating this array, DO NOT put anything other than user ID strings in it because
    * no consistency-checking is performed.  Anything that isn't a string will be discarded when
    * the User instance's Firebase document is updated.
-   * @returns {string[]} Array of favorite user IDs
+   * @returns {string[]} Array of favourite user IDs
    */
-  get favourites() { return this.#favourites; }
+  get favourites() { return (this.currentUserCanModify() ? this.#favourites : structuredClone(this.#favourites)); }
 
   /**
    * Get the user's first name(s).
@@ -456,7 +529,7 @@ class User {
    * be discarded when the User instance's Firebase document is updated.
    * @returns {Project[]} Array of Project instances
    */
-  get projects() { return this.#projects; }
+  get projects() { return (this.currentUserCanModify() ? this.#projects : structuredClone(this.#projects)); }
 
   /**
    * Get the array of the user's skills.
@@ -466,7 +539,7 @@ class User {
    * the User instance's Firebase document is updated.
    * @returns {string[]} Array of skill strings
    */
-  get skills() { return this.#skills; }
+  get skills() { return (this.currentUserCanModify() ? this.#skills : structuredClone(this.#skills)); }
 
   /**
    * Get the user's professional specialization.
@@ -503,9 +576,14 @@ class User {
   /**
    * Set the user's availability status for work.
    * @param {number} value - Availability status (must be one of the static AVAILABILITY_* constants)
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a valid availability constant
    */
   set availability(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (![User.AVAILABILITY_NOT_AVAILABLE, User.AVAILABILITY_PART_TIME, User.AVAILABILITY_FULL_TIME].includes(value)) {
       throw new Error("Invalid availability value");
     }
@@ -516,17 +594,27 @@ class User {
   /**
    * Set the timestamp when the user account was soft-deleted.
    * @param {Timestamp|Date|null} value - Deletion timestamp (will be converted to Firestore Timestamp)
+   * @throws {Error} If the current user is not permitted to modify this instance
    */
   set deletedOn(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     this.#deletedOn = enforceTimestamp(value);
   }
 
   /**
    * Set the user's email address.
    * @param {string} value - Email address
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set email(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -535,25 +623,35 @@ class User {
   }
 
   /**
-   * Set the array of user IDs that this user has marked as favorites.
-   * Automatically removes duplicates and trims whitespace from each ID.
-   * @param {string[]} value - Array of favorite user IDs (must be non-empty strings)
-   * @throws {Error} If value is not an array of non-empty strings
+   * Set the array of user IDs that this user has marked as favourites.
+   * Automatically removes duplicates.
+   * @param {string[]} value - Array of favourite user IDs (must be valid Firebase user ID's)
+   * @throws {Error} If the current user is not permitted to modify this instance
+   * @throws {Error} If value is not an array of valid Firebase user ID's
    */
   set favourites(value) {
-    if (!Array.isArray(value) || value.some((favourite) => typeof favourite !== "string" || favourite.trim() === "")) {
-      throw new Error("Value must be an array of non-empty strings (duplicates will be discarded)");
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
     }
 
-    this.#favourites = [...new Set(value.map((favourite) => favourite.trim()))]; // Remove duplicates using Set
+    if (!Array.isArray(value) || value.some((favourite) => !isValidFirebaseUserUID(favourite))) {
+      throw new Error("Value must be an array of valid Firebase user ID's");
+    }
+
+    this.#favourites = [...new Set(value)]; // Remove duplicates using Set
   }
 
   /**
    * Set the user's first name(s).
    * @param {string} value - First name(s)
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set firstNames(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -564,9 +662,14 @@ class User {
   /**
    * Set the URL to the user's GitHub profile.
    * @param {string} value - GitHub profile URL
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set gitHubURL(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -577,9 +680,14 @@ class User {
   /**
    * Set whether the user is an administrator.
    * @param {boolean} value - Administrator flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isAdmin(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -590,9 +698,14 @@ class User {
   /**
    * Set whether the user is a contractor.
    * @param {boolean} value - Contractor role flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isContractor(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -603,9 +716,14 @@ class User {
   /**
    * Set whether the user is a recruiter.
    * @param {boolean} value - Recruiter role flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isRecruiter(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -616,17 +734,27 @@ class User {
   /**
    * Set the timestamp of the user's last logout.
    * @param {Timestamp|Date|null} value - Last logout timestamp (will be converted to Firestore Timestamp)
+   * @throws {Error} If the current user is not permitted to modify this instance
    */
   set lastLoggedOut(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     this.#lastLoggedOut = enforceTimestamp(value);
   }
 
   /**
    * Set the user's last name (surname).
    * @param {string} value - Last name
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set lastName(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -637,9 +765,14 @@ class User {
   /**
    * Set the URL to the user's LinkedIn profile.
    * @param {string} value - LinkedIn profile URL
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set linkedInURL(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -650,9 +783,14 @@ class User {
   /**
    * Set the user's geographical location.
    * @param {Location|null} value - Location instance, or null to clear location
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is neither null nor a Location instance
    */
   set location(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if ((value !== null) && !(value instanceof Location)) {
       throw new Error("Value must be either null or a Location instance");
     }
@@ -663,9 +801,14 @@ class User {
   /**
    * Set the URL to the user's profile image.
    * @param {string} value - Profile image URL
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set profileImageURL(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -676,9 +819,14 @@ class User {
   /**
    * Set the user's profile "About" section text.
    * @param {string} value - Profile about text
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set profileAbout(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -689,9 +837,15 @@ class User {
   /**
    * Set the array of the user's projects.
    * @param {Project[]} value - Array of Project instances
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not an array of Project instances
+   * @throws {Error} If any projects have duplicate titles
    */
   set projects(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (!Array.isArray(value) || value.some((project) => !(project instanceof Project))) {
       throw new Error("Value must be an array of Project objects");
     }
@@ -709,9 +863,14 @@ class User {
    * Set the array of the user's skills.
    * Automatically removes duplicates and trims whitespace from each skill.
    * @param {string[]} value - Array of skill strings (must be non-empty strings)
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not an array of non-empty strings
    */
   set skills(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (!Array.isArray(value) || value.some((skill) => typeof skill !== "string" || skill.trim() === "")) {
       throw new Error("Value must be an array of non-empty strings (duplicates will be discarded)");
     }
@@ -722,9 +881,14 @@ class User {
   /**
    * Set the user's professional specialization.
    * @param {string} value - Professional specialization
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set specialization(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -735,9 +899,14 @@ class User {
   /**
    * Set the URL to the user's profile video.
    * @param {string} value - Profile video URL
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set videoURL(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "string") {
       throw new Error("Value must be a string");
     }
@@ -748,9 +917,14 @@ class User {
   /**
    * Set whether the user is open to hybrid work arrangements (combination of remote and on-site).
    * @param {boolean} value - Hybrid work preference flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_hybrid(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -761,9 +935,14 @@ class User {
   /**
    * Set whether the user is open to on-site work only.
    * @param {boolean} value - On-site work preference flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_onSite(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -774,9 +953,14 @@ class User {
   /**
    * Set whether the user is open to remote work only.
    * @param {boolean} value - Remote work preference flag
+   * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_remote(value) {
+    if (!this.currentUserCanModify()) {
+      throw new Error("Current user is not permitted to modify this instance");
+    }
+
     if (typeof value !== "boolean") {
       throw new Error("Value must be a boolean");
     }
@@ -786,6 +970,14 @@ class User {
 
   // Methods
 
+  /**
+   * Checks if the current user is allowed to modify this instance.
+   *
+   * @returns {boolean} True if the current user can make modifications, false otherwise
+   */
+  currentUserCanModify() {
+    return User.currentUserId === this.#userId;
+  }
   /**
    * Get the user's full name in the specified format.
    *
@@ -833,7 +1025,7 @@ class User {
       availability:  this.#availability,
       deletedOn:  this.#deletedOn,
       email:  this.#email,
-      favourites:  this.#favourites,
+      favourites:  this.#favourites.filter((favourite) => isValidFirebaseUserUID(favourite)),
       firstNames:  this.#firstNames,
       gitHubURL:  this.#gitHubURL,
       isAdmin:  this.#isAdmin,
@@ -845,8 +1037,8 @@ class User {
       location:  this.#location?.toFirebaseDocument(),
       profileImageURL:  this.#profileImageURL,
       profileAbout:  this.#profileAbout,
-      projects:  this.#projects.map((project) => project.toFirebaseDocument()),
-      skills:  this.#skills,
+      projects:  this.#projects.filter((project) => project instanceof Project).map((project) => project.toFirebaseDocument()),
+      skills:  this.#skills.filter((skill) => typeof skill === "string"),
       specialization:  this.#specialization,
       videoURL:  this.#videoURL,
       worksite_hybrid:  this.#worksite_hybrid,
@@ -880,7 +1072,7 @@ class User {
    * await setDoc(userRef, newUser);
    */
   static firebaseConverter = {
-    fromFirestore:  (snapshot, options) => new User(snapshot.data(options)),
+    fromFirestore:  (snapshot, options) => new User(snapshot.id, snapshot.data(options)),
     toFirestore:  (user) => user.toFirebaseDocument()
   };
 }
