@@ -32,6 +32,67 @@ function parseStringsArray(stringsArray, targetArray) {
 }
 
 /**
+ * Validate whether a value is a properly formatted email address.
+ *
+ * This function performs basic format validation only and does not verify if the email address
+ * actually exists or is deliverable.
+ *
+ * @param {*} value - The value to validate
+ * @returns {boolean} True if the value is a string matching the email format, false otherwise
+ * @example
+ * isValidEmailAddress("user@example.com"); // true
+ * isValidEmailAddress("invalid.email"); // false
+ * isValidEmailAddress("user@domain"); // false
+ * isValidEmailAddress(123); // false
+ * isValidEmailAddress(""); // false
+ */
+function isValidEmailAddress(value) {
+	/*
+	This function uses a regular expression to check if the provided value matches the
+	basic structure of an email address (local@domain.extension).
+	*/
+	const emailPattern = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+	return (typeof value === "string" && emailPattern.test(value));
+}
+
+/**
+ * Validate whether a value is a properly formatted URL.
+ *
+ * This function validates the URL structure but does not verify if the URL is accessible or
+ * exists.
+ *
+ * @param {*} value - The value to validate
+ * @returns {boolean} True if the value can be parsed as a valid URL, false otherwise
+ * @example
+ * isValidURL("https://example.com"); // true
+ * isValidURL("http://localhost:3000/path"); // true
+ * isValidURL("ftp://files.example.com"); // true
+ * isValidURL("not a url"); // false
+ * isValidURL(""); // false
+ * isValidURL(123); // false
+ */
+function isValidURL(value) {
+	/*
+	This function attempts to construct an URL object from the provided value.  If
+	successful then the value is a valid URL; if it throws an error then it's not a valid
+	URL.
+	*/
+
+	let isValid = true;
+
+	try {
+		new URL(value);
+	} catch {
+		isValid = false;
+	}
+
+	console.assert(typeof isValid === "boolean");
+
+	return isValid;
+}
+
+/**
  * Determine whether a value is a properly formatted Firebase user UID or not.
  *
  * @param {*} value - The value to validate
@@ -69,6 +130,24 @@ function isValidTimestamp(value) {
 	} catch (error) {
 		return false;
 	}
+}
+
+/**
+ * Convert a value to a trimmed string, or return an empty string if the value is not a string.
+ *
+ * This is useful for sanitizing user input and ensuring that string fields always contain
+ * valid string values without extra whitespace.
+ *
+ * @param {*} value - The value to convert to a trimmed string
+ * @returns {string} The trimmed string, or an empty string if value is not a string
+ * @example
+ * enforceTrimmedString("  hello  "); // "hello"
+ * enforceTrimmedString("world"); // "world"
+ * enforceTrimmedString(""); // ""
+ * enforceTrimmedString(123); // ""
+ */
+function enforceTrimmedString(value) {
+	return (typeof value === "string" ? value.trim() : "");
 }
 
 /**
@@ -301,8 +380,11 @@ const messageDataSchema = {
 
 export {
 	parseStringsArray,
+	isValidEmailAddress,
+	isValidURL,
 	isValidFirebaseUserUID,
 	isValidTimestamp,
+	enforceTrimmedString,
 	enforceTimestamp,
 	enforceSchema,
 	qualificationsList,
