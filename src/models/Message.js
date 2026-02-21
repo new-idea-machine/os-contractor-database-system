@@ -47,10 +47,12 @@
  *
  * @module models/Message
  * @requires firebase/firestore
+ * @requires constants/data
  */
 
 import { serverTimestamp } from "firebase/firestore";
 import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
+import { enforceTrimmedString } from "../constants/data";
 
 /**
  * Message model for storing a single message in a conversation.
@@ -211,7 +213,7 @@ class Message {
       this.#author = (isValidFirebaseUserUID(data.author) ? data.author : (Message.#currentUserId || ""));
       this.#conversationId = (typeof data.conversationId === "string" ? data.conversationId : this.#conversationId);
       this.#createdOn = enforceTimestamp(data.createdOn);
-      this.#text = (typeof data.text === "string" ? data.text : this.#text);
+      this.#text = enforceTrimmedString(data.text);
 
       // Process archivedBy array
 
@@ -354,10 +356,13 @@ class Message {
    * @throws {Error} If value is not a non-empty string
    */
   set text(value) {
-    if (typeof value !== "string" || value.trim() === "") {
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
       throw new Error("Value must be a non-empty string");
     }
-    this.#text = value.trim();
+
+    this.#text = newValue;
   }
 
   /**

@@ -1,6 +1,3 @@
-import { serverTimestamp } from "firebase/firestore";
-import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
-
 /**
  * @fileoverview UserViewed data model for tracking profile view events.
  *
@@ -36,7 +33,14 @@ import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
  * );
  * const viewsSnapshot = await getDocs(viewsQuery);
  * const views = viewsSnapshot.docs.map(doc => doc.data());  // Already UserViewed instances
+ *
+ * @module models/UserViewed
+ * @requires firebase/firestore
+ * @requires constants/data
  */
+
+import { serverTimestamp } from "firebase/firestore";
+import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
 
 /**
  * UserViewed model for tracking profile view events.
@@ -74,7 +78,7 @@ class UserViewed {
    * Create a new UserViewed instance.
    *
    * When creating a brand new view record (as opposed to populating a new instance with
-   * existing data), set the "timestamp" member to null -- the timestamp will be generated
+   * existing data), set the "timestamp" member to null – the timestamp will be generated
    * automatically by Firebase when the instance is first saved.
    *
    * @constructor

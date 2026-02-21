@@ -55,10 +55,11 @@
  *
  * @module models/Conversation
  * @requires firebase/firestore
+ * @requires constants/data
  */
 
 import { Timestamp, serverTimestamp } from "firebase/firestore";
-import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
+import { isValidFirebaseUserUID, enforceTrimmedString, enforceTimestamp } from "../constants/data";
 
 /**
  * Conversation model for storing and managing multi-user chat conversations.
@@ -229,8 +230,8 @@ class Conversation {
 
   constructor(data = {}) {
     if (data && typeof data === "object" && !Array.isArray(data)) {
-     this.#createdOn = (data.createdOn ? enforceTimestamp(data.createdOn) : this.#createdOn);
-      this.#subject = data.subject || this.#subject;
+      this.#createdOn = (data.createdOn ? enforceTimestamp(data.createdOn) : this.#createdOn);
+      this.#subject = enforceTrimmedString(data.subject);
 
       // Process archivedBy array
 
@@ -246,10 +247,12 @@ class Conversation {
 
       if (Array.isArray(data.deletedOnBy)) {
         data.deletedOnBy.forEach((deletionData) => {
-          const timestamp = enforceTimestamp(deletionData.timestamp);
+          if (typeof deletionData === "object" && !Array.isArray(deletionData)) {
+            const timestamp = enforceTimestamp(deletionData.timestamp);
 
-          if (isValidFirebaseUserUID(deletionData.userId) && timestamp) {
-            this.#deletedOnBy.push({ userId: deletionData.userId, timestamp });
+            if (isValidFirebaseUserUID(deletionData.userId) && timestamp) {
+              this.#deletedOnBy.push({ userId: deletionData.userId, timestamp });
+            }
           }
         });
       }
@@ -415,10 +418,13 @@ class Conversation {
       throw new Error("Only moderators can change the subject.");
     }
 
-    if (typeof value !== "string" || value.trim() === "") {
-      throw new Error("Subject must be a non-empty string");
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
+      throw new Error("Value must be a non-empty string");
     }
-    this.#subject = value.trim();
+
+    this.#subject = newValue;
   }
 
   /**
@@ -535,7 +541,7 @@ class Conversation {
       throw new Error("Participant user ID isn't valid");
     }
 
-    if (!this.isModerator) {
+    if (!this.isModerator()) {
       throw new Error("Only moderators can add participants");
     }
 
@@ -579,7 +585,7 @@ class Conversation {
       throw new Error("Participant user ID isn't valid");
     }
 
-    if (!this.isModerator && (userId !== Conversation.currentUserId)) {
+    if (!this.isModerator() && (userId !== Conversation.currentUserId)) {
       throw new Error("Only moderators can remove participants");
     }
 
@@ -615,7 +621,7 @@ class Conversation {
       throw new Error("Moderator user ID isn't valid");
     }
 
-    if (!this.isModerator) {
+    if (!this.isModerator()) {
       throw new Error("Only moderators can promote participants to moderators");
     }
 
@@ -659,7 +665,7 @@ class Conversation {
       throw new Error("Moderator user ID isn't valid");
     }
 
-    if (!this.isModerator) {
+    if (!this.isModerator()) {
       throw new Error("Only moderators can demote moderators to participants");
     }
 

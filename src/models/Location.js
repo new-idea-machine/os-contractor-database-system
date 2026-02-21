@@ -60,10 +60,12 @@
  * @module models/Location
  * @requires firebase/firestore
  * @requires firebase/geofire
+ * @requires constants/data
  */
 
 import { GeoPoint } from "firebase/firestore";
 import { distanceBetween, geohashForLocation } from "firebase/geofire";
+import { enforceTrimmedString } from "../constants/data";
 
 /**
  * Convert a geohash string to a GeoPoint instance.
@@ -174,7 +176,9 @@ class Location {
   constructor(data = {}) {
     const defaultCoordinates = [0.0, 0.0];
     const coordinatesAreGeoPoint = data.coordinates instanceof GeoPoint;
-    const geohashIsString = typeof data.geohash === "string";
+    const geohash = enforceTrimmedString(data.geohash);
+    const geohashPattern = /^[0-9bcdefghjkmnpqrstuvwxyz]+$/i;
+    const geohashIsValid = geohashPattern.test(geohash);
 
     /*
     This constructor considers the possibility that data may be missing and does its best to
@@ -189,12 +193,12 @@ class Location {
 
     if (coordinatesAreGeoPoint) {
       this.#coordinates = data.coordinates;
-      this.#geohash = geohashIsString ? data.geohash : geohashForLocation(this.#coordinates);
+      this.#geohash = geohashIsValid ? geohash : geohashForLocation(this.#coordinates);
     }
-    else if (geohashIsString) {
+    else if (geohashIsValid) {
       try {
-        this.#coordinates = locationForGeohash(data.geohash);
-        this.#geohash = data.geohash;
+        this.#coordinates = locationForGeohash(geohash);
+        this.#geohash = geohash;
       }
       catch {
         this.#coordinates = new GeoPoint(...defaultCoordinates);
@@ -259,6 +263,7 @@ class Location {
    *
    * @param {Location} location - The location to calculate the distance to
    * @returns {number} Distance (in kilometers)
+   * @throws {Error} The supplied argument isn't an instance of Location
    */
 
   distanceTo(location) {

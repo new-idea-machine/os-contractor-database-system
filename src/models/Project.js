@@ -45,8 +45,10 @@
  * await updateDoc(doc(db, "projects", projectId), newProjectData);
  *
  * @module models/Project
- * @requires firebase/firestore
+ * @requires constants/data
  */
+
+import { isValidURL, enforceTrimmedString } from "../constants/data";
 
 /**
  * Project model for storing project data for a user's portfolio.
@@ -112,14 +114,12 @@ class Project {
     */
 
     if (typeof data === "object" && !Array.isArray(data)) {
-      this.#description = (typeof data.description === "string" ? data.description.trim() : this.#description);
+      const title = enforceTrimmedString(data.title);
+      const url = enforceTrimmedString(data.url);
 
-      if ((typeof data.title === "string") && (data.title.trim() !== ""))
-        this.#title = data.title.trim()
-      else
-        this.#title = (new Date(Date.now())).toLocaleString();
-
-      this.#url = (typeof data.url === "string" ? data.url.trim() : this.#url);
+      this.#description = enforceTrimmedString(data.description);
+      this.#title = (title !== "" ? title : (new Date(Date.now())).toLocaleString());
+      this.#url = (isValidURL(url) ? url : this.#url);
     }
   }
 
@@ -171,11 +171,13 @@ class Project {
    * @throws {Error} If value is not a non-empty string
    */
   set title(value) {
-    if (typeof value !== "string" || value.trim() === "") {
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
       throw new Error("Value must be a unique, non-empty string");
     }
 
-    this.#title = value.trim();
+    this.#title = newValue;
   }
 
   /**
@@ -183,14 +185,16 @@ class Project {
    * Automatically trims whitespace from the value.
    *
    * @param {string} value - Project URL (must be a string)
-   * @throws {Error} If value is not a string
+   * @throws {Error} If value is not a valid URL
    */
   set url(value) {
-    if (typeof value !== "string") {
-      throw new Error("URL must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (!isValidURL(newValue)) {
+      throw new Error("Value must be a valid uniform resource locator");
     }
 
-    this.#url = value.trim();
+    this.#url = newValue;
   }
 
   // Methods

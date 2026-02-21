@@ -53,12 +53,19 @@
  *
  * @module models/User
  * @requires firebase/firestore
- * @requires ./Location
- * @requires ./Project
- * @requires ../constants/data
+ * @requires models/Location
+ * @requires models/Project
+ * @requires constants/data
  */
 
-import { isValidFirebaseUserUID, enforceTimestamp, parseStringsArray } from "../constants/data";
+import {
+  isValidEmailAddress,
+  isValidURL,
+  isValidFirebaseUserUID,
+  enforceTrimmedString,
+  enforceTimestamp,
+  parseStringsArray
+} from "../constants/data";
 import { Location } from "./Location";
 import { Project } from "./Project";
 
@@ -69,6 +76,8 @@ import { Project } from "./Project";
  * location, projects, skills, and work preferences. Supports both contractor and recruiter
  * roles with appropriate fields for each.
  *
+ * A user can only modify their own instance, and they can't grant themselves administrator
+ * status.
  * @class User
  */
 class User {
@@ -615,8 +624,8 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    if (!isValidEmailAddress(value)) {
+      throw new Error("Value must be a valid e-mail address");
     }
 
     this.#email = value;
@@ -652,11 +661,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
+      throw new Error("Value must be a non-empty string");
     }
 
-    this.#firstNames = value;
+    this.#firstNames = newValue;
   }
 
   /**
@@ -670,11 +681,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (!isValidURL(newValue)) {
+      throw new Error("Value must be a valid uniform resource locator");
     }
 
-    this.#gitHubURL = value;
+    this.#gitHubURL = newValue;
   }
 
   /**
@@ -684,7 +697,7 @@ class User {
    * @throws {Error} If value is not a boolean
    */
   set isAdmin(value) {
-    if (!this.currentUserCanModify()) {
+    if (!this.#isAdmin || !this.currentUserCanModify()) {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
@@ -755,11 +768,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
+      throw new Error("Value must be a non-empty string");
     }
 
-    this.#lastName = value;
+    this.#lastName = newValue;
   }
 
   /**
@@ -773,11 +788,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (!isValidURL(newValue)) {
+      throw new Error("Value must be a valid uniform resource locator");
     }
 
-    this.#linkedInURL = value;
+    this.#linkedInURL = newValue;
   }
 
   /**
@@ -809,11 +826,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (!isValidURL(newValue)) {
+      throw new Error("Value must be a valid uniform resource locator");
     }
 
-    this.#profileImageURL = value;
+    this.#profileImageURL = newValue;
   }
 
   /**
@@ -871,7 +890,7 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (!Array.isArray(value) || value.some((skill) => typeof skill !== "string" || skill.trim() === "")) {
+    if (!Array.isArray(value) || value.some((skill) => enforceTrimmedString(skill) === "")) {
       throw new Error("Value must be an array of non-empty strings (duplicates will be discarded)");
     }
 
@@ -889,11 +908,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (newValue === "") {
+      throw new Error("Value must be a non-empty string");
     }
 
-    this.#specialization = value;
+    this.#specialization = newValue;
   }
 
   /**
@@ -907,11 +928,13 @@ class User {
       throw new Error("Current user is not permitted to modify this instance");
     }
 
-    if (typeof value !== "string") {
-      throw new Error("Value must be a string");
+    const newValue = enforceTrimmedString(value);
+
+    if (!isValidURL(newValue)) {
+      throw new Error("Value must be a valid uniform resource locator");
     }
 
-    this.#videoURL = value;
+    this.#videoURL = newValue;
   }
 
   /**
@@ -1038,7 +1061,7 @@ class User {
       profileImageURL:  this.#profileImageURL,
       profileAbout:  this.#profileAbout,
       projects:  this.#projects.filter((project) => project instanceof Project).map((project) => project.toFirebaseDocument()),
-      skills:  this.#skills.filter((skill) => typeof skill === "string"),
+      skills:  this.#skills.map((skill) => enforceTrimmedString(skill)).filter((skill) => skill !== ""),
       specialization:  this.#specialization,
       videoURL:  this.#videoURL,
       worksite_hybrid:  this.#worksite_hybrid,
