@@ -52,6 +52,7 @@
 import { serverTimestamp } from "firebase/firestore";
 import {
   isValidTimestamp,
+  enforceTrimmedString,
   enforceTimestamp,
   isValidFirebaseUserUID,
   parseStringsArray,
@@ -78,6 +79,16 @@ import { Location } from "./Location";
  * });
  */
 class Contract {
+  // Static constants
+  /**
+   * Human-readable text representations of worksite preferences
+   * @static
+   * @constant {Object}
+   * @property {string} onSite - On-site work preference text
+   * @property {string} remote - Remote work preference text
+   * @property {string} hybrid - Hybrid work preference text
+   */
+  static WORKSITE_TEXTS = { onSite: "On-Site", remote: "Remote", hybrid: "Hybrid" };
 
   // Static private members
 
@@ -420,6 +431,24 @@ class Contract {
   get location() { return this.#location; }
 
   /**
+   * Check if hybrid work arrangement is an option.
+   * @returns {boolean} True if hybrid work is an option, false if it isn't available
+   */
+  get worksite_hybrid() { return this.#worksite_hybrid; }
+
+  /**
+   * Check if on-site work is an option.
+   * @returns {boolean} True if on-site work is an option, false if it isn't available
+   */
+  get worksite_onSite() { return this.#worksite_onSite; }
+
+  /**
+   * Check if remote work is an option.
+   * @returns {boolean} True if remote work is an option, false if it isn't available
+   */
+  get worksite_remote() { return this.#worksite_remote; }
+
+  /**
    * Get additional details about work location or arrangement.
    * @returns {string} The worksite details
    */
@@ -507,9 +536,17 @@ class Contract {
 
   // Setters with validation
 
+  /**
+   * Set the job title or position name.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new title (will be trimmed)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If the trimmed value is not a non-empty string
+   */
   set title(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if ((typeof value !== "string") || (value.trim() === "")) {
@@ -519,9 +556,17 @@ class Contract {
     this.#title = value.trim();
   }
 
+  /**
+   * Set the name of the entity offering the contract.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new entity name
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set entityName(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -531,21 +576,18 @@ class Contract {
     this.#entityName = value;
   }
 
-  set postedOn(value) {
-    if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
-    }
-
-    if ((value !== null) && !isValidTimestamp(value)) {
-      throw new Error("Posted-on must be a valid timestamp");
-    }
-
-    this.#postedOn = enforceTimestamp(value);
-  }
-
+  /**
+   * Set the current application status of the contract.
+   *
+   * Only the contract creator can modify this field.
+   * @see contractApplicationStatusList
+   * @param {string} value - The new application status (must be from contractApplicationStatusList)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a valid application status
+   */
   set applicationStatus(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (!contractApplicationStatusList.includes(value)) {
@@ -555,9 +597,18 @@ class Contract {
     this.#applicationStatus = value;
   }
 
+  /**
+   * Set the type of contract being offered.
+   *
+   * Only the contract creator can modify this field.
+   * @see contractTypesList
+   * @param {string} value - The new contract type (must be from contractTypesList)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a valid contract type
+   */
   set contractType(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (!contractTypesList.includes(value)) {
@@ -567,21 +618,97 @@ class Contract {
     this.#contractType = value;
   }
 
+  /**
+   * Set the geographical location of the work.
+   *
+   * Only the contract creator can modify this field.
+   * @param {?Location} value - The new location instance, or null for not applicable
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a Location instance or null
+   */
   set location(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (value && !(value instanceof Location)) {
-      throw new Error("Location must be a Location object");
+      throw new Error("Location must be a Location instance");
     }
 
     this.#location = value;
   }
 
+  /**
+   * Set whether a hybrid (remote and on-site) work location arrangement is available.
+   *
+   * Only the contract creator can modify this field.
+   * @param {boolean} value - True if hybrid work location is an option, false otherwise
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a boolean
+   */
+  set worksite_hybrid(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the contract creator can modify this property")
+    }
+
+    if (typeof value !== "boolean") {
+      throw new Error("Value must be a boolean");
+    }
+
+    this.#worksite_hybrid = value;
+  }
+
+  /**
+   * Set whether an on-site work location arrangement is available.
+   *
+   * Only the contract creator can modify this field.
+   * @param {boolean} value - True if on-site work is an option, false otherwise
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a boolean
+   */
+  set worksite_onSite(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the contract creator can modify this property")
+    }
+
+    if (typeof value !== "boolean") {
+      throw new Error("Value must be a boolean");
+    }
+
+    this.#worksite_onSite = value;
+  }
+
+  /**
+   * Set whether a remote work location arrangement is available.
+   *
+   * Only the contract creator can modify this field.
+   * @param {boolean} value - True if remote work is an option, false otherwise
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a boolean
+   */
+  set worksite_remote(value) {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the contract creator can modify this property")
+    }
+
+    if (typeof value !== "boolean") {
+      throw new Error("Value must be a boolean");
+    }
+
+    this.#worksite_remote = value;
+  }
+
+  /**
+   * Set additional details about work location or arrangement.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new worksite details
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set worksiteDetails(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -591,33 +718,66 @@ class Contract {
     this.#worksiteDetails = value;
   }
 
+  /**
+   * Set the number of positions available for this contract.  A value of "0" means that
+   * there's an indeterminate number of positions.
+   *
+   * Only the contract creator can modify this field.
+   * @param {number} value - The number of positions (must be a positive integer)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a positive integer
+   */
   set numberOfPositions(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
-    if (typeof value !== "number" || value <= 0) {
-      throw new Error("Number of positions must be a positive number");
+    if (!Number.isInteger(value) || value <= 0) {
+      throw new Error("Number of positions must be a positive integer");
     }
 
     this.#numberOfPositions = value;
   }
 
+  /**
+   * Set the deadline for submitting applications.  The deadline, if not null, must be in the
+   * future.
+   *
+   * Only the contract creator can modify this field.
+   * @param {Timestamp} value - The application deadline, or null if there is no deadline
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a valid timestamp
+   * @throws {Error} If the deadline is in the past
+   */
   set applicationDeadline(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
-    if ((value !== null) && !isValidTimestamp(value)) {
-      throw new Error("Application deadline must be a valid timestamp");
+    if ((value !== null) && (!isValidTimestamp(value))) {
+      throw new Error("Application deadline must be either null or a valid timestamp");
     }
 
-    this.#applicationDeadline = enforceTimestamp(value);
+    const deadline = enforceTimestamp(value);
+
+    if ((deadline !== null) && (deadline.toDate() <= Date.now())) {
+      throw new Error("Application deadline must be in the future");
+    }
+
+    this.#applicationDeadline = deadline;
   }
 
+  /**
+   * Set the detailed description of the contract position.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new description (will be trimmed)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a non-empty string
+   */
   set description(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if ((typeof value !== "string") || (value.trim() === "")) {
@@ -627,9 +787,17 @@ class Contract {
     this.#description = value.trim();
   }
 
+  /**
+   * Set the key responsibilities for the role.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new responsibilities
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set responsibilities(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -639,9 +807,17 @@ class Contract {
     this.#responsibilities = value;
   }
 
+  /**
+   * Set the specific requirements for the position.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new requirements
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set requirements(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -651,9 +827,18 @@ class Contract {
     this.#requirements = value;
   }
 
+  /**
+   * Set the required experience level for the position.
+   *
+   * Only the contract creator can modify this field.
+   * @see contractExperienceLevelsList
+   * @param {string} value - The new experience level (must be from contractExperienceLevelsList)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a valid experience level
+   */
   set experienceLevel(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (!contractExperienceLevelsList.includes(value)) {
@@ -663,21 +848,39 @@ class Contract {
     this.#experienceLevel = value;
   }
 
+  /**
+   * Set the array of required skills for the position.  Duplicate skills and strings that are
+   * empty after being trimmed will be automatically removed.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string[]} value - Array of skill names (will be trimmed, duplicates removed)
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not an array of non-empty strings
+   */
   set skills(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
-    if (!Array.isArray(value) || value.some((skill) => (typeof skill !== "string") || (skill.trim() === ""))) {
+    if (!Array.isArray(value) || value.some((skill) => enforceTrimmedString(skill) === "")) {
       throw new Error("Skills must be an array of non-empty strings (duplicates will be discarded)");
     }
 
     this.#skills = [...new Set(value.map((skill) => skill.trim()))]; // Remove duplicates using Set
   }
 
+
+  /**
+   * Set the compensation rate for the position.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The new rate (e.g., "$75/hour", "$5000/month")
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set rate(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -687,9 +890,17 @@ class Contract {
     this.#rate = value;
   }
 
+  /**
+   * Set the expected or actual start date for the contract.
+   *
+   * Only the contract creator can modify this field.
+   * @param {?Timestamp} value - The start date timestamp, or null if undetermined
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a valid timestamp or null
+   */
   set startDate(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if ((value !== null) && !isValidTimestamp(value)) {
@@ -699,9 +910,17 @@ class Contract {
     this.#startDate = enforceTimestamp(value);
   }
 
+  /**
+   * Set the duration of the contract.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string} value - The duration (e.g., "6 months", "1 year")
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not a string
+   */
   set duration(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (typeof value !== "string") {
@@ -711,21 +930,18 @@ class Contract {
     this.#duration = value;
   }
 
-  set deletedOn(value) {
-    if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
-    }
-
-    if ((value !== null) && !isValidTimestamp(value)) {
-      throw new Error("Deleted-on must be a valid timestamp");
-    }
-
-    this.#deletedOn = enforceTimestamp(value);
-  }
-
+  /**
+   * Set the array of user IDs who have applied to this contract.  Duplicate user IDs will be
+   * removed automatically.
+   *
+   * Only the contract creator can modify this field.
+   * @param {string[]} value - Array of Firebase user UIDs
+   * @throws {Error} If not the contract creator
+   * @throws {Error} If value is not an array of valid Firebase user UIDs
+   */
   set applicants(value) {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can modify this property")
     }
 
     if (!Array.isArray(value) || value.some((applicant) => !isValidFirebaseUserUID(applicant))) {
@@ -735,19 +951,22 @@ class Contract {
     this.#applicants = [...new Set(value)]; // Remove duplicates using Set
   }
 
-  set viewCount(value) {
-    if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
-    }
-
-    if (typeof value !== "number" || value < 0) {
-      throw new Error("View count must be a positive number");
-    }
-
-    this.#viewCount = Math.round(value);
-  }
-
   // Methods
+
+  /**
+   * Get an array of the contract's worksite options as human-readable strings.
+   *
+   * @returns {string[]} Array of worksite options strings (e.g., ["On-Site", "Remote", "Hybrid"])
+   */
+  worksiteOptionsToStrings() {
+    const options = [];
+
+    if (this.#worksite_onSite) options.push(Contract.WORKSITE_TEXTS.onSite);
+    if (this.#worksite_remote) options.push(Contract.WORKSITE_TEXTS.remote);
+    if (this.#worksite_hybrid) options.push(Contract.WORKSITE_TEXTS.hybrid);
+
+    return options;
+  }
 
   /**
    * Check if this contract is currently active (not soft-deleted).
@@ -759,15 +978,38 @@ class Contract {
 
   /**
    * Soft-delete this contract by setting the deletedOn timestamp.
+   *
    * Only the contract's creator can delete a contract.
    * @throws {Error} If the current user is not the contract creator
    */
   delete() {
     if (!this.createdByCurrentUser()) {
-      throw new Error("Only the user who created this contract can make changes to it")
+      throw new Error("Only the contract creator can perform this action")
     }
 
     this.#deletedOn = serverTimestamp();
+  }
+
+  /**
+   * Undelete this contract by nullifying the deletedOn timestamp.
+   *
+   * Only the contract's creator can delete a contract.
+   * @throws {Error} If the current user is not the contract creator
+   */
+  undelete() {
+    if (!this.createdByCurrentUser()) {
+      throw new Error("Only the contract creator can perform this action")
+    }
+
+    this.#deletedOn = null;
+  }
+
+  /**
+   * Check if the application deadline has passed.
+   * @returns {boolean} True if deadline has passed, false if otherwise
+   */
+  isExpired() {
+    return (this.#applicationDeadline === null ? false : this.#applicationDeadline.toDate() < Date.now());
   }
 
   /**
@@ -846,7 +1088,7 @@ class Contract {
       postedBy:  this.#postedBy,
       applicationStatus:  this.#applicationStatus,
       contractType:  this.#contractType,
-      location:  this.#location,
+      location:  this.#location?.toFirebaseDocument(),
       worksite_hybrid:  this.#worksite_hybrid,
       worksite_onSite:  this.#worksite_onSite,
       worksite_remote:  this.#worksite_remote,
@@ -857,12 +1099,12 @@ class Contract {
       responsibilities:  this.#responsibilities,
       requirements:  this.#requirements,
       experienceLevel:  this.#experienceLevel,
-      skills:  this.#skills,
+      skills:  this.#skills.map((skill) => enforceTrimmedString(skill)).filter((skill) => skill !== ""),
       rate:  this.#rate,
       startDate:  this.#startDate,
       duration:  this.#duration,
       deletedOn:  this.#deletedOn,
-      applicants:  this.#applicants,
+      applicants:  this.#applicants.filter((applicant) => isValidFirebaseUserUID(applicant)),
       viewCount:  this.#viewCount
     };
 
@@ -905,7 +1147,7 @@ class Contract {
    * @returns {boolean} True if the current user matches the postedBy field, false otherwise
    */
   createdByCurrentUser() {
-    return Contract.currentUserId === this.#postedBy;
+    return Contract.#currentUserId === this.#postedBy;
   }
 }
 
