@@ -405,7 +405,9 @@ class User {
 
       if (Array.isArray(data.projects)) {
         data.projects.forEach(project => {
-          this.#projects.push(project instanceof Project ? project : new Project(project));
+          try {
+            this.#projects.push(project instanceof Project ? project : new Project(project, userId));
+          } catch {}
         });
       }
 

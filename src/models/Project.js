@@ -48,7 +48,7 @@
  * @requires constants/data
  */
 
-import { isValidURL, enforceTrimmedString } from "../constants/data";
+import { isValidURL, isValidFirebaseUserUID, enforceTrimmedString } from "../constants/data";
 
 /**
  * Project model for storing project data for a user's portfolio.
@@ -65,6 +65,60 @@ import { isValidURL, enforceTrimmedString } from "../constants/data";
  * });
  */
 class Project {
+  // Static private members
+
+  /**
+   * Last known user ID (used when generating unique project ID's)
+   *
+   * @private
+   * @static
+   * @type {string}
+   */
+  static #lastKnownUserId = "";
+
+  /**
+   * Last used unique identifier (used when generating unique project ID's)
+   *
+   * @private
+   * @static
+   * @type {number}
+   */
+  static #nextUniqueId = Number.MIN_SAFE_INTEGER;
+
+  // Static private methods
+
+  /**
+   * Get a new unique identifier that can be used as a key when mapping an array of Project
+   * instances to React components.
+   *
+   * The identifier is a string consisting of the user's ID and a number.
+   *
+   * @private
+   * @static
+   * @param {string} userId - Unique identifier of the user that owns the project
+   * @returns {string}
+   * @throws {Error} There are too many projects for this UID mechanism to handle
+   */
+  static #getNewUniqueId(userId) {
+    /*
+    It is technically possible for a user to have more projects than JavaScript can handle, but
+    the probability of that is infinitesimally small.
+
+    Still, it must be considered.
+    */
+
+    if (userId !== Project.#lastKnownUserId) {
+      Project.#nextUniqueId = Number.MIN_SAFE_INTEGER;
+      Project.#lastKnownUserId = userId;
+    }
+
+    if (Project.#nextUniqueId === Number.MAX_SAFE_INTEGER) {
+      throw new Error("That's more projects than can be handled!");
+    }
+
+    return `${userId}:${Project.#nextUniqueId++}`;
+  }
+
   // Private members
 
   /**
@@ -75,11 +129,11 @@ class Project {
   #description = "";
 
   /**
-   * The project's title (must be unique among the user's projects)
+   * The project's title
    * @private
    * @type {string}
    */
-  #title;  // See constructor for default initial value
+  #title = "";
 
   /**
    * URL to the project (e.g., GitHub repository, live demo, documentation)
@@ -88,38 +142,49 @@ class Project {
    */
   #url = "";
 
+  /**
+   * Project's unique identifier (can be used as a key when mapping arrays of Projects to React
+   * components)
+   *
+   * @private
+   * @type {number}
+   */
+  #projectId = null;
+
   // Constructor
 
   /**
    * Create a new Project instance.
+   *
+   * Do NOT mix user ID's when creating a series of Project instances!  This would result in
+   * shared project ID's among instances.  Instead, ALWAYS instanciate each user's projects at
+   * the same time, one user at a time.
    *
    * @constructor
    * @param {Object} [data={}] - Project data object
    * @param {string} [data.description=""] - Project description
    * @param {string} [data.title=""] - Project title (must be unique)
    * @param {string} [data.url=""] - Project URL (e.g., GitHub repository, live demo)
-   * @example
-   * // Create a new project
-   *
-   * const project = new Project({
-   *   title: "Portfolio Website",
-   *   description: "Personal portfolio built with React",
-   *   url: "https://myportfolio.com"
-   * });
+   * @throws {Error} If userId is not a valid Firebase User UID or if user has more projects
+   * than JavaScript can handle
    */
-  constructor(data = {}) {
+  constructor(data = {}, userId) {
+    if (!isValidFirebaseUserUID(userId)) {
+      throw new Error("userId must be a valid Firebase User UID");
+    }
+
     /*
     This constructor considers the possibility that data may be invalid or missing and will add
     default values to its members where necessary to maintain data integrity.
     */
 
     if (typeof data === "object" && !Array.isArray(data)) {
-      const title = enforceTrimmedString(data.title);
       const url = enforceTrimmedString(data.url);
 
       this.#description = enforceTrimmedString(data.description);
-      this.#title = (title !== "" ? title : (new Date(Date.now())).toLocaleString());
+      this.#title =  enforceTrimmedString(data.title);
       this.#url = (isValidURL(url) ? url : this.#url);
+      this.#projectId = Project.#getNewUniqueId(userId);
     }
   }
 
@@ -145,6 +210,12 @@ class Project {
    * @returns {string} Project URL
    */
   get url() { return this.#url; }
+
+  /**
+   * Get the project's unique ID (can be used as a key when mapping an array of Project
+   * instances to React components).
+   */
+  get projectId() { return this.#projectId; }
 
   // Setters with validation
 
