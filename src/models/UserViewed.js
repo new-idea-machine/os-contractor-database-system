@@ -53,8 +53,11 @@ import { isValidFirebaseUserUID, enforceTimestamp } from "../constants/data";
  * @class UserViewed
  */
 class UserViewed {
+  // Private members
+
   /**
    * Timestamp when the profile view occurred (null until saved to Firebase)
+   *
    * @private
    * @type {?Timestamp}
    */
@@ -62,6 +65,7 @@ class UserViewed {
 
   /**
    * User ID of the user whose profile was viewed
+   *
    * @private
    * @type {string}
    */
@@ -69,10 +73,13 @@ class UserViewed {
 
   /**
    * User ID of the user who viewed the profile
+   *
    * @private
    * @type {string}
    */
   #viewingUser = "";
+
+  // Constructor
 
   /**
    * Create a new UserViewed instance.
@@ -88,6 +95,11 @@ class UserViewed {
    * @param {string} [data.viewingUser=""] - User ID of the viewing user
    */
   constructor(data = {}) {
+    /*
+    This constructor considers the possibility that data may be invalid or missing and will add
+    default values to its members where necessary to maintain data integrity.
+    */
+
     if (data && typeof data === "object" && !Array.isArray(data)) {
       // Initialize from data or use defaults
       this.#timestamp = (data.timestamp ? enforceTimestamp(data.timestamp) : this.#timestamp);
@@ -100,18 +112,21 @@ class UserViewed {
 
   /**
    * Get the timestamp when the profile view occurred.
+   *
    * @returns {?Timestamp} View timestamp, or null if not yet saved to Firebase
    */
   get timestamp() { return this.#timestamp; }
 
   /**
    * Get the user ID of the user whose profile was viewed.
+   *
    * @returns {string} Viewed user's ID
    */
   get viewedUser() { return this.#viewedUser; }
 
   /**
    * Get the user ID of the user who viewed the profile.
+   *
    * @returns {string} Viewing user's ID
    */
   get viewingUser() { return this.#viewingUser; }

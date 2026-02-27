@@ -144,12 +144,15 @@ function locationForGeohash(geohash) {
  * Location model for storing geographical coordinates and geohash.
  *
  * Used to determine a user's proximity to an on-site work location.
+ *
+ * @class Location
  */
 class Location {
   // Private members
 
   /**
-   * The instance's geographic co-ordinates (must be kept synchronized with geohash member).
+   * The instance's geographic co-ordinates (must be kept synchronized with geohash member)
+   *
    * @private
    * @type {Object}
    */
@@ -157,50 +160,62 @@ class Location {
 
   /**
    * The geohash of the instance's geographic co-ordinates (must be kept synchronized with
-   * coordinates member).
+   * coordinates member)
+   *
    * @private
-   * @type {Object}
+   * @type {string}
    */
   #geohash = "s000000000";
 
   // Constructor
 
   /**
-   * Create a new Location instance.  If no co-ordinates can be discerned from the arguments
-   * then 0° latitude, 0° longitude is used as the default co-ordinates.
+   * Create a new Location instance.
    *
+   * If no co-ordinates can be discerned from the arguments then 0° latitude, 0° longitude are
+   * used as the default co-ordinates.
+   *
+   * @constructor
    * @param {Object} data - Location data
    * @param {Object} data.coordinates - GeoPoint data containing latitude and longitude
    * @param {string} data.geohash - Geohash string for efficient geospatial queries
    */
   constructor(data = {}) {
-    const defaultCoordinates = [0.0, 0.0];
-    const coordinatesAreGeoPoint = data.coordinates instanceof GeoPoint;
-    const geohash = enforceTrimmedString(data.geohash);
-    const geohashPattern = /^[0-9bcdefghjkmnpqrstuvwxyz]+$/i;
-    const geohashIsValid = geohashPattern.test(geohash);
-
     /*
     This constructor considers the possibility that data may be missing and does its best to
     maintain data integrity.
-
-    If one of "data.coordinates" or "data.geohash" is invalid then it's derived from the other.
-    If both are invalid then default co-ordinates are used.
-
-    If both members of "data" are valid then it's assumed that the two are consistent and, for
-    the sake of efficiency, no consistency checking is performed.
     */
 
-    if (coordinatesAreGeoPoint) {
-      this.#coordinates = data.coordinates;
-      this.#geohash = geohashIsValid ? geohash : geohashForLocation(this.#coordinates);
-    }
-    else if (geohashIsValid) {
-      try {
-        this.#coordinates = locationForGeohash(geohash);
-        this.#geohash = geohash;
+   const defaultCoordinates = [0.0, 0.0];
+
+    if (typeof data === "object" && !Array.isArray(data)) {
+      const coordinatesAreGeoPoint = data.coordinates instanceof GeoPoint;
+      const geohash = enforceTrimmedString(data.geohash);
+      const geohashPattern = /^[0-9bcdefghjkmnpqrstuvwxyz]+$/i;
+      const geohashIsValid = geohashPattern.test(geohash);
+
+      /*
+      If one of "data.coordinates" or "data.geohash" is invalid then it's derived from the other.
+      If both are invalid then default co-ordinates are used.
+
+      If both members of "data" are valid then it's assumed that the two are consistent and, for
+      the sake of efficiency, no consistency checking is performed.
+      */
+
+      if (coordinatesAreGeoPoint) {
+        this.#coordinates = data.coordinates;
+        this.#geohash = geohashIsValid ? geohash : geohashForLocation(this.#coordinates);
       }
-      catch {
+      else if (geohashIsValid) {
+        try {
+          this.#coordinates = locationForGeohash(geohash);
+          this.#geohash = geohash;
+        }
+        catch {
+          this.#coordinates = new GeoPoint(...defaultCoordinates);
+        }
+      }
+      else {
         this.#coordinates = new GeoPoint(...defaultCoordinates);
       }
     }
@@ -239,7 +254,7 @@ class Location {
    *
    * @param {number} latitude - The latitude coordinate in degrees (must be between -90 and 90)
    * @param {number} longitude - The longitude coordinate in degrees (must be between -180 and 180)
-   * @throws {Error} When latitude or longitude are not numbers or are out of range
+   * @throws {Error} Latitude or longitude is not a number or is out of range
    */
   setCoordinates(latitude, longitude) {
     if ((typeof latitude !== "number") || (typeof longitude !== "number")) {

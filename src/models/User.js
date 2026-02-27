@@ -78,6 +78,7 @@ import { Project } from "./Project";
  *
  * A user can only modify their own instance, and they can't grant themselves administrator
  * status.
+ *
  * @class User
  */
 class User {
@@ -85,6 +86,7 @@ class User {
 
   /**
    * Availability status:  Not available for work
+   *
    * @static
    * @constant {number}
    */
@@ -92,6 +94,7 @@ class User {
 
   /**
    * Availability status:  Available for part-time work
+   *
    * @static
    * @constant {number}
    */
@@ -99,6 +102,7 @@ class User {
 
   /**
    * Availability status:  Available for full-time work
+   *
    * @static
    * @constant {number}
    */
@@ -106,6 +110,7 @@ class User {
 
   /**
    * Human-readable text representations of availability statuses
+   *
    * @static
    * @constant {string[]}
    */
@@ -113,6 +118,7 @@ class User {
 
   /**
    * Human-readable text representations of worksite preferences
+   *
    * @static
    * @constant {Object}
    * @property {string} onSite - On-site work preference text
@@ -125,6 +131,7 @@ class User {
 
   /**
    * Current authenticated user's ID (set once during app initialization)
+   *
    * @private
    * @static
    * @type {?string}
@@ -135,6 +142,7 @@ class User {
 
   /**
    * Get the current user's ID.
+   *
    * @static
    * @returns {?string} Current user ID, or null if not set
    */
@@ -176,6 +184,7 @@ class User {
 
   /**
    * User's unique identifier (Firebase Firestore document ID)
+   *
    * @private
    * @type {string}
    */
@@ -183,6 +192,7 @@ class User {
 
   /**
    * User's availability-for-work status (see constructor for default value)
+   *
    * @private
    * @type {number}
    */
@@ -190,6 +200,7 @@ class User {
 
   /**
    * Timestamp when the user account was soft-deleted (null if active)
+   *
    * @private
    * @type {?Timestamp}
    */
@@ -197,6 +208,7 @@ class User {
 
   /**
    * User's email address
+   *
    * @private
    * @type {string}
    */
@@ -204,6 +216,7 @@ class User {
 
   /**
    * Array of user IDs that this user has marked as favourites
+   *
    * @private
    * @type {string[]}
    */
@@ -211,6 +224,7 @@ class User {
 
   /**
    * User's first name(s)
+   *
    * @private
    * @type {string}
    */
@@ -218,6 +232,7 @@ class User {
 
   /**
    * URL to user's GitHub profile
+   *
    * @private
    * @type {string}
    */
@@ -225,6 +240,7 @@ class User {
 
   /**
    * Does the user have administrator privileges?
+   *
    * @private
    * @type {boolean}
    */
@@ -232,6 +248,7 @@ class User {
 
   /**
    * Is the user a contractor?
+   *
    * @private
    * @type {boolean}
    */
@@ -239,6 +256,7 @@ class User {
 
   /**
    * Is the user a recruiter?
+   *
    * @private
    * @type {boolean}
    */
@@ -246,6 +264,7 @@ class User {
 
   /**
    * Timestamp of the user's last logout
+   *
    * @private
    * @type {?Timestamp}
    */
@@ -253,6 +272,7 @@ class User {
 
   /**
    * User's last name (surname)
+   *
    * @private
    * @type {string}
    */
@@ -260,6 +280,7 @@ class User {
 
   /**
    * URL to user's LinkedIn profile
+   *
    * @private
    * @type {string}
    */
@@ -267,6 +288,7 @@ class User {
 
   /**
    * User's geographical location
+   *
    * @private
    * @type {?Location}
    */
@@ -274,6 +296,7 @@ class User {
 
   /**
    * URL to user's profile image
+   *
    * @private
    * @type {string}
    */
@@ -281,6 +304,7 @@ class User {
 
   /**
    * User's profile "About" section text
+   *
    * @private
    * @type {string}
    */
@@ -288,6 +312,7 @@ class User {
 
   /**
    * Array of user's projects
+   *
    * @private
    * @type {Project[]}
    */
@@ -295,6 +320,7 @@ class User {
 
   /**
    * Array of user's skills
+   *
    * @private
    * @type {string[]}
    */
@@ -302,6 +328,7 @@ class User {
 
   /**
    * User's professional specialization
+   *
    * @private
    * @type {string}
    */
@@ -309,6 +336,7 @@ class User {
 
   /**
    * URL to user's profile video
+   *
    * @private
    * @type {string}
    */
@@ -316,6 +344,7 @@ class User {
 
   /**
    * Is the user open to hybrid remote & on-site work arrangements?
+   *
    * @private
    * @type {boolean}
    */
@@ -323,6 +352,7 @@ class User {
 
   /**
    * Is the user open to just on-site work?
+   *
    * @private
    * @type {boolean}
    */
@@ -330,6 +360,7 @@ class User {
 
   /**
    * Is the user open to just remote work?
+   *
    * @private
    * @type {boolean}
    */
@@ -367,6 +398,11 @@ class User {
    * @param {boolean} [data.worksite_remote] - Remote work preference
    */
   constructor(userId, data = {}) {
+    /*
+    This constructor considers the possibility that data may be invalid or missing and will add
+    default values to its members where necessary to maintain data integrity.
+    */
+
     const defaultAvailability = User.AVAILABILITY_NOT_AVAILABLE;
 
     if (!isValidFirebaseUserUID(userId)) {
@@ -374,11 +410,6 @@ class User {
     }
 
     this.#userId = userId;
-
-    /*
-    This constructor considers the possibility that data may be invalid or missing and will add
-    default values to its members where necessary to maintain data integrity.
-    */
 
     if (typeof data === "object" && !Array.isArray(data)) {
       this.#availability = (data.availability !== undefined ? data.availability : defaultAvailability);
@@ -418,7 +449,6 @@ class User {
       this.#worksite_hybrid = (typeof data.worksite_hybrid === "boolean" ? data.worksite_hybrid : this.#worksite_hybrid);
       this.#worksite_onSite = (typeof data.worksite_onSite === "boolean" ? data.worksite_onSite : this.#worksite_onSite);
       this.#worksite_remote = (typeof data.worksite_remote === "boolean" ? data.worksite_remote : this.#worksite_remote);
-
     } else {
       this.#availability = defaultAvailability;
     }
@@ -428,24 +458,28 @@ class User {
 
   /**
    * Get the user's ID.
+   *
    * @returns {string} User ID
    */
   get userId() { return this.#userId; }
 
   /**
    * Get the user's availability-for-work status.
+   *
    * @returns {number} Availability status (use static AVAILABILITY_* constants to interpret)
    */
   get availability() { return this.#availability; }
 
   /**
    * Get the timestamp when the user account was soft-deleted.
+   *
    * @returns {?Timestamp} Deletion timestamp, or null if the account is active
    */
   get deletedOn() { return this.#deletedOn; }
 
   /**
    * Get the user's email address.
+   *
    * @returns {string} Email address
    */
   get email() { return this.#email; }
@@ -456,78 +490,91 @@ class User {
    * When manipulating this array, DO NOT put anything other than user ID strings in it because
    * no consistency-checking is performed.  Anything that isn't a string will be discarded when
    * the User instance's Firebase document is updated.
+   *
    * @returns {string[]} Array of favourite user IDs
    */
   get favourites() { return (this.currentUserCanModify() ? this.#favourites : structuredClone(this.#favourites)); }
 
   /**
    * Get the user's first name(s).
+   *
    * @returns {string} First name(s)
    */
   get firstNames() { return this.#firstNames; }
 
   /**
    * Get the URL to the user's GitHub profile.
+   *
    * @returns {string} GitHub profile URL
    */
   get gitHubURL() { return this.#gitHubURL; }
 
   /**
    * Is the user account active (not soft-deleted)?
+   *
    * @returns {boolean} True if the account is active, false if deleted
    */
   get isActive() { return this.#deletedOn === null; }
 
   /**
    * Is the user is an administrator?
+   *
    * @returns {boolean} True if the user is an administrator
    */
   get isAdmin() { return this.#isAdmin; }
 
   /**
    * Is the user a contractor?
+   *
    * @returns {boolean} True if the user is a contractor
    */
   get isContractor() { return this.#isContractor; }
 
   /**
    * Is the user is a recruiter?
+   *
    * @returns {boolean} True if the user is a recruiter
    */
   get isRecruiter() { return this.#isRecruiter; }
 
   /**
    * Get the timestamp of the user's last logout.
+   *
    * @returns {?Timestamp} Last logout timestamp, or null if never logged out
    */
   get lastLoggedOut() { return this.#lastLoggedOut; }
 
   /**
    * Get the user's last name (surname).
+   *
    * @returns {string} Last name
    */
   get lastName() { return this.#lastName; }
 
   /**
    * Get the URL to the user's LinkedIn profile.
+   *
    * @returns {string} LinkedIn profile URL
    */
   get linkedInURL() { return this.#linkedInURL; }
 
   /**
    * Get the user's geographical location.
+   *
    * @returns {?Location} Location instance, or null if not set
    */
   get location() { return this.#location; }
 
   /**
    * Get the URL to the user's profile image.
+   *
    * @returns {string} Profile image URL
    */
   get profileImageURL() { return this.#profileImageURL; }
 
   /**
    * Get the user's profile "About" section text.
+   *
    * @returns {string} Profile about text
    */
   get profileAbout() { return this.#profileAbout; }
@@ -538,6 +585,7 @@ class User {
    * When manipulating this array, DO NOT put anything other than Project instances in it
    * because no consistency-checking is performed.  Anything that isn't a Project instance will
    * be discarded when the User instance's Firebase document is updated.
+   *
    * @returns {Project[]} Array of Project instances
    */
   get projects() { return (this.currentUserCanModify() ? this.#projects : structuredClone(this.#projects)); }
@@ -548,36 +596,42 @@ class User {
    * When manipulating this array, DO NOT put anything other than strings in it because no
    * consistency-checking is performed.  Anything that isn't a string will be discarded when
    * the User instance's Firebase document is updated.
+   *
    * @returns {string[]} Array of skill strings
    */
   get skills() { return (this.currentUserCanModify() ? this.#skills : structuredClone(this.#skills)); }
 
   /**
    * Get the user's professional specialization.
+   *
    * @returns {string} Professional specialization
    */
   get specialization() { return this.#specialization; }
 
   /**
    * Get the URL to the user's profile video.
+   *
    * @returns {string} Profile video URL
    */
   get videoURL() { return this.#videoURL; }
 
   /**
    * Check if the user is open to hybrid work arrangements (combination of remote and on-site).
+   *
    * @returns {boolean} True if the user accepts hybrid work
    */
   get worksite_hybrid() { return this.#worksite_hybrid; }
 
   /**
    * Check if the user is open to on-site work only.
+   *
    * @returns {boolean} True if the user accepts on-site work
    */
   get worksite_onSite() { return this.#worksite_onSite; }
 
   /**
    * Check if the user is open to remote work only.
+   *
    * @returns {boolean} True if the user accepts remote work
    */
   get worksite_remote() { return this.#worksite_remote; }
@@ -586,13 +640,14 @@ class User {
 
   /**
    * Set the user's availability status for work.
+   *
    * @param {number} value - Availability status (must be one of the static AVAILABILITY_* constants)
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a valid availability constant
    */
   set availability(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (![User.AVAILABILITY_NOT_AVAILABLE, User.AVAILABILITY_PART_TIME, User.AVAILABILITY_FULL_TIME].includes(value)) {
@@ -604,12 +659,13 @@ class User {
 
   /**
    * Set the timestamp when the user account was soft-deleted.
+   *
    * @param {Timestamp|Date|null} value - Deletion timestamp (will be converted to Firestore Timestamp)
    * @throws {Error} If the current user is not permitted to modify this instance
    */
   set deletedOn(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     this.#deletedOn = enforceTimestamp(value);
@@ -617,13 +673,14 @@ class User {
 
   /**
    * Set the user's email address.
+   *
    * @param {string} value - Email address
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set email(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (!isValidEmailAddress(value)) {
@@ -636,13 +693,14 @@ class User {
   /**
    * Set the array of user IDs that this user has marked as favourites.
    * Automatically removes duplicates.
+   *
    * @param {string[]} value - Array of favourite user IDs (must be valid Firebase user ID's)
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not an array of valid Firebase user ID's
    */
   set favourites(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (!Array.isArray(value) || value.some((favourite) => !isValidFirebaseUserUID(favourite))) {
@@ -654,13 +712,14 @@ class User {
 
   /**
    * Set the user's first name(s).
+   *
    * @param {string} value - First name(s)
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set firstNames(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -674,13 +733,14 @@ class User {
 
   /**
    * Set the URL to the user's GitHub profile.
+   *
    * @param {string} value - GitHub profile URL
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set gitHubURL(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -694,13 +754,14 @@ class User {
 
   /**
    * Set whether the user is an administrator.
+   *
    * @param {boolean} value - Administrator flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isAdmin(value) {
     if (!this.#isAdmin || !this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {
@@ -712,13 +773,14 @@ class User {
 
   /**
    * Set whether the user is a contractor.
+   *
    * @param {boolean} value - Contractor role flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isContractor(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {
@@ -730,13 +792,14 @@ class User {
 
   /**
    * Set whether the user is a recruiter.
+   *
    * @param {boolean} value - Recruiter role flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set isRecruiter(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {
@@ -748,12 +811,13 @@ class User {
 
   /**
    * Set the timestamp of the user's last logout.
+   *
    * @param {Timestamp|Date|null} value - Last logout timestamp (will be converted to Firestore Timestamp)
    * @throws {Error} If the current user is not permitted to modify this instance
    */
   set lastLoggedOut(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     this.#lastLoggedOut = enforceTimestamp(value);
@@ -761,13 +825,14 @@ class User {
 
   /**
    * Set the user's last name (surname).
+   *
    * @param {string} value - Last name
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set lastName(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -781,13 +846,14 @@ class User {
 
   /**
    * Set the URL to the user's LinkedIn profile.
+   *
    * @param {string} value - LinkedIn profile URL
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set linkedInURL(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -801,13 +867,14 @@ class User {
 
   /**
    * Set the user's geographical location.
+   *
    * @param {Location|null} value - Location instance, or null to clear location
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is neither null nor a Location instance
    */
   set location(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if ((value !== null) && !(value instanceof Location)) {
@@ -819,13 +886,14 @@ class User {
 
   /**
    * Set the URL to the user's profile image.
+   *
    * @param {string} value - Profile image URL
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set profileImageURL(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -839,13 +907,14 @@ class User {
 
   /**
    * Set the user's profile "About" section text.
+   *
    * @param {string} value - Profile about text
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set profileAbout(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "string") {
@@ -857,6 +926,7 @@ class User {
 
   /**
    * Set the array of the user's projects.
+   *
    * @param {Project[]} value - Array of Project instances
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not an array of Project instances
@@ -864,7 +934,7 @@ class User {
    */
   set projects(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (!Array.isArray(value) || value.some((project) => !(project instanceof Project))) {
@@ -883,13 +953,14 @@ class User {
   /**
    * Set the array of the user's skills.
    * Automatically removes duplicates and trims whitespace from each skill.
+   *
    * @param {string[]} value - Array of skill strings (must be non-empty strings)
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not an array of non-empty strings
    */
   set skills(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (!Array.isArray(value) || value.some((skill) => enforceTrimmedString(skill) === "")) {
@@ -901,13 +972,14 @@ class User {
 
   /**
    * Set the user's professional specialization.
+   *
    * @param {string} value - Professional specialization
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set specialization(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -921,13 +993,14 @@ class User {
 
   /**
    * Set the URL to the user's profile video.
+   *
    * @param {string} value - Profile video URL
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a string
    */
   set videoURL(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     const newValue = enforceTrimmedString(value);
@@ -941,13 +1014,14 @@ class User {
 
   /**
    * Set whether the user is open to hybrid work arrangements (combination of remote and on-site).
+   *
    * @param {boolean} value - Hybrid work preference flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_hybrid(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {
@@ -959,13 +1033,14 @@ class User {
 
   /**
    * Set whether the user is open to on-site work only.
+   *
    * @param {boolean} value - On-site work preference flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_onSite(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {
@@ -977,13 +1052,14 @@ class User {
 
   /**
    * Set whether the user is open to remote work only.
+   *
    * @param {boolean} value - Remote work preference flag
    * @throws {Error} If the current user is not permitted to modify this instance
    * @throws {Error} If value is not a boolean
    */
   set worksite_remote(value) {
     if (!this.currentUserCanModify()) {
-      throw new Error("Current user is not permitted to modify this instance");
+      throw new Error("Current user is not permitted to modify this property");
     }
 
     if (typeof value !== "boolean") {

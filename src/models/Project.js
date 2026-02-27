@@ -57,12 +57,6 @@ import { isValidURL, isValidFirebaseUserUID, enforceTrimmedString } from "../con
  * It provides validation for all properties and methods for Firestore serialization.
  *
  * @class Project
- * @example
- * const project = new Project({
- *   title: "E-commerce Platform",
- *   description: "A full-stack e-commerce solution with React and Node.js",
- *   url: "https://github.com/user/ecommerce"
- * });
  */
 class Project {
   // Static private members
@@ -137,6 +131,7 @@ class Project {
 
   /**
    * URL to the project (e.g., GitHub repository, live demo, documentation)
+   *
    * @private
    * @type {string}
    */
