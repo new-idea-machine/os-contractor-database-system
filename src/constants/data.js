@@ -331,6 +331,7 @@ const techDataSchema = {
 	summary: '',
 	location: '',
 	profileImg: '',
+	video: '',
 	otherInfo: {
 		linkedinUrl: '',
 		githubUrl: '',

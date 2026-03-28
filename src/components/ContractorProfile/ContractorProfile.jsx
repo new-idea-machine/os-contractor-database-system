@@ -1,4 +1,4 @@
-import React, { useContext, useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import styles from "./ContractorProfile.module.css";
 import { skillsContext } from "../../contexts/SkillsContext";
 import GitHubIcon from "@mui/icons-material/GitHub";
@@ -128,6 +128,13 @@ const ContractorProfile = (props) => {
             {contractor?.summary}
           </p>
         </section>
+
+        {contractor?.video && (
+          <section>
+            <h2>Video</h2>
+            <video className={styles.Video} src={contractor.video} controls />
+          </section>
+        )}
 
         {contractor?.projects && (
           <section id="Projects">
